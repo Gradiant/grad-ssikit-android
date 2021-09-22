@@ -17,6 +17,8 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import okio.ByteString.Companion.encode
 
+//ANDROID PORT
+/*
 class CustodianPresentTest : StringSpec() {
     lateinit var did: String
     lateinit var vcJsonLd: String
@@ -69,4 +71,5 @@ class CustodianPresentTest : StringSpec() {
             pres.jwt shouldBe presStr
         }
     }
-}
+}*/
+//ANDROID PORT

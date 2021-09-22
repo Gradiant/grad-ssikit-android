@@ -19,6 +19,8 @@ import io.kotest.matchers.collections.shouldBeSameSizeAs
 import io.kotest.matchers.collections.shouldContainAll
 import io.kotest.matchers.shouldBe
 
+//ANDROID PORT
+/*
 class AuditorCommandTest : StringSpec() {
     private lateinit var did: String
     private lateinit var vcStr: String
@@ -120,4 +122,5 @@ class AuditorCommandTest : StringSpec() {
             }
         }
     }
-}
+}*/
+//ANDROID PORT

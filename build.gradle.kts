@@ -42,7 +42,10 @@ dependencies {
     implementation("com.google.guava:guava:30.1.1-jre")
 
     // VC
-    implementation("id.walt:waltid-ssikit-vclib:1.4.7")
+    //ANDROID PORT
+    //implementation("id.walt:waltid-ssikit-vclib:1.4.7")
+    implementation(files("./libs/waltid-ssikit-vclib-1.4.8-SNAPSHOT.jar"))
+    //ANDROID PORT
 
     // JSON
     implementation("org.json:json:20210307")
@@ -82,7 +85,10 @@ dependencies {
     implementation("com.sksamuel.hoplite:hoplite-hikaricp:1.4.7")
 
     // Service-Matrix
-    implementation("id.walt.servicematrix:WaltID-ServiceMatrix:1.0.1")
+    //ANDROID PORT
+    //implementation("id.walt.servicematrix:WaltID-ServiceMatrix:1.0.1")
+    implementation(files("./libs/WaltID-ServiceMatrix-1.0.1.jar"))
+    //ANDROID PORT
 
     // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.5.21")
@@ -108,12 +114,16 @@ tasks.withType<Test> {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(16))
+        //ANDROID PORT
+        languageVersion.set(JavaLanguageVersion.of(11))
+        //ANDROID PORT
     }
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "15"
+    //ANDROID PORT
+    kotlinOptions.jvmTarget = "11"
+    //ANDROID PORT
 }
 
 tasks.named<CreateStartScripts>("startScripts") {

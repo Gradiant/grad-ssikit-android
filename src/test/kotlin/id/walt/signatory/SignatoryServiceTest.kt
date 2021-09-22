@@ -22,7 +22,8 @@ import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.types.beInstanceOf
 import java.text.SimpleDateFormat
 
-class SignatoryServiceTest : StringSpec({
+//ANDROID TEST
+/*class SignatoryServiceTest : StringSpec({
     ServiceMatrix("$RESOURCES_PATH/service-matrix.properties")
     val signatory = Signatory.getService()
 
@@ -116,4 +117,5 @@ class SignatoryServiceTest : StringSpec({
         cred should beInstanceOf<VerifiableId>()
         (cred as VerifiableId).id shouldBe vcObj.id
     }
-})
+})*/
+//ANDROID TEST

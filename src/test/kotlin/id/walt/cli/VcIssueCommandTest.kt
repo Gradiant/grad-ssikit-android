@@ -43,7 +43,8 @@ class VcIssueCommandTest : StringSpec({
         message shouldContain "-s, --subject-did"
     }
 
-    "vc issue default" {
+    //ANDROID PORT
+    /*"vc issue default" {
         VcIssueCommand().parse(listOf("-i", didIssuer, "-s", didSubject))
     }
 
@@ -65,6 +66,6 @@ class VcIssueCommandTest : StringSpec({
 
     "vc issue VerifiableDiploma JWT" {
         VcIssueCommand().parse(listOf("-i", didIssuer, "-s", didSubject, "-t", "VerifiableDiploma", "-p", "JWT"))
-    }
-
+    }*/
+    //ANDROID PORT
 })

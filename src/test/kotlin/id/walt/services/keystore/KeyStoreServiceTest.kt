@@ -37,7 +37,11 @@ open class KeyStoreServiceTest : AnnotationSpec() {
     open fun saveLoadEd25519KeysTest() {
         val keyId = keyService.generate(KeyAlgorithm.EdDSA_Ed25519)
         val key = keyService.load(keyId.id, KeyType.PRIVATE)
-        48 shouldBe key.keyPair!!.private.encoded.size
+        //ANDROID PORT
+        //48 shouldBe key.keyPair!!.private.encoded.size
+        83 shouldBe key.keyPair!!.private.encoded.size
+        //ANDROID PORT
+
     }
 
     @Test

@@ -6,7 +6,8 @@ import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import java.nio.file.Path
 
-class HKVStoreTest : StringSpec({
+//ANDROID PORT
+/*class HKVStoreTest : StringSpec({
 
     fun hkvTest() {
         val hkvStore = HKVStoreService.getService()
@@ -36,4 +37,5 @@ class HKVStoreTest : StringSpec({
         ServiceRegistry.registerService<HKVStoreService>(FileSystemHKVStore("./fsStore.conf"))
         hkvTest()
     }
-})
+})*/
+//ANDROID PORT

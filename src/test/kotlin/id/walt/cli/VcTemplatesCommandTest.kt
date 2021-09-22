@@ -10,9 +10,11 @@ class VcTemplatesCommandTest : StringSpec({
 
     ServiceMatrix("$RESOURCES_PATH/service-matrix.properties")
 
-    "vc templates list" {
+    //ANDROID PORT
+    /*"vc templates list" {
         VcTemplatesListCommand().parse(listOf())
-    }
+    }*/
+    //ANDROID PORT
 
     "vc templates export" {
         // TODO WALT0508

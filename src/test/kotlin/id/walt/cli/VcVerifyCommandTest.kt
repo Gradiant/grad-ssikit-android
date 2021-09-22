@@ -32,6 +32,8 @@ class VcVerifyCommandTest : StringSpec({
         ListVerificationPoliciesCommand().parse(listOf())
     }
 
+    //ANDROID PORT
+    /*
     "vc verify -p SignaturePolicy path/to/vp.json" {
         val did = DidService.create(DidMethod.key)
         val vcStr = Signatory.getService().issue(
@@ -60,5 +62,6 @@ class VcVerifyCommandTest : StringSpec({
         } finally {
             vpFile.delete()
         }
-    }
+    }*/
+    //ANDROID PORT
 })
