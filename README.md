@@ -38,13 +38,13 @@ This project demonstrates how to integrate & use the SSI Kit in any Kotlin/Java 
 
 The SSI Kit by walt.id is Open Source software released under the [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0.html).
 
-#Android Port
+# Android Port
 
 ## Changes
 
-1. WaltIdJsonLdCredentialService.kt, WaltIdJwtCredentialService.kt -> kotlin.streams.toList must be imported
+1. WaltIdJsonLdCredentialService.kt, WaltIdJwtCredentialService.kt -> kotlin.streams.toList must be imported.
 
-2. Folder libs created -> ServiceMatrix jar and Vclib jar added to folder
+2. Folder libs created -> ServiceMatrix jar and Vclib jar added to folder.
 
 3. Signatory service commented in file src/test/resources/service-matrix.properties and ./service-matrix.properties. The function "fromConfiguration" gives the following error: "Could not detect parser for file extension '.conf'".
 
@@ -55,3 +55,16 @@ The SSI Kit by walt.id is Open Source software released under the [Apache 2.0 li
 6. HKVStoreTest commented due to HKVStoreService commented in point 5.
 
 7. KeyStoreServiceTest.kt -> size of ed25519 private key is 83, not 48 as indicated in the test. No idea why this changed.
+
+8. build.gradle.kts -> fatJar task has some duplicity issues. Fixed after added "EXCLUDE" as duplicate strategy".
+
+9. WaltIdServices.kt -> Android cannot execute "Runtime.version.feature()" to get Java Runtime Version. Instead, it was replaced with "System.getProperty("java.version")" which is allowed in Android.
+
+## Android Application Requirements
+
+1. Place the jars of waltid-ssikit, waltid-vclib, waltid-servicematrix in app/libs. Add those libraries to the project with the following line "implementation fileTree(include: ['*.jar'], dir: './libs')" inside the build.gradle of the project.
+
+2. Android cannot resolve kotlin-reflect.kclasses, so this dependency line must be placed in build.gradle "implementation("org.jetbrains.kotlin:kotlin-reflect:1.5.21"" 
+
+3. Android cannot resolve mu.KotlinLogging, so this dependency line must be placed in build.gradle "implementation("io.github.microutils:kotlin-logging-jvm:2.0.11")"
+

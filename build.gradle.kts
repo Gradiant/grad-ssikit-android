@@ -136,7 +136,9 @@ tasks.named<CreateStartScripts>("startScripts") {
 
 val fatJar = task("fatJar", type = Jar::class) {
     group = "build"
-
+    //ANDROID PORT
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    //ANDROID PORT
     archiveBaseName.set("${project.name}-with-dependencies")
 
     manifest {

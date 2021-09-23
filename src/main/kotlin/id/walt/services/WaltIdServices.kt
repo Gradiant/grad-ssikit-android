@@ -54,9 +54,12 @@ object WaltIdServices {
         val javaVersion = System.getProperty("java.runtime.version")
         println("Walt.ID SSI-Kit ${Values.version} (running on Java $javaVersion)")
 
-        if (Runtime.version().feature() < 16) {
-            log.error { "Java version 16+ is required!" }
+        //ANDROID PORT
+        val version = Integer.parseInt(System.getProperty("java.version"))
+        if (version < 11) {
+            log.error { "Java version 11+ is required!" }
         }
+        //ANDROID PORT
 
         // BC is required for
         // - secp256k1 curve
