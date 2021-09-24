@@ -34,6 +34,10 @@ dependencies {
     implementation("com.github.multiformats:java-multibase:v1.1.0")
     implementation("com.microsoft.azure:azure-keyvault:1.2.4")
     implementation("com.microsoft.azure:azure-client-authentication:1.7.13")
+    //ANDROID PORT
+    implementation("com.madgag.spongycastle:prov:1.54.0.0")
+    implementation("com.madgag.spongycastle:pkix:1.54.0.0")
+    //ANDROID PORT
 
     // Ethereum
     implementation("org.web3j:core:5.0.0")

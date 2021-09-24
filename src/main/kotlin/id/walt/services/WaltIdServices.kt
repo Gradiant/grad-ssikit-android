@@ -16,7 +16,9 @@ import org.apache.logging.log4j.Level
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.core.LoggerContext
 import org.apache.logging.log4j.core.config.LoggerConfig
-import org.bouncycastle.jce.provider.BouncyCastleProvider
+//ANDROID PORT
+import org.spongycastle.jce.provider.BouncyCastleProvider
+//ANDROID PORT
 import id.walt.Values
 import java.io.File
 import java.nio.file.Files

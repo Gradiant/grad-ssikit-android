@@ -60,11 +60,15 @@ The SSI Kit by walt.id is Open Source software released under the [Apache 2.0 li
 
 9. WaltIdServices.kt -> Android cannot execute "Runtime.version.feature()" to get Java Runtime Version. Instead, it was replaced with "System.getProperty("java.version")" which is allowed in Android.
 
+10. WaltIdServices.kt -> Vanilla BouncyCastleProvider cannot be executed in Android. Instead, it was replaced by spongycastle.
+
 ## Android Application Requirements
 
 1. Place the jars of waltid-ssikit, waltid-vclib, waltid-servicematrix in app/libs. Add those libraries to the project with the following line "implementation fileTree(include: ['*.jar'], dir: './libs')" inside the build.gradle of the project.
 
-2. Android cannot resolve kotlin-reflect.kclasses, so this dependency line must be placed in build.gradle "implementation("org.jetbrains.kotlin:kotlin-reflect:1.5.21"" 
+2. Android cannot resolve kotlin-reflect.kclasses, so this dependency line must be placed in build.gradle: "implementation("org.jetbrains.kotlin:kotlin-reflect:1.5.21"" 
 
-3. Android cannot resolve mu.KotlinLogging, so this dependency line must be placed in build.gradle "implementation("io.github.microutils:kotlin-logging-jvm:2.0.11")"
+3. Android cannot resolve mu.KotlinLogging, so this dependency line must be placed in build.gradle: "implementation("io.github.microutils:kotlin-logging-jvm:2.0.11")"
+
+4. Android cannot resolve spongycastle, so this 2 dependency lines must be placed in build.gradle: "implementation("com.madgag.spongycastle:prov:1.54.0.0")" and "implementation("com.madgag.spongycastle:pkix:1.54.0.0")"
 
