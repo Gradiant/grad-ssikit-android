@@ -22,7 +22,9 @@ import org.spongycastle.jce.provider.BouncyCastleProvider
 import id.walt.Values
 import java.io.File
 import java.nio.file.Files
-import java.nio.file.Path
+//ANDROID PORT
+import kotlin.io.path.Path
+//ANDROID PORT
 import java.security.Security
 
 enum class CryptoProvider { SUN, TINK, CUSTOM }
@@ -81,13 +83,15 @@ object WaltIdServices {
 
     fun createDirStructure() {
         log.debug { "Creating dir-structure at: $dataDir" }
-        Files.createDirectories(Path.of(keyDir))
-        Files.createDirectories(Path.of("$dataDir/did/created"))
-        Files.createDirectories(Path.of("$dataDir/did/resolved"))
-        Files.createDirectories(Path.of("$dataDir/vc/templates"))
-        Files.createDirectories(Path.of("$dataDir/vc/created"))
-        Files.createDirectories(Path.of("$dataDir/vc/presented"))
-        Files.createDirectories(Path.of(ebsiDir))
+        //ANDROID PORT
+        Files.createDirectories(Path(keyDir))
+        Files.createDirectories(Path("$dataDir/did/created"))
+        Files.createDirectories(Path("$dataDir/did/resolved"))
+        Files.createDirectories(Path("$dataDir/vc/templates"))
+        Files.createDirectories(Path("$dataDir/vc/created"))
+        Files.createDirectories(Path("$dataDir/vc/presented"))
+        Files.createDirectories(Path(ebsiDir))
+        //ANDROID PORT
     }
 
     fun loadConfig() = ConfigLoader.Builder()
