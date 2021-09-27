@@ -68,6 +68,8 @@ The SSI Kit by walt.id is Open Source software released under the [Apache 2.0 li
 
 13. WaltIdServices.kt -> Changed path variables to handle Android data directory path.
 
+14. SqlDbManager.kt -> Android cannot execute common java driver jdbc, so it's needed to replace it with a port of this driver to Android: SqlDroid. The HikariDataSource tries to execute the function getNetworkTimeout that doesn't exist in java.sql.connection of Android. Instead, it was replaced with a common DriverManager.getConnection(). SqlDroid doesn't allow autocommit mode to false, so it had to be changed to true. Additionally, all manual commits were commented since they are useless now.
+
 ## Android Application Requirements
 
 1. Place the jars of waltid-ssikit, waltid-vclib, waltid-servicematrix in app/libs. Add those libraries to the project with the following line "implementation fileTree(include: ['*.jar'], dir: './libs')" inside the build.gradle of the project.
@@ -83,3 +85,26 @@ The SSI Kit by walt.id is Open Source software released under the [Apache 2.0 li
 6. Android cannot resolve TinkConfig, so this dependency line must be placed in build.gradle: "api("com.google.crypto.tink:tink:1.6.1")".
 
 7. WaltIdServices cannot access relative Android Data Directory Path. To solve this, it is needed to set this android path in some variable, so the next line must be placed in the MainActivity: "id.walt.common.androidDataDir = dataDir.absolutePath" (Kotlin)
+
+8. Android cannot resolve hoplite, so this 3 dependency lines must be placed in build.gradle: "implementation("com.sksamuel.hoplite:hoplite-core:1.4.7")", "implementation("com.sksamuel.hoplite:hoplite-yaml:1.4.7")" and "implementation("com.sksamuel.hoplite:hoplite-hikaricp:1.4.7")".
+
+9. Android cannot resolve sqldroid, so this dependency line must be placed in build.gradle: "implementation('org.sqldroid:sqldroid:1.0.3')".
+
+10. Android cannot resolve "com.nimbusds.jose", so this dependency line must be placed in build.gradle: "implementation 'com.nimbusds:nimbus-jose-jwt:9.15.1'"
+
+11. Android cannot resolve some libraries located in alternative repositories, so this lines must be added to the list of maven repositories: 
+* maven {
+    url "https://maven.walt.id/repository/danubetech"
+}
+* maven {
+    url "https://repo.danubetech.com/repository/maven-public/"
+}
+* maven {
+    url "https://jitpack.io"
+}
+
+12. Android cannot resolve keyFormats, so this dependency line must be placed in build.gradle:
+* api("info.weboftrust:ld-signatures-java:0.5-SNAPSHOT") {
+        exclude group:"net.jcip", module:"jcip-annotations"
+    }
+A duplicity issue appears after adding this library, so the module "jcip-annotations" must be excluded.

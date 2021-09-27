@@ -1,10 +1,13 @@
 package id.walt.common
 
-import com.zaxxer.hikari.HikariDataSource
+//ANDROID PORT
 import mu.KotlinLogging
-import id.walt.services.WaltIdServices
 import java.sql.Connection
+import java.sql.Driver
+import java.sql.DriverManager
+//ANDROID PORT
 import java.sql.Statement
+
 
 object SqlDbManager {
     private val log = KotlinLogging.logger {}
@@ -13,10 +16,27 @@ object SqlDbManager {
 //    val JDBC_URL = "jdbc:sqlite::memory:"
 
     //  private val config: HikariConfig = HikariConfig()
-    private var dataSource: HikariDataSource? = WaltIdServices.loadHikariDataSource()
+    //ANDROID PORT
+    private lateinit var connection: Connection
+    //private var dataSource: HikariDataSource? = WaltIdServices.loadHikariDataSource()
+    //ANDROID PORT
 
     // TODO: Should be configurable
     val recreateDb = false
+
+    //ANDROID PORT
+    init {
+        try {
+            DriverManager.registerDriver(Class.forName("org.sqldroid.SQLDroidDriver").newInstance() as Driver)
+        } catch (e: Exception) {
+            throw RuntimeException("Failed to register SQLDroidDriver")
+        }
+        val androidDataDir = id.walt.common.androidDataDir
+        val jdbcUrl = "jdbc:sqldroid:$androidDataDir/data/walt.db"
+        connection = DriverManager.getConnection(jdbcUrl)
+        connection.autoCommit = false
+    }
+    //ANDROID PORT
 
     fun start() {
 //        config.jdbcUrl = JDBC_URL
@@ -34,9 +54,11 @@ object SqlDbManager {
         createDatabase()
     }
 
+    //ANDROID PORT
     fun stop() {
-        dataSource?.close()
+        connection.close()
     }
+    //ANDROID PORT
 
     private fun createDatabase() {
         getConnection().use { con ->
@@ -71,10 +93,12 @@ object SqlDbManager {
         }
     }
 
+    //ANDROID PORT
     fun getConnection(): Connection {
         // var connection = DriverManager.getConnection(JDBC_URL)
-        return dataSource!!.connection!!
+        return connection
     }
+    //ANDROID PORT
 
     fun getLastRowId(statement: Statement): Int {
         val rs = statement.executeQuery("select last_insert_rowid() AS lastRowId")
