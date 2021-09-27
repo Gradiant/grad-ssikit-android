@@ -35,9 +35,12 @@ data class WaltIdConfig(
 
 object WaltIdServices {
 
-    const val dataDir = "data"
-    const val keyDir = "$dataDir/key/"
-    const val ebsiDir = "$dataDir/ebsi/"
+    //ANDROID PORT
+    var androidDataDir = id.walt.common.androidDataDir
+    var dataDir = "$androidDataDir/data"
+    var keyDir = "$dataDir/key/"
+    var ebsiDir = "$dataDir/ebsi/"
+    //ANDROID PORT
 
     val httpLogging = false
     val log = KotlinLogging.logger {}

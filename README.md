@@ -64,6 +64,10 @@ The SSI Kit by walt.id is Open Source software released under the [Apache 2.0 li
 
 11. WaltIdServices.kt -> java.nio.file.Path does not exist in Android. Instead, it was replaced by kotlin.io.path.Path.
 
+12. FileFun.kt -> Added androidDataDir variable to handle Android data path. 
+
+13. WaltIdServices.kt -> Changed path variables to handle Android data directory path.
+
 ## Android Application Requirements
 
 1. Place the jars of waltid-ssikit, waltid-vclib, waltid-servicematrix in app/libs. Add those libraries to the project with the following line "implementation fileTree(include: ['*.jar'], dir: './libs')" inside the build.gradle of the project.
@@ -77,3 +81,5 @@ The SSI Kit by walt.id is Open Source software released under the [Apache 2.0 li
 5. Android cannot resolve spongycastle, so this 2 dependency lines must be placed in build.gradle: "implementation("com.madgag.spongycastle:prov:1.54.0.0")" and "implementation("com.madgag.spongycastle:pkix:1.54.0.0")".
 
 6. Android cannot resolve TinkConfig, so this dependency line must be placed in build.gradle: "api("com.google.crypto.tink:tink:1.6.1")".
+
+7. WaltIdServices cannot access relative Android Data Directory Path. To solve this, it is needed to set this android path in some variable, so the next line must be placed in the MainActivity: "id.walt.common.androidDataDir = dataDir.absolutePath" (Kotlin)
