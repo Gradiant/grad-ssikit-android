@@ -60,15 +60,13 @@ The SSI Kit by walt.id is Open Source software released under the [Apache 2.0 li
 
 9. WaltIdServices.kt -> Android cannot execute "Runtime.version.feature()" to get Java Runtime Version. Instead, it was replaced with "System.getProperty("java.version")" which is allowed in Android.
 
-10. WaltIdServices.kt -> Vanilla BouncyCastleProvider cannot be executed in Android. Instead, it was replaced by spongycastle.
+10. WaltIdServices.kt -> java.nio.file.Path does not exist in Android. Instead, it was replaced by kotlin.io.path.Path.
 
-11. WaltIdServices.kt -> java.nio.file.Path does not exist in Android. Instead, it was replaced by kotlin.io.path.Path.
+11. FileFun.kt -> Added androidDataDir variable to handle Android data path. 
 
-12. FileFun.kt -> Added androidDataDir variable to handle Android data path. 
+12. WaltIdServices.kt -> Changed path variables to handle Android data directory path.
 
-13. WaltIdServices.kt -> Changed path variables to handle Android data directory path.
-
-14. SqlDbManager.kt -> Android cannot execute common java driver jdbc, so it's needed to replace it with a port of this driver to Android: SqlDroid. The HikariDataSource tries to execute the function getNetworkTimeout that doesn't exist in java.sql.connection of Android. Instead, it was replaced with a common DriverManager.getConnection(). SqlDroid doesn't allow autocommit mode to false, so it had to be changed to true. Additionally, all manual commits were commented since they are useless now.
+13. SqlDbManager.kt -> Android cannot execute common java driver jdbc, so it's needed to replace it with a port of this driver to Android: SqlDroid. The HikariDataSource tries to execute the function getNetworkTimeout that doesn't exist in java.sql.connection of Android. Instead, it was replaced with a common DriverManager.getConnection(). SqlDroid doesn't allow autocommit mode to false, so it had to be changed to true. Additionally, all manual commits were commented since they are useless now.
 
 ## Android Application Requirements
 
@@ -80,19 +78,17 @@ The SSI Kit by walt.id is Open Source software released under the [Apache 2.0 li
 
 4. Android cannot resolve ktor-client, so this two dependency lines must be placed in build.gradle: "implementation("io.ktor:ktor-client-cio:1.6.3")" and "implementation("io.ktor:ktor-client-serialization:1.6.3")".
 
-5. Android cannot resolve spongycastle, so this 2 dependency lines must be placed in build.gradle: "implementation("com.madgag.spongycastle:prov:1.54.0.0")" and "implementation("com.madgag.spongycastle:pkix:1.54.0.0")".
+5. Android cannot resolve TinkConfig, so this dependency line must be placed in build.gradle: "api("com.google.crypto.tink:tink:1.6.1")".
 
-6. Android cannot resolve TinkConfig, so this dependency line must be placed in build.gradle: "api("com.google.crypto.tink:tink:1.6.1")".
+6. WaltIdServices cannot access relative Android Data Directory Path. To solve this, it is needed to set this android path in some variable, so the next line must be placed in the MainActivity: "id.walt.common.androidDataDir = dataDir.absolutePath" (Kotlin)
 
-7. WaltIdServices cannot access relative Android Data Directory Path. To solve this, it is needed to set this android path in some variable, so the next line must be placed in the MainActivity: "id.walt.common.androidDataDir = dataDir.absolutePath" (Kotlin)
+7. Android cannot resolve hoplite, so this 3 dependency lines must be placed in build.gradle: "implementation("com.sksamuel.hoplite:hoplite-core:1.4.7")", "implementation("com.sksamuel.hoplite:hoplite-yaml:1.4.7")" and "implementation("com.sksamuel.hoplite:hoplite-hikaricp:1.4.7")".
 
-8. Android cannot resolve hoplite, so this 3 dependency lines must be placed in build.gradle: "implementation("com.sksamuel.hoplite:hoplite-core:1.4.7")", "implementation("com.sksamuel.hoplite:hoplite-yaml:1.4.7")" and "implementation("com.sksamuel.hoplite:hoplite-hikaricp:1.4.7")".
+8. Android cannot resolve sqldroid, so this dependency line must be placed in build.gradle: "implementation('org.sqldroid:sqldroid:1.0.3')".
 
-9. Android cannot resolve sqldroid, so this dependency line must be placed in build.gradle: "implementation('org.sqldroid:sqldroid:1.0.3')".
+9. Android cannot resolve "com.nimbusds.jose", so this dependency line must be placed in build.gradle: "implementation 'com.nimbusds:nimbus-jose-jwt:9.15.1'"
 
-10. Android cannot resolve "com.nimbusds.jose", so this dependency line must be placed in build.gradle: "implementation 'com.nimbusds:nimbus-jose-jwt:9.15.1'"
-
-11. Android cannot resolve some libraries located in alternative repositories, so this lines must be added to the list of maven repositories: 
+10. Android cannot resolve some libraries located in alternative repositories, so this lines must be added to the list of maven repositories: 
 * maven {
     url "https://maven.walt.id/repository/danubetech"
 }
@@ -103,7 +99,7 @@ The SSI Kit by walt.id is Open Source software released under the [Apache 2.0 li
     url "https://jitpack.io"
 }
 
-12. Android cannot resolve keyFormats, so this dependency line must be placed in build.gradle:
+11. Android cannot resolve keyFormats, so this dependency line must be placed in build.gradle:
 * api("info.weboftrust:ld-signatures-java:0.5-SNAPSHOT") {
         exclude group:"net.jcip", module:"jcip-annotations"
     }
