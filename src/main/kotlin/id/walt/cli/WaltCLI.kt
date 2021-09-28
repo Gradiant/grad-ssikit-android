@@ -12,7 +12,10 @@ import id.walt.servicematrix.ServiceMatrix
 import id.walt.services.WaltIdServices
 import mu.KotlinLogging
 import org.apache.logging.log4j.Level
-
+//ANDROID PORT
+import java.io.File
+import java.io.FileInputStream
+//ANDROID PORT
 
 data class CliConfig(var dataDir: String, val properties: MutableMap<String, String>, var verbose: Boolean)
 
@@ -80,7 +83,9 @@ object WaltCLI {
 
             log.debug { "SSI Kit CLI starting..." }
 
-            ServiceMatrix("service-matrix.properties")
+            //ANDROID PORT
+            ServiceMatrix(FileInputStream(File("service-matrix.properties")))
+            //ANDROID PORT
 
             if (args.any { it == "--verbose" || it == "-v" }) {
                 WaltIdServices.setLogLevel(Level.DEBUG)

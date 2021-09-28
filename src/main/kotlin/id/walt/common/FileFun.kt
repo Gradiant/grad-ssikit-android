@@ -3,10 +3,6 @@ package id.walt.common
 import id.walt.services.essif.EssifClient
 import java.io.File
 
-//ANDROID PORT
-lateinit var androidDataDir: String
-//ANDROID PORT
-
 fun readEssif(fileName: String) = ClassLoader.getSystemResource("essif/${fileName}.json").readText(Charsets.UTF_8)
 
 fun readWhenContent(file: File, errorMessage: String? = null) = when {

@@ -18,6 +18,9 @@ import org.apache.logging.log4j.core.LoggerContext
 import org.apache.logging.log4j.core.config.LoggerConfig
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import id.walt.Values
+//ANDROID PORT
+import id.walt.servicematrix.utils.AndroidUtils.getAndroidDataDir
+//ANDROID PORT
 import java.io.File
 import java.nio.file.Files
 //ANDROID PORT
@@ -34,7 +37,7 @@ data class WaltIdConfig(
 object WaltIdServices {
 
     //ANDROID PORT
-    var androidDataDir = id.walt.common.androidDataDir
+    var androidDataDir = getAndroidDataDir()
     var dataDir = "$androidDataDir/data"
     var keyDir = "$dataDir/key/"
     var ebsiDir = "$dataDir/ebsi/"

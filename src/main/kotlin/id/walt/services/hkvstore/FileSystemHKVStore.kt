@@ -4,16 +4,24 @@ import id.walt.servicematrix.ServiceConfiguration
 import io.ktor.util.*
 import java.io.File
 import java.nio.file.Path
+//ANDROID PORT
+import kotlin.io.path.Path
+import id.walt.servicematrix.utils.AndroidUtils.getDataRoot
+//ANDROID PORT
 
 data class FilesystemStoreConfig(
     val dataRoot: String
 ) : ServiceConfiguration {
-    val dataDirectory: Path = Path.of(dataRoot)
+    //ANDROID PORT
+    val dataDirectory: Path = Path(dataRoot)
+    //ANDROID PORT
 }
 
-class FileSystemHKVStore(configurationPath: String) : HKVStoreService() {
+class FileSystemHKVStore() : HKVStoreService() {
 
-    override val configuration: FilesystemStoreConfig = fromConfiguration(configurationPath)
+    //ANDROID PORT
+    override val configuration: FilesystemStoreConfig = FilesystemStoreConfig(getDataRoot())
+    //ANDROID PORT
 
     override fun put(key: HKVKey, value: ByteArray) {
         dataDirCombinePath(key.toPath()).apply {

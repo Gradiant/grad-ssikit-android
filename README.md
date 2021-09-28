@@ -62,11 +62,14 @@ The SSI Kit by walt.id is Open Source software released under the [Apache 2.0 li
 
 10. WaltIdServices.kt -> java.nio.file.Path does not exist in Android. Instead, it was replaced by kotlin.io.path.Path.
 
-11. FileFun.kt -> Added androidDataDir variable to handle Android data path. 
+11. WaltIdServices.kt -> Changed path variables to handle Android data directory path.
 
-12. WaltIdServices.kt -> Changed path variables to handle Android data directory path.
+12. SqlDbManager.kt -> Android cannot execute common java driver jdbc, so it's needed to replace it with a port of this driver to Android: SqlDroid. The HikariDataSource tries to execute the function getNetworkTimeout that doesn't exist in java.sql.connection of Android. Instead, it was replaced with a common DriverManager.getConnection(). SqlDroid doesn't work fine with autocommit mode to false (database gets blocked after the first execution). Additionally, all manual commits were commented since they are useless now, and jdbcUrl is created based in the androidDataDir path set by the application.
 
-13. SqlDbManager.kt -> Android cannot execute common java driver jdbc, so it's needed to replace it with a port of this driver to Android: SqlDroid. The HikariDataSource tries to execute the function getNetworkTimeout that doesn't exist in java.sql.connection of Android. Instead, it was replaced with a common DriverManager.getConnection(). SqlDroid doesn't work fine with autocommit mode to false (database gets blocked after the first execution). Additionally, all manual commits were commented since they are useless now.
+13. WaltCLI.kt -> ServiceMatrix call was adjusted to the changes of the constructor.
+
+14. FileSystemHKVStore.kt -> FilesystemStoreConfig created from constructor using the dataRoot parameter set by the Android Application, instead of using fromConfiguration function. This was needed due to an error called previously ("Could not detect parser for file extension '.conf'").
+
 
 ## Android Application Requirements
 
@@ -104,3 +107,7 @@ The SSI Kit by walt.id is Open Source software released under the [Apache 2.0 li
         exclude group:"net.jcip", module:"jcip-annotations"
     }
 A duplicity issue appears after adding this library, so the module "jcip-annotations" must be excluded.
+
+12. Android cannot resolve klaxon, so this dependency line must be placed in build.gradle: "implementation("com.beust:klaxon:5.5")".
+
+13. Android needs a servicematrix.properties file placed in resources/raw. It contains the matrix of services to initialize, and must not contain conf files for the services. This resource should be obtained using the function "openRawResource" and the passed to the ServiceMatrix. To be able to initialize successfully the services, two functions need to be executed before the ServiceMatrix execution: "setAndroidDatDir" and "setDataRoot".

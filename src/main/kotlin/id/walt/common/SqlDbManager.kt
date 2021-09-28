@@ -5,6 +5,7 @@ import mu.KotlinLogging
 import java.sql.Connection
 import java.sql.Driver
 import java.sql.DriverManager
+import id.walt.servicematrix.utils.AndroidUtils.getAndroidDataDir
 //ANDROID PORT
 import java.sql.Statement
 
@@ -35,7 +36,7 @@ object SqlDbManager {
             throw RuntimeException("Failed to register SQLDroidDriver")
         }
 
-        androidDataDir = id.walt.common.androidDataDir
+        androidDataDir = getAndroidDataDir()
     }
     //ANDROID PORT
 
