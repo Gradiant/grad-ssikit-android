@@ -5,6 +5,9 @@ import java.net.URLDecoder
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 import java.nio.file.Path
+//ANDROID PORT
+import kotlin.io.path.Path
+//ANDROID PORT
 import java.util.*
 
 class HKVKey (
@@ -19,10 +22,14 @@ class HKVKey (
             subKeys.addAll(moreKeys)
     }
 
-    private fun forFS(value: String): String = URLEncoder.encode(value, StandardCharsets.UTF_8)
+    //ANDROID PORT
+    private fun forFS(value: String): String = URLEncoder.encode(value, StandardCharsets.UTF_8.toString())
+    //ANDROID PORT
 
     fun toPath(): Path {
-        return Path.of(forFS(rootKey), *subKeys.map { forFS(it) }.toTypedArray())
+        //ANDROID PORT
+        return Path(forFS(rootKey), *subKeys.map { forFS(it) }.toTypedArray())
+        //ANDROID PORT
     }
 
     override fun toString(): String {

@@ -70,6 +70,7 @@ The SSI Kit by walt.id is Open Source software released under the [Apache 2.0 li
 
 14. FileSystemHKVStore.kt -> FilesystemStoreConfig created from constructor using the dataRoot parameter set by the Android Application, instead of using fromConfiguration function. This was needed due to an error called previously ("Could not detect parser for file extension '.conf'").
 
+15. HKVKey.kt -> Path.of method does not exist in Android SDK, so it was replaced by Path() constructor from "kotlin.io.path.Path".
 
 ## Android Application Requirements
 
