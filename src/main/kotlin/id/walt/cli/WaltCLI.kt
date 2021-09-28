@@ -17,6 +17,7 @@ import java.io.File
 import java.io.FileInputStream
 //ANDROID PORT
 
+
 data class CliConfig(var dataDir: String, val properties: MutableMap<String, String>, var verbose: Boolean)
 
 private val log = KotlinLogging.logger {}
@@ -113,7 +114,8 @@ object WaltCLI {
                         VcTemplatesCommand().subcommands(
                             VcTemplatesListCommand(),
                             VcTemplatesExportCommand()
-                        )
+                        ),
+                        vcImportCommand()
                     ),
                     EssifCommand().subcommands(
                         EssifOnboardingCommand(),

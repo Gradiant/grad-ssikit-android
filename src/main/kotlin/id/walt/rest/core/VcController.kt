@@ -73,7 +73,12 @@ object VcController {
 
     fun present(ctx: Context) {
         val presentVcReq = ctx.bodyAsClass(PresentVcRequest::class.java)
-        ctx.result(credentialService.present(presentVcReq.vc, presentVcReq.domain, presentVcReq.challenge))
+        ctx.result(credentialService.present(
+            listOf(presentVcReq.vc),
+            presentVcReq.holderDid,
+            presentVcReq.domain,
+            presentVcReq.challenge
+        ))
     }
 
     fun presentDocs() = document().operation {

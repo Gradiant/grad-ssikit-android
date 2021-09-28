@@ -12,46 +12,62 @@ import id.walt.vclib.VcLibManager
 import id.walt.vclib.model.VerifiableCredential
 import id.walt.vclib.vclist.VerifiablePresentation
 import info.weboftrust.ldsignatures.LdProof
+//ANDROID PORT
 import mu.KotlinLogging
+//ANDROID PORT
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.*
 //ANDROID PORT
 import kotlin.streams.toList
+
+//private val log = KotlinLogging.logger {}
 //ANDROID PORT
 
-private val log = KotlinLogging.logger {}
+private const val JWT_VC_CLAIM = "vc"
+private const val JWT_VP_CLAIM = "vp"
 
 open class WaltIdJwtCredentialService : JwtCredentialService() {
 
     private val jwtService = JwtService.getService()
-    val JWT_VC_CLAIM = "vc"
-    val JWT_VP_CLAIM = "vp"
 
     override fun sign(jsonCred: String, config: ProofConfig): String {
-        log.debug { "Signing JWT object with config: $config" }
+        //ANDROID PORT
+        //log.debug { "Signing JWT object with config: $config" }
+        //ANDROID PORT
+
         val issuerDid = config.issuerDid
         val issueDate = config.issueDate ?: Date()
-        val crd = jsonCred.toCredential()
-        val payload = JWTClaimsSet.Builder()
+        val validDate = config.validDate ?: Date()
+        val jwtClaimsSet = JWTClaimsSet.Builder()
             .jwtID(config.id)
             .issuer(issuerDid)
-            .subject(config.subjectDid)
             .issueTime(issueDate)
-            .notBeforeTime(issueDate)
+            .notBeforeTime(validDate)
             .expirationTime(config.expirationDate)
-            .claim(when(crd) {
-                is VerifiablePresentation -> JWT_VP_CLAIM
-                else -> JWT_VC_CLAIM
-             }, crd.toMap())
-            .build().toString()
 
-        log.debug { "Signing: $payload" }
+        when(val crd = jsonCred.toCredential()) {
+                is VerifiablePresentation -> jwtClaimsSet
+                    .audience(config.verifierDid!!)
+                            .claim("nonce", config.nonce!!)
+                        .claim(JWT_VP_CLAIM, crd.toMap())
+                    else -> jwtClaimsSet
+                    .subject(config.subjectDid)
+                            .claim(JWT_VC_CLAIM, crd.toMap())
+                }
+
+        val payload = jwtClaimsSet.build().toString()
+        //ANDROID PORT
+        //log.debug { "Signing: $payload" }
+        //ANDROID PORT
+
         return jwtService.sign(issuerDid, payload)
     }
 
     override fun verifyVc(issuerDid: String, vc: String): Boolean {
-        log.debug { "Verifying vc: $vc with issuerDid: $issuerDid" }
+        //ANDROID PORT
+        //log.debug { "Verifying vc: $vc with issuerDid: $issuerDid" }
+        //ANDROID PORT
         return SignedJWT.parse(vc).header.keyID == issuerDid && verifyVc(vc)
     }
 
@@ -65,32 +81,34 @@ open class WaltIdJwtCredentialService : JwtCredentialService() {
         }
 
     override fun verifyVc(vc: String): Boolean {
-        log.debug { "Verifying vc: $vc" }
+        //ANDROID PORT
+        //log.debug { "Verifying vc: $vc" }
+        //ANDROID PORT
         return JwtService.getService().verify(vc)
     }
 
     override fun verifyVp(vp: String): Boolean =
         verifyVc(vp)
 
-    override fun present(vc: String): String {
-        log.debug { "Creating a presentation for VC:\n$vc" }
+    override fun present(vcs: List<String>, holderDid: String, verifierDid: String, challenge: String): String {
+        //ANDROID PORT
+        //log.debug { "Creating a presentation for VCs:\n$vcs" }
+        //ANDROID PORT
 
-        val vpReqStr = VerifiablePresentation(
-            id = "id",
-            verifiableCredential = listOf(vc.toCredential())
-        ).encode()
+        val id = "urn:uuid:${UUID.randomUUID()}"
+        val config = ProofConfig(issuerDid = holderDid, verifierDid = verifierDid, proofType = ProofType.JWT, nonce = challenge, id = id)
+        val vpReqStr = VerifiablePresentation(verifiableCredential = vcs.map { it.toCredential() }).encode()
 
-        log.trace { "VP request:\n$vpReqStr" }
+        //ANDROID PORT
+        //log.trace { "VP request: $vpReqStr" }
+        //log.trace { "Proof config: $$config" }
+        //ANDROID PORT
 
-        val holderDid = VcUtils.getHolder(vc.toCredential())
-        val proofConfig = ProofConfig(
-            issuerDid = holderDid,
-            subjectDid = holderDid,
-            proofType = ProofType.JWT
-        )
-        val vp = sign(vpReqStr, proofConfig)
+        val vp = sign(vpReqStr, config)
 
-        log.debug { "VP created:$vp" }
+        //ANDROID PORT
+        //log.debug { "VP created:$vp" }
+        //ANDROID PORT
         return vp
     }
 
