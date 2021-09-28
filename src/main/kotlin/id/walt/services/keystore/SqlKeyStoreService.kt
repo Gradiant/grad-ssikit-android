@@ -22,8 +22,10 @@ open class SqlKeyStoreService : KeyStoreService() {
         SqlDbManager.getConnection().use { connection ->
             connection.apply {
                 prepareStatement(
-                    "insert into lt_key (name, priv, pub, algorithm, provider) values (?, ?, ?, ?, ?)",
-                    RETURN_GENERATED_KEYS
+                    //ANDROID PORT
+                    "insert into lt_key (name, priv, pub, algorithm, provider) values (?, ?, ?, ?, ?)"
+                    //RETURN_GENERATED_KEYS
+                    //ANDROID PORT
                 ).use { statement ->
                     key.run {
                         listOf(
@@ -37,7 +39,9 @@ open class SqlKeyStoreService : KeyStoreService() {
 
                     when {
                         statement.executeUpdate() == UPDATE_SUCCESS -> {
-                            commit()
+                            //ANDROID PORT
+                            //commit()
+                            //ANDROID PORT
                             log.trace { "Key \"${key}\" saved successfully." }
                         }
                         else -> {
@@ -70,7 +74,9 @@ open class SqlKeyStoreService : KeyStoreService() {
                         )
                     }
                 }
-                connection.commit()
+                //ANDROID PORT
+                //connection.commit()
+                //ANDROID PORT
             }
         }
         return key ?: throw IllegalArgumentException("Could not load key: $keyId")
@@ -89,7 +95,9 @@ open class SqlKeyStoreService : KeyStoreService() {
                         if (rs.next()) {
                             val id = rs.getString("name")
                             log.trace { "keyId \"${id}\" loaded." }
-                            con.commit()
+                            //ANDROID PORT
+                            //con.commit()
+                            //ANDROID PORT
                             return id
                         }
                     }
@@ -121,7 +129,9 @@ open class SqlKeyStoreService : KeyStoreService() {
                     }
                 }
             } finally {
-                con.commit()
+                //ANDROID PORT
+                //con.commit()
+                //ANDROID PORT
             }
         }
     }
@@ -205,7 +215,9 @@ open class SqlKeyStoreService : KeyStoreService() {
                     }
                 }
             }
-            con.commit()
+            //ANDROID PORT
+            //con.commit()
+            //ANDROID PORT
         }
         return keys
     }
@@ -273,7 +285,9 @@ open class SqlKeyStoreService : KeyStoreService() {
                     stmt.setString(1, alias)
                     stmt.executeUpdate()
                 }
-            con.commit()
+            //ANDROID PORT
+            //con.commit()
+            //ANDROID PORT
         }
     }
 

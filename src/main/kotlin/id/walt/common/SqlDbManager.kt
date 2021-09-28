@@ -23,6 +23,9 @@ object SqlDbManager {
 
     // TODO: Should be configurable
     val recreateDb = false
+    //ANDROID PORT
+    private lateinit var androidDataDir: String
+    //ANDROID PORT
 
     //ANDROID PORT
     init {
@@ -31,10 +34,8 @@ object SqlDbManager {
         } catch (e: Exception) {
             throw RuntimeException("Failed to register SQLDroidDriver")
         }
-        val androidDataDir = id.walt.common.androidDataDir
-        val jdbcUrl = "jdbc:sqldroid:$androidDataDir/data/walt.db"
-        connection = DriverManager.getConnection(jdbcUrl)
-        connection.autoCommit = false
+
+        androidDataDir = id.walt.common.androidDataDir
     }
     //ANDROID PORT
 
@@ -89,12 +90,16 @@ object SqlDbManager {
                             "alias string unique)"
                 )
             }
-            con.commit()
+            //ANDROID PORT
+            //con.commit()
+            //ANDROID PORT
         }
     }
 
     //ANDROID PORT
     fun getConnection(): Connection {
+        val jdbcUrl = "jdbc:sqldroid:$androidDataDir/data/walt.db"
+        connection = DriverManager.getConnection(jdbcUrl)
         // var connection = DriverManager.getConnection(JDBC_URL)
         return connection
     }

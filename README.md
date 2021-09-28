@@ -66,7 +66,7 @@ The SSI Kit by walt.id is Open Source software released under the [Apache 2.0 li
 
 12. WaltIdServices.kt -> Changed path variables to handle Android data directory path.
 
-13. SqlDbManager.kt -> Android cannot execute common java driver jdbc, so it's needed to replace it with a port of this driver to Android: SqlDroid. The HikariDataSource tries to execute the function getNetworkTimeout that doesn't exist in java.sql.connection of Android. Instead, it was replaced with a common DriverManager.getConnection(). SqlDroid doesn't allow autocommit mode to false, so it had to be changed to true. Additionally, all manual commits were commented since they are useless now.
+13. SqlDbManager.kt -> Android cannot execute common java driver jdbc, so it's needed to replace it with a port of this driver to Android: SqlDroid. The HikariDataSource tries to execute the function getNetworkTimeout that doesn't exist in java.sql.connection of Android. Instead, it was replaced with a common DriverManager.getConnection(). SqlDroid doesn't work fine with autocommit mode to false (database gets blocked after the first execution). Additionally, all manual commits were commented since they are useless now.
 
 ## Android Application Requirements
 
