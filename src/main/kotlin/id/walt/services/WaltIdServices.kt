@@ -16,9 +16,7 @@ import org.apache.logging.log4j.Level
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.core.LoggerContext
 import org.apache.logging.log4j.core.config.LoggerConfig
-//ANDROID PORT
-import org.spongycastle.jce.provider.BouncyCastleProvider
-//ANDROID PORT
+import org.bouncycastle.jce.provider.BouncyCastleProvider
 import id.walt.Values
 import java.io.File
 import java.nio.file.Files
@@ -70,7 +68,10 @@ object WaltIdServices {
 
         // BC is required for
         // - secp256k1 curve
+        //ANDROID PORT
+        Security.removeProvider("BC")
         Security.addProvider(BouncyCastleProvider())
+        //ANDROID PORT
 
         TinkConfig.register()
 
