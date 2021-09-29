@@ -26,6 +26,10 @@ repositories {
 }
 
 dependencies {
+    //ANDROID PORT
+    //VC & Service-Matrix Ported Versions
+    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
+    //ANDROID PORT
     // Crypto
     api("com.google.crypto.tink:tink:1.6.1")
     api("info.weboftrust:ld-signatures-java:0.5-SNAPSHOT")
@@ -44,7 +48,6 @@ dependencies {
     // VC
     //ANDROID PORT
     //implementation("id.walt:waltid-ssikit-vclib:1.4.7")
-    implementation(files("./libs/waltid-ssikit-vclib-1.4.8-SNAPSHOT.jar"))
     //ANDROID PORT
 
     // JSON
@@ -87,7 +90,6 @@ dependencies {
     // Service-Matrix
     //ANDROID PORT
     //implementation("id.walt.servicematrix:WaltID-ServiceMatrix:1.0.1")
-    implementation(files("./libs/WaltID-ServiceMatrix-1.0.1.jar"))
     //ANDROID PORT
 
     // Kotlin

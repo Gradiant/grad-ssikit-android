@@ -8,7 +8,9 @@ fun toParamMap(paramString: String): Map<String, String> {
     val paramMap = HashMap<String, String>()
     val pairs = paramString.split("&")
     pairs.forEach {
-        paramMap[it.substringBefore("=")] = URLDecoder.decode(it.substringAfter("="), StandardCharsets.UTF_8)
+        //ANDROID PORT
+        paramMap[it.substringBefore("=")] = URLDecoder.decode(it.substringAfter("="), StandardCharsets.UTF_8.toString())
+        //ANDROID PORT
     }
     return paramMap
 }

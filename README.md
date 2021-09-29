@@ -72,6 +72,12 @@ The SSI Kit by walt.id is Open Source software released under the [Apache 2.0 li
 
 15. HKVKey.kt -> Path.of method does not exist in Android SDK, so it was replaced by Path() constructor from "kotlin.io.path.Path".
 
+16. Every ServiceMatrix(string) appearance in the tests has been replaced by ServiceMatrix(FileInputStream) since this constructor was changed to easily support Android resource files.
+
+17. build.gradle.kts -> implementation of single jars replaced for all jars in libs folder.
+
+18. Several appareances of URLDecoder.decode(string, charset) were replaced for URLDecoder.decode(string, string) as it is the only supported invocation of this function in Android SDK.
+
 ## Android Application Requirements
 
 1. Place the jars of waltid-ssikit, waltid-vclib, waltid-servicematrix in app/libs. Add those libraries to the project with the following line "implementation fileTree(include: ['*.jar'], dir: './libs')" inside the build.gradle of the project.
