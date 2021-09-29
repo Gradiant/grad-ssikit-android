@@ -115,7 +115,7 @@ object WaltCLI {
                             VcTemplatesListCommand(),
                             VcTemplatesExportCommand()
                         ),
-                        vcImportCommand()
+                        VcImportCommand()
                     ),
                     EssifCommand().subcommands(
                         EssifOnboardingCommand(),

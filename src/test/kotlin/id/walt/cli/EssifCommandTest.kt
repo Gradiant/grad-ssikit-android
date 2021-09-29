@@ -16,6 +16,9 @@ import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import java.io.File
+//ANDROID PORT
+import java.io.FileInputStream
+//ANDROID PORT
 import kotlin.time.ExperimentalTime
 import kotlin.time.minutes
 import kotlin.time.seconds
@@ -48,10 +51,14 @@ class EssifCommandTest : StringSpec({
     val bearerToken = File("data/ebsi/bearer-token.txt")
     val enableTests = bearerToken.exists()
 
-    ServiceMatrix("service-matrix.properties")
+    //ANDROID PORT
+    ServiceMatrix(
+        FileInputStream(File("service-matrix.properties")))
+    //ANDROID PORT
 
     // DID used for onboarding
-    val key = KeyService.getService().generate(KeyAlgorithm.ECDSA_Secp256k1)
+    val key = KeyService.getService().generate(KeyAlgorithm.EdDSA_Ed25519)
+    val ethKey = KeyService.getService().generate(KeyAlgorithm.ECDSA_Secp256k1)
     var did = DidService.create(DidMethod.ebsi, keyAlias = key.id)
     val identifier = DidUrl.from(did).identifier
 
@@ -88,7 +95,7 @@ class EssifCommandTest : StringSpec({
         retry(9, 2.minutes, delay = 4.seconds) {
             println("Registering did")
             shouldNotThrowAny {
-                EssifDidRegisterCommand().parse(listOf("--did", did))
+                EssifDidRegisterCommand().parse(listOf("--did", did, "--eth-key", ethKey.id))
             }
         }
         HKVStoreService.getService().delete(HKVKey("ebsi", identifier), true)

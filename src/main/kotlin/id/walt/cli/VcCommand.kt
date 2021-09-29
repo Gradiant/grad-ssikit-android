@@ -69,9 +69,9 @@ class VcIssueCommand : CliktCommand(
         if (interactive) {
             val cliDataProvider = CLIDataProviders.getCLIDataProviderFor(template)
             if (cliDataProvider == null) {
-                    echo("No interactive data provider available for template: $template")
-                    return
-                }
+                echo("No interactive data provider available for template: $template")
+                return
+            }
             val templ = VcTemplateManager.loadTemplate(template)
             DataProviderRegistry.register(templ::class, cliDataProvider)
         }
@@ -95,17 +95,17 @@ class VcIssueCommand : CliktCommand(
 class VcImportCommand : CliktCommand(
     name = "import",
     help = "Import VC to custodian store"
-        ) {
+) {
 
     val src: File by argument().file()
 
     override fun run() {
-            if (src.exists()) {
-                    val cred = src.readText().toCredential()
-                    val storeId = cred.id ?: "custodian#${UUID.randomUUID()}"
-                    CustodianService.getService().storeCredential(storeId, cred)
-                    println("Credential stored as $storeId")
-                }
+        if (src.exists()) {
+                val cred = src.readText().toCredential()
+                val storeId = cred.id ?: "custodian#${UUID.randomUUID()}"
+                CustodianService.getService().storeCredential(storeId, cred)
+                println("Credential stored as $storeId")
+            }
         }
 }
 

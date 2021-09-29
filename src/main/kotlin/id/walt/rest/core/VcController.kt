@@ -22,6 +22,7 @@ data class CreateVcRequest(
 @Serializable
 data class PresentVcRequest(
     val vc: String,
+    val holderDid: String,
     val domain: String?,
     val challenge: String?
 )

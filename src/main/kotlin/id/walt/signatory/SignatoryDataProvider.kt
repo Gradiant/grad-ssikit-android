@@ -30,6 +30,7 @@ class VerifiableIdDataProvider : SignatoryDataProvider {
 
     override fun populate(template: VerifiableCredential, proofConfig: ProofConfig): VerifiableId {
         val vc = template as VerifiableId
+
         vc.id = proofConfig.id ?: "identity#verifiableID#${UUID.randomUUID()}"
         vc.issuer = proofConfig.issuerDid
         if (proofConfig.issueDate != null) vc.issuanceDate = dateFormat.format(proofConfig.issueDate)
@@ -38,6 +39,7 @@ class VerifiableIdDataProvider : SignatoryDataProvider {
         vc.validFrom = vc.issuanceDate
         vc.credentialSubject!!.id = proofConfig.subjectDid
         vc.evidence!!.verifier = proofConfig.issuerDid
+
         return vc
     }
 }
@@ -46,6 +48,7 @@ class VerifiableDiplomaDataProvider : SignatoryDataProvider {
 
     override fun populate(template: VerifiableCredential, proofConfig: ProofConfig): VerifiableDiploma {
         val vc = template as VerifiableDiploma
+
         vc.id = proofConfig.id ?: "education#higherEducation#${UUID.randomUUID()}"
         vc.issuer = proofConfig.issuerDid
         if (proofConfig.issueDate != null) vc.issuanceDate = dateFormat.format(proofConfig.issueDate)
@@ -53,6 +56,7 @@ class VerifiableDiplomaDataProvider : SignatoryDataProvider {
         if (proofConfig.expirationDate != null) vc.expirationDate = dateFormat.format(proofConfig.expirationDate)
         vc.credentialSubject!!.id = proofConfig.subjectDid
         vc.credentialSubject!!.awardingOpportunity!!.awardingBody.id = proofConfig.issuerDid
+
         return vc
     }
 }

@@ -47,14 +47,14 @@ open class WaltIdJwtCredentialService : JwtCredentialService() {
             .expirationTime(config.expirationDate)
 
         when(val crd = jsonCred.toCredential()) {
-                is VerifiablePresentation -> jwtClaimsSet
-                    .audience(config.verifierDid!!)
-                            .claim("nonce", config.nonce!!)
-                        .claim(JWT_VP_CLAIM, crd.toMap())
-                    else -> jwtClaimsSet
-                    .subject(config.subjectDid)
-                            .claim(JWT_VC_CLAIM, crd.toMap())
-                }
+            is VerifiablePresentation -> jwtClaimsSet
+                .audience(config.verifierDid!!)
+                .claim("nonce", config.nonce!!)
+                .claim(JWT_VP_CLAIM, crd.toMap())
+            else -> jwtClaimsSet
+                .subject(config.subjectDid)
+                .claim(JWT_VC_CLAIM, crd.toMap())
+        }
 
         val payload = jwtClaimsSet.build().toString()
         //ANDROID PORT

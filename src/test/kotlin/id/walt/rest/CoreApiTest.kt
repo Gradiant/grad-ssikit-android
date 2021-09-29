@@ -39,13 +39,18 @@ import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
 import org.apache.commons.lang3.StringUtils.countMatches
 import java.io.File
+//ANDROID PORT
+import java.io.FileInputStream
+//ANDROID PORT
 import java.sql.Timestamp
 import java.time.LocalDateTime
 
 class CoreApiTest : AnnotationSpec() {
 
     init {
-        ServiceMatrix("$RESOURCES_PATH/service-matrix.properties")
+        //ANDROID PORT
+        ServiceMatrix(FileInputStream(File("$RESOURCES_PATH/service-matrix.properties")))
+        //ANDROID PORT
     }
 
     private val credentialService = JsonLdCredentialService.getService()
@@ -307,9 +312,9 @@ class CoreApiTest : AnnotationSpec() {
 
         val vp = client.post<String>("$CORE_API_URL/v1/vc/present") {
             contentType(ContentType.Application.Json)
-            body = PresentVcRequest(vcStr, "domain.com", "nonce")
+            body = PresentVcRequest(vcStr, subjectDid, "domain.com", "nonce")
         }
-        countMatches(vp, "proof") shouldBe 2
+        countMatches(vp, "\"proof\"") shouldBe 2
 
         val result = client.post<VerificationResult>("$CORE_API_URL/v1/vc/verify") {
             contentType(ContentType.Application.Json)

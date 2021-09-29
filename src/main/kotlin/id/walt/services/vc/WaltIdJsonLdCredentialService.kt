@@ -142,12 +142,6 @@ open class WaltIdJsonLdCredentialService : JsonLdCredentialService() {
     //            throw Exception("Could not load signing key for $issuerDid")
     //        }
     //
-    //        val issuerKeys = KeyManagementService.loadKeys(issuerDid)
-    //        if (issuerKeys == null) {
-    //            log.error { "Could not load signing key for $issuerDid" }
-    //            throw Exception("Could not load signing key for $issuerDid")
-    //        }
-    //
     //        val signer = when (signatureType) {
     //            SignatureType.Ed25519Signature2018 -> Ed25519Signature2018LdSigner(issuerKeys.getPrivateAndPublicKey())
     //            SignatureType.EcdsaSecp256k1Signature2019 -> EcdsaSecp256k1Signature2019LdSigner(ECKey.fromPrivate(issuerKeys.getPrivKey()))
@@ -285,18 +279,18 @@ open class WaltIdJsonLdCredentialService : JsonLdCredentialService() {
     //    }
 
     override fun present(vcs: List<String>, holderDid: String, domain: String?, challenge: String?): String {
-            log.debug { "Creating a presentation for VCs:\n$vcs" }
+        log.debug { "Creating a presentation for VCs:\n$vcs" }
 
-            val id = "urn:uuid:${UUID.randomUUID()}"
-            val config = ProofConfig(
-                    issuerDid = holderDid,
-                    issuerVerificationMethod = DidService.getAuthenticationMethods(holderDid)!![0],
-                    proofPurpose = "authentication",
-                    proofType = ProofType.LD_PROOF,
-                    domain = domain,
-                    nonce = challenge,
-                    id = id
-                        )
+        val id = "urn:uuid:${UUID.randomUUID()}"
+        val config = ProofConfig(
+            issuerDid = holderDid,
+            issuerVerificationMethod = DidService.getAuthenticationMethods(holderDid)!![0],
+            proofPurpose = "authentication",
+            proofType = ProofType.LD_PROOF,
+            domain = domain,
+            nonce = challenge,
+            id = id
+        )
         val vpReqStr = VerifiablePresentation(
             id = id,
             holder = holderDid,
