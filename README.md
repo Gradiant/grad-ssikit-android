@@ -84,6 +84,8 @@ The SSI Kit by walt.id is Open Source software released under the [Apache 2.0 li
 
 21. build.gradle.kts -> Related to previous point, the jni was added with the following dependency "fr.acinq.secp256k1:secp256k1-kmp:0.6.0".
 
+22. WaltIdDidEbsiService.kt -> BigInteger.TWO does not exist in Android, so it was replaced by BigInteger.ONE.add(BigInteger.ONE). 
+
 ## Android Application Requirements
 
 1. Place the jars of waltid-ssikit, waltid-vclib, waltid-servicematrix in app/libs. Add those libraries to the project with the following line "implementation fileTree(include: ['*.jar'], dir: './libs')" inside the build.gradle of the project.

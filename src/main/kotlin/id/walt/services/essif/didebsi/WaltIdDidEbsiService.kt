@@ -110,7 +110,9 @@ open class WaltIdDidEbsiService : DidEbsiService() {
 //        val sig = toECDSASignature(cs.sign(key.keyId, encodedTx), key.algorithm)
         val v = BigInteger
             .valueOf(keyService.getRecoveryId(ethKeyAlias, encodedTx, sig).toLong())
-            .add(chainId.multiply(BigInteger.TWO))
+            //ANDROID PORT
+            .add(chainId.multiply(BigInteger.ONE.add(BigInteger.ONE)))
+            //ANDROID PORT
             .add(BigInteger.valueOf(35L))
 
         signatureData = Sign.SignatureData(v.toByteArray(), sig.r.toByteArray(), sig.s.toByteArray())
