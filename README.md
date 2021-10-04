@@ -78,6 +78,12 @@ The SSI Kit by walt.id is Open Source software released under the [Apache 2.0 li
 
 18. Several appareances of URLDecoder.decode(string, charset) were replaced for URLDecoder.decode(string, string) as it is the only supported invocation of this function in Android SDK.
 
+19. WaltIdProvider.kt -> java.security.provider constructor of Android SDK doesn't allow the version to be a String, so the parameter versionNum was added to Values.kt. 
+
+20. WaltIdJwtService -> BouncyCastle ECDSA functions doesn't seem to work for Secp256k1 curve, as it is not natively supported in Android. Several signers from different libraries were tested, but all of them got a "OpenSSLX509CertificateFactory$ParsingException". The solution taken uses a jni to directly interact with the native secp256k1 code, and it led to the creation of a AndroidECDSASigner and AndroidECDSAVerifier.
+
+21. build.gradle.kts -> Related to previous point, the jni was added with the following dependency "fr.acinq.secp256k1:secp256k1-kmp:0.6.0".
+
 ## Android Application Requirements
 
 1. Place the jars of waltid-ssikit, waltid-vclib, waltid-servicematrix in app/libs. Add those libraries to the project with the following line "implementation fileTree(include: ['*.jar'], dir: './libs')" inside the build.gradle of the project.
@@ -121,3 +127,5 @@ A duplicity issue appears after adding this library, so the module "jcip-annotat
 
 14. A modified version of jsonld-common-java and titanium-json-ld libraries need to be used, in order to substitute the java.net.http.httpclient used in them for a okhttp3client. This libraries will be placed in the libs folder aswell. In order to use the modified version and not the one implemented in gradle, it is needed to add this line: "exclude group: "decentralized-identity", module: "jsonld-common-java"" to the dependency line: "api("info.weboftrust:ld-signatures-java:0.5-SNAPSHOT")".
 * Just to clarify: Before doing this solution, the local import of the java.net.http.httpclient from jdk 11 was tried without success. It solved the dependency issue of the httpclient, but one new issue appeared: "No static method getInteger(String) in NetProperties".
+
+15. Android cannot resolve the secp256k1-kmp-jni-android, so this dependency line must be placed in build.gradle: "implementation("fr.acinq.secp256k1:secp256k1-kmp-jni-android:0.6.0")".

@@ -5,11 +5,18 @@ import com.nimbusds.jose.crypto.*
 import com.nimbusds.jose.jwk.Curve
 import com.nimbusds.jose.jwk.OctetKeyPair
 import com.nimbusds.jose.jwk.gen.OctetKeyPairGenerator
+//ANDROID PORT
+import com.nimbusds.jose.util.Base64URL
+//ANDROID PORT
 import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.SignedJWT
 import mu.KotlinLogging
 import id.walt.crypto.*
 import id.walt.services.key.KeyService
+//ANDROID PORT
+import id.walt.services.keystore.KeyType
+import java.security.interfaces.ECPrivateKey
+//ANDROID PORT
 import java.security.interfaces.ECPublicKey
 import java.util.*
 
@@ -86,7 +93,9 @@ class WaltIdJwtService : JwtService() {
             .expirationTime(Date(Date().time + 60 * 1000))
             .build()
 
-        val issuerKey = keyService.load(keyAlias)
+        //ANDROID PORT
+        val issuerKey = keyService.load(keyAlias, KeyType.PRIVATE)
+        //ANDROID PORT
         if (issuerKey == null) {
             log.error { "Could not load signing key for $keyAlias" }
             throw Exception("Could not load signing key for $keyAlias")
@@ -103,13 +112,14 @@ class WaltIdJwtService : JwtService() {
                 jwt
             }
             KeyAlgorithm.ECDSA_Secp256k1 -> {
+                //ANDROID PORT
+                val signature = AndroidECDSASigner.sign(issuerKey.keyPair!!.private as ECPrivateKey, payload)
                 val jwt = SignedJWT(
-                    JWSHeader.Builder(JWSAlgorithm.ES256K).keyID(keyAlias).type(JOSEObjectType.JWT).build(),
-                    claimsSet
+                    JWSHeader.Builder(JWSAlgorithm.ES256K).keyID(keyAlias).type(JOSEObjectType.JWT).build().toBase64URL(),
+                    Base64URL.encode(payload),
+                    signature
                 )
-                val jwsSigner = ECDSASigner(PrivateKeyHandle(issuerKey.keyId), Curve.SECP256K1)
-                jwsSigner.jcaContext.provider = WaltIdProvider()
-                jwt.sign(jwsSigner)
+                //ANDROID PORT
                 jwt
             }
             else -> {
@@ -138,10 +148,9 @@ class WaltIdJwtService : JwtService() {
         val res = when (verifierKey.algorithm) {
             KeyAlgorithm.EdDSA_Ed25519 -> jwt.verify(Ed25519Verifier(keyService.toEd25519Jwk(verifierKey)))
             KeyAlgorithm.ECDSA_Secp256k1 -> {
-                val verifier =
-                    ECDSAVerifier(PublicKeyHandle(verifierKey.keyId, verifierKey.getPublicKey() as ECPublicKey))
-                verifier.jcaContext.provider = WaltIdProvider()
-                jwt.verify(verifier)
+                //ANDROID PORT
+                AndroidECDSAVerifier.verify(jwt.signature.decode(), jwt.payload.toBytes(), verifierKey.getPublicKey() as ECPublicKey)
+                //ANDROID PORT
             }
             else -> {
                 log.error { "Algorithm ${verifierKey.algorithm} not supported" }

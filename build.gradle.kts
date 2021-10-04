@@ -55,6 +55,11 @@ dependencies {
     implementation("com.beust:klaxon:5.5")
     //implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
 
+    //ANDROID PORT
+    //Secp256k1
+    implementation("fr.acinq.secp256k1:secp256k1-kmp:0.6.0")
+    //ANDROID PORT
+
     // DB
     implementation("org.xerial:sqlite-jdbc:3.36.0.2")
     implementation("com.zaxxer:HikariCP:5.0.0")
