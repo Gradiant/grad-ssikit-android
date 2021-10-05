@@ -86,6 +86,8 @@ The SSI Kit by walt.id is Open Source software released under the [Apache 2.0 li
 
 22. WaltIdDidEbsiService.kt -> BigInteger.TWO does not exist in Android, so it was replaced by BigInteger.ONE.add(BigInteger.ONE). 
 
+23. CryptFun.kt -> LazySodiumJava cannot be executed by an Android environment. Instead, the LazySodiumAndroid variant must be used. As this is a Java library, and it cannot import the LazySodiumAndroid despite being able to resolve the dependency, the constructor was called using getKClass functions from ReflectionUtils.
+
 ## Android Application Requirements
 
 1. Place the jars of waltid-ssikit, waltid-vclib, waltid-servicematrix in app/libs. Add those libraries to the project with the following line "implementation fileTree(include: ['*.jar'], dir: './libs')" inside the build.gradle of the project.
@@ -131,3 +133,5 @@ A duplicity issue appears after adding this library, so the module "jcip-annotat
 * Just to clarify: Before doing this solution, the local import of the java.net.http.httpclient from jdk 11 was tried without success. It solved the dependency issue of the httpclient, but one new issue appeared: "No static method getInteger(String) in NetProperties".
 
 15. Android cannot resolve the secp256k1-kmp-jni-android, so this dependency line must be placed in build.gradle: "implementation("fr.acinq.secp256k1:secp256k1-kmp-jni-android:0.6.0")".
+
+16. Android cannot resolve LazySodiumAndroid, so this dependency line must be placed in build.gradle: "implementation("com.goterl:lazysodium-android:5.0.2")".

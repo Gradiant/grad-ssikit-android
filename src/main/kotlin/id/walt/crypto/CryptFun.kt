@@ -5,13 +5,19 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.databind.node.JsonNodeFactory
 import com.fasterxml.jackson.databind.node.ObjectNode
-import com.goterl.lazysodium.LazySodiumJava
-import com.goterl.lazysodium.SodiumJava
+//ANDROID PORT
+//import com.goterl.lazysodium.LazySodiumJava
+//import com.goterl.lazysodium.SodiumJava
+//ANDROID PORT
 import com.nimbusds.jose.JWSAlgorithm
 import com.nimbusds.jose.crypto.impl.ECDSA
 import com.nimbusds.jose.jwk.Curve
 import com.nimbusds.jose.jwk.ECKey
 import com.nimbusds.jose.util.Base64URL
+//ANDROID PORT
+import id.walt.servicematrix.utils.ReflectionUtils.getKClassByName
+import kotlin.reflect.full.createInstance
+//ANDROID PORT
 import io.ipfs.multibase.Base58
 import io.ipfs.multibase.Multibase
 import org.bouncycastle.asn1.DEROctetString
@@ -229,13 +235,13 @@ fun convertX25519PublicKeyToMultiBase58Btc(x25519PublicKey: ByteArray): String {
 // https://github.com/datkt/sodium
 fun convertPublicKeyEd25519ToCurve25519(ed25519PublicKey: ByteArray): ByteArray {
     // https://libsodium.gitbook.io/doc/advanced/ed25519-curve25519
-    val lazySodium = LazySodiumJava(SodiumJava())
+    //ANDROID PORT
+    val lazySodiumAndroidCallable = getKClassByName("com.goterl.lazysodium.LazySodiumAndroid").members.single {it.name == "convertPublicKeyEd25519ToCurve25519"}
+    val sodiumAndroid = getKClassByName("com.goterl.lazysodium.SodiumAndroid").createInstance()
+    val lazySodiumAndroid = getKClassByName("com.goterl.lazysodium.LazySodiumAndroid").constructors.first {it.parameters.size == 1}.call(sodiumAndroid)
     val dhPublicKey = ByteArray(32)
-    if (!lazySodium.convertPublicKeyEd25519ToCurve25519(
-            dhPublicKey,
-            ed25519PublicKey
-        )
-    ) throw RuntimeException("Could not convert Ed25519 to X25519 pubic key")
+    lazySodiumAndroidCallable.call(lazySodiumAndroid, dhPublicKey, ed25519PublicKey)
+    //ANDROID PORT
     return dhPublicKey
 }
 
