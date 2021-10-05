@@ -135,3 +135,8 @@ A duplicity issue appears after adding this library, so the module "jcip-annotat
 15. Android cannot resolve the secp256k1-kmp-jni-android, so this dependency line must be placed in build.gradle: "implementation("fr.acinq.secp256k1:secp256k1-kmp-jni-android:0.6.0")".
 
 16. Android cannot resolve LazySodiumAndroid, so this dependency line must be placed in build.gradle: "implementation("com.goterl:lazysodium-android:5.0.2")".
+* It is also needed to provide the libjnidispatch.so to the Android application, or an "Unsatisfied Link" error will raise. This file must be placed inside src/main/jniLibs/ARCHITECTURE/libjnidispatch.so. A good practice, to be able to run this app in any smartphone, is placing the libjnidispatch.so version of the most famous architectures in a directory tree like:
+jniLibs -> x86 -> libjnidispatch.so
+	-> x86_64 -> libjnidispatch.so
+	-> arm64-v8a -> libjnidispatch.so
+	-> armeabi-v7a -> libjnidispatch.so
