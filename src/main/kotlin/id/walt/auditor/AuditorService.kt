@@ -1,10 +1,18 @@
 package id.walt.auditor
 
+import id.walt.model.TrustedIssuer
+import id.walt.services.WaltIdServices.log
+import id.walt.services.did.DidService
+import id.walt.services.essif.TrustedIssuerClient
 import id.walt.services.vc.JsonLdCredentialService
 import id.walt.services.vc.JwtCredentialService
+import id.walt.services.vc.VcUtils
 import id.walt.vclib.Helpers.toCredential
 import id.walt.vclib.model.VerifiableCredential
 import id.walt.vclib.vclist.VerifiablePresentation
+//ANDROID PORT
+//import mu.KotlinLogging
+//ANDROID PORT
 
 // the following validation policies can be applied
 // - SIGNATURE
@@ -17,6 +25,10 @@ import id.walt.vclib.vclist.VerifiablePresentation
 // - REVOCATION_STATUS
 // - SECURE_CRYPTO
 // - HOLDER_BINDING (only for VPs)
+
+//ANDROID PORT
+//val log = KotlinLogging.logger {}
+//ANDROID PORT
 
 interface VerificationPolicy {
     val id: String
@@ -31,8 +43,7 @@ class SignaturePolicy : VerificationPolicy {
     override val description: String = "Verify by signature"
 
     override fun verify(vc: VerifiableCredential): Boolean {
-        return when(vc.jwt) {
-            // TODO: support JWT Presentation
+        return DidService.importKey(VcUtils.getIssuer(vc)) && when (vc.jwt) {
             null -> jsonLdCredentialService.verify(vc.json!!).verified
             else -> jwtCredentialService.verify(vc.jwt!!).verified
         }
@@ -41,7 +52,57 @@ class SignaturePolicy : VerificationPolicy {
 
 class JsonSchemaPolicy : VerificationPolicy { // Schema already validated by json-ld?
     override val description: String = "Verify by JSON schema"
-    override fun verify(vc: VerifiableCredential) = true // TODO validate policy
+        override fun verify(vc: VerifiableCredential): Boolean {
+
+            return when (vc) {
+                is VerifiablePresentation -> true
+                else -> DidService.loadOrResolveAnyDid(VcUtils.getIssuer(vc)) != null
+            }
+        }
+    }
+
+class TrustedIssuerRegistryPolicy : VerificationPolicy {
+        override val description: String = "Verify by trusted EBSI Trusted Issuer Registry record"
+        override fun verify(vc: VerifiableCredential): Boolean {
+
+            // VPs are not considered
+            if (vc is VerifiablePresentation) {
+                return true
+            }
+
+            val issuerDid = VcUtils.getIssuer(vc)
+
+            val resolvedIssuerDid = DidService.loadOrResolveAnyDid(issuerDid) ?: throw Exception("Could not resolve issuer DID $issuerDid")
+
+            if (resolvedIssuerDid.id != issuerDid) {
+                log.debug { "Resolved DID ${resolvedIssuerDid.id} does not match the issuer DID $issuerDid" }
+                return false
+            }
+
+            val tirRecord = try {
+                TrustedIssuerClient.getIssuer(issuerDid)
+            } catch (e: Exception) {
+                throw Exception("Could not resolve issuer TIR record of $issuerDid", e)
+            }
+
+            return validTrustedIssuerRecord(tirRecord)
+
+        }
+
+        private fun validTrustedIssuerRecord(tirRecord: TrustedIssuer): Boolean {
+            var issuerRecordValid = true
+
+            if (tirRecord.attributes[0].body != "eyJAY29udGV4dCI6Imh0dHBzOi8vZWJzaS5ldSIsInR5cGUiOiJhdHRyaWJ1dGUiLCJuYW1lIjoiaXNzdWVyIiwiZGF0YSI6IjVkNTBiM2ZhMThkZGUzMmIzODRkOGM2ZDA5Njg2OWRlIn0=") {
+                issuerRecordValid = false
+                log.debug { "Body of TIR record ${tirRecord} not valid." }
+            }
+
+            if (tirRecord.attributes[0].hash != "14f2d3c3320f65b6fd9413608e4c17f831e3c595ad61222ec12f899752348718") {
+                issuerRecordValid = false
+                log.debug { "Body of TIR record ${tirRecord} not valid." }
+            }
+            return issuerRecordValid
+        }
 }
 
 class TrustedIssuerDidPolicy : VerificationPolicy {
@@ -51,11 +112,18 @@ class TrustedIssuerDidPolicy : VerificationPolicy {
 
 class TrustedSubjectDidPolicy : VerificationPolicy {
     override val description: String = "Verify by trusted subject did"
-    override fun verify(vc: VerifiableCredential) = true // TODO validate policy
+    override fun verify(vc: VerifiableCredential): Boolean {
+
+        //TODO complete PoC implementation
+        return when (vc) {
+            is VerifiablePresentation -> true
+            else -> DidService.loadOrResolveAnyDid(VcUtils.getHolder(vc)) != null
+        }
+    }
 }
 
 object PolicyRegistry {
-    val policies = HashMap<String, VerificationPolicy>()
+    private val policies = LinkedHashMap<String, VerificationPolicy>()
     val defaultPolicyId: String
 
     fun register(policy: VerificationPolicy) = policies.put(policy.id, policy)
@@ -67,9 +135,10 @@ object PolicyRegistry {
         val sigPol = SignaturePolicy()
         defaultPolicyId = sigPol.id
         register(sigPol)
-        register(TrustedIssuerDidPolicy())
-        register(TrustedSubjectDidPolicy())
         register(JsonSchemaPolicy())
+        register(TrustedSubjectDidPolicy())
+        register(TrustedIssuerDidPolicy())
+        register(TrustedIssuerRegistryPolicy())
     }
 }
 
@@ -93,16 +162,16 @@ object AuditorService : IAuditor {
 
     private fun allAccepted(policyResults: Map<String, Boolean>) = policyResults.values.all { it }
 
-    override fun verify(vc: String, policies: List<VerificationPolicy>): VerificationResult {
-        val vc = vc.toCredential()
+    override fun verify(vcStr: String, policies: List<VerificationPolicy>): VerificationResult {
+        val vc = vcStr.toCredential()
         val policyResults = policies.associateBy(keySelector = VerificationPolicy::id) { policy ->
             policy.verify(vc) &&
-                    when (vc) {
-                        is VerifiablePresentation -> vc.verifiableCredential.all { cred ->
-                            policy.verify(cred)
-                        }
-                        else -> true
+                when (vc) {
+                    is VerifiablePresentation -> vc.verifiableCredential.all { cred ->
+                        policy.verify(cred)
                     }
+                    else -> true
+                }
         }
 
         return VerificationResult(allAccepted(policyResults), policyResults)

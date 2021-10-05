@@ -2,8 +2,8 @@ package id.walt.cli
 
 import com.github.ajalt.clikt.core.PrintHelpMessage
 import id.walt.auditor.PolicyRegistry
-import id.walt.model.DidMethod
 import id.walt.custodian.CustodianService
+import id.walt.model.DidMethod
 import id.walt.servicematrix.ServiceMatrix
 import id.walt.services.did.DidService
 import id.walt.services.vc.JsonLdCredentialService

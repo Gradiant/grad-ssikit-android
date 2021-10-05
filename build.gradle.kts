@@ -47,7 +47,7 @@ dependencies {
 
     // VC
     //ANDROID PORT
-    //implementation("id.walt:waltid-ssikit-vclib:1.4.7")
+    //implementation("id.walt:waltid-ssikit-vclib:1.4.9")
     //ANDROID PORT
 
     // JSON
@@ -146,6 +146,7 @@ val fatJar = task("fatJar", type = Jar::class) {
     //ANDROID PORT
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     //ANDROID PORT
+
     archiveBaseName.set("${project.name}-with-dependencies")
 
     manifest {

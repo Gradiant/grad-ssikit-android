@@ -10,6 +10,9 @@ import id.walt.model.DidMethod
 import id.walt.model.DidUrl
 import id.walt.services.did.DidService
 import java.io.File
+//ANDROID PORT
+import java.io.FileInputStream
+//ANDROID PORT
 import java.nio.file.Files
 import java.nio.file.Path
 
@@ -19,7 +22,9 @@ class DidServiceTest : AnnotationSpec() {
     private val RESOURCES_PATH: String = "src/test/resources"
 
     init {
-        ServiceMatrix("$RESOURCES_PATH/service-matrix.properties")
+        //ANDROID PORT
+        ServiceMatrix(FileInputStream(File("$RESOURCES_PATH/service-matrix.properties")))
+        //ANDROID PORT
     }
 
     fun readExampleDid(fileName: String) =
@@ -33,9 +38,8 @@ class DidServiceTest : AnnotationSpec() {
     @Test
     fun parseDidUrlTest() {
 
-        val did = Did("context")
-
         val didUrl = DidUrl("method", "identifier", "key1")
+        val did = Did("context", didUrl.did)
 
         "did:method:identifier#key1" shouldBe didUrl.url
 

@@ -30,7 +30,12 @@ class FileSystemHKVStore() : HKVStoreService() {
         }
     }
 
-    override fun getAsByteArray(key: HKVKey): ByteArray = dataDirCombinePath(key.toPath()).readBytes()
+    override fun getAsByteArray(key: HKVKey): ByteArray? = dataDirCombinePath(key.toPath()).run {
+        return when(exists()) {
+            true -> readBytes()
+            else -> null
+        }
+    }
 
     override fun listChildKeys(parent: HKVKey, recursive: Boolean): Set<HKVKey> =
         dataDirCombinePath(parent.toPath()).listFiles().let { pathFileList ->

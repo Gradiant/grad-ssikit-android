@@ -25,7 +25,9 @@ import java.util.*
 class WaltIdJwtCredentialServiceTest : AnnotationSpec() {
 
     init {
+        //ANDROID PORT
         ServiceMatrix(FileInputStream(File("$RESOURCES_PATH/service-matrix.properties")))
+        //ANDROID PORT
     }
 
     private val credentialService = JwtCredentialService.getService()

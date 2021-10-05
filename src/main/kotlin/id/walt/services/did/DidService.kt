@@ -323,6 +323,42 @@ object DidService {
     fun listDids(): List<String> =
         HKVStoreService.getService().listChildKeys(HKVKey("did", "created")).map { it.name }.toList()
 
+    fun loadOrResolveAnyDid(didStr: String): BaseDid? {
+        val url = DidUrl.from(didStr)
+        log.debug { "Loading or resolving $didStr" }
+        val storedDid = loadDid(didStr)
+        return when(storedDid) {
+            null -> when(url.method) {
+                DidMethod.key.name -> resolveDidKey(url)
+                DidMethod.ebsi.name -> kotlin.runCatching { resolveDidEbsi(didStr) }.getOrNull()
+                // TODO: implement did:web
+                else -> null
+            }?.apply { storeDid(didStr, this.encodePretty()) }
+            else -> BaseDid.decode(didStr, storedDid)
+        }
+    }
+
+    fun importKey(didStr: String): Boolean {
+        val anyDid = loadOrResolveAnyDid(didStr)
+        return anyDid?.run {
+            return when(method) {
+                DidMethod.ebsi -> {
+                    this as DidEbsi
+                    val pubKeyJwk = verificationMethod!![0].publicKeyJwk
+                    KeyService.getService().delete(id!!)
+                    pubKeyJwk!!.kid = id
+                    WaltIdServices.log.debug { "Importing key: ${pubKeyJwk.kid}" }
+                    KeyService.getService().import(Klaxon().toJsonString(pubKeyJwk))
+                    return true
+                }
+                else -> {
+                    // TODO: implement other did types
+                    return true
+                }
+            }
+        } ?: return false
+    }
+
 
     // TODO: consider the methods below. They might be deprecated!
 

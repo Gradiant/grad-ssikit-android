@@ -125,7 +125,9 @@ object WaltCLI {
                         EssifDidCommand().subcommands(
                             EssifDidRegisterCommand()
                         ),
-                        EssifTirCommand(),
+                        EssifTirCommand().subcommands(
+                            EssifTirGetIssuerCommand()
+                        ),
                         EssifTaorCommand(),
                         EssifTsrCommand()
                     ),

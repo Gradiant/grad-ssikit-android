@@ -1,8 +1,10 @@
 package id.walt.common
 
 //ANDROID PORT
-import mu.KotlinLogging
+//import mu.KotlinLogging
+//ANDROID PORT
 import java.sql.Connection
+//ANDROID PORT
 import java.sql.Driver
 import java.sql.DriverManager
 import id.walt.servicematrix.utils.AndroidUtils.getAndroidDataDir
@@ -11,7 +13,9 @@ import java.sql.Statement
 
 
 object SqlDbManager {
-    private val log = KotlinLogging.logger {}
+    //ANDROID PORT
+    //private val log = KotlinLogging.logger {}
+    //ANDROID PORT
 
 //    val JDBC_URL = "jdbc:sqlite:data/walt.db"
 //    val JDBC_URL = "jdbc:sqlite::memory:"
@@ -26,9 +30,7 @@ object SqlDbManager {
     val recreateDb = false
     //ANDROID PORT
     private lateinit var androidDataDir: String
-    //ANDROID PORT
 
-    //ANDROID PORT
     init {
         try {
             DriverManager.registerDriver(Class.forName("org.sqldroid.SQLDroidDriver").newInstance() as Driver)
@@ -67,7 +69,9 @@ object SqlDbManager {
             con.createStatement().use { stmt ->
 
                 if (recreateDb) {
-                    log.debug { "Recreating database" }
+                    //ANDROID PORT
+                    //log.debug { "Recreating database" }
+                    //ANDROID PORT
                     stmt.executeUpdate("drop table if exists lt_key")
                     stmt.executeUpdate("drop table if exists lt_key_alias")
                 }

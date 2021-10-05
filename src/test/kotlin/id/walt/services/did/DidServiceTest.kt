@@ -11,12 +11,17 @@ import id.walt.model.DidUrl
 import id.walt.services.key.KeyService
 import id.walt.test.RESOURCES_PATH
 import java.io.File
+//ANDROID PORT
+import java.io.FileInputStream
+//ANDROID PORT
 
 class DidServiceTest : AnnotationSpec() {
 
     @Before
     fun setup() {
-        ServiceMatrix("$RESOURCES_PATH/service-matrix.properties")
+        //ANDROID PORT
+        ServiceMatrix(FileInputStream(File("$RESOURCES_PATH/service-matrix.properties")))
+        //ANDROID PORT
     }
 
     private val keyService = KeyService.getService()

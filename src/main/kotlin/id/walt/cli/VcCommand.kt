@@ -75,7 +75,7 @@ class VcIssueCommand : CliktCommand(
             val templ = VcTemplateManager.loadTemplate(template)
             DataProviderRegistry.register(templ::class, cliDataProvider)
         }
-        echo("Issuing and verifiable credential (using template ${template})...")
+        echo("Issuing a verifiable credential (using template ${template})")
 
         // Loading VC template
         log.debug { "Loading credential template: ${template}" }
@@ -101,12 +101,12 @@ class VcImportCommand : CliktCommand(
 
     override fun run() {
         if (src.exists()) {
-                val cred = src.readText().toCredential()
-                val storeId = cred.id ?: "custodian#${UUID.randomUUID()}"
-                CustodianService.getService().storeCredential(storeId, cred)
-                println("Credential stored as $storeId")
-            }
+            val cred = src.readText().toCredential()
+            val storeId = cred.id ?: "custodian#${UUID.randomUUID()}"
+            CustodianService.getService().storeCredential(storeId, cred)
+            println("Credential stored as $storeId")
         }
+    }
 }
 
 class PresentVcCommand : CliktCommand(
@@ -120,7 +120,6 @@ class PresentVcCommand : CliktCommand(
     val verifierDid: String? by option("-v", "--verifier-did", help = "DID of the verifier (recipient of the VP)")
     val domain: String? by option("-d", "--domain", help = "Domain name to be used in the LD proof")
     val challenge: String? by option("-c", "--challenge", help = "Challenge to be used in the LD proof")
-    // val holderDid: String? by option("-i", "--holder-did", help = "DID of the holder (owner of the VC)")
 
     override fun run() {
         echo("Creating verifiable presentation from files:")
@@ -161,11 +160,9 @@ class VerifyVcCommand : CliktCommand(
         echo("Verifying from file $src ...\n")
 
         if (!src.exists()) {
-            log.error("Could not load file $src")
             throw Exception("Could not load file $src")
         }
         if (policies.any { !PolicyRegistry.contains(it) }) {
-            log.error("Unknown verification policy specified")
             throw Exception("Unknown verification policy specified")
         }
 
