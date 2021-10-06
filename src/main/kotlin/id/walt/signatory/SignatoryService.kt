@@ -64,12 +64,14 @@ abstract class Signatory : BaseService(), ISignatory {
     open fun listTemplates(): List<String> = implementation.listTemplates()
     open fun loadTemplate(templateId: String): VerifiableCredential = implementation.loadTemplate(templateId)
 }
-
-class WaltSignatory(configurationPath: String) : Signatory() {
-
+//ANDROID PORT
+class WaltSignatory() : Signatory() {
+//ANDROID PORT
     private val vcStore = VcStoreService.getService()
     private val VC_GROUP = "signatory"
-    override val configuration: SignatoryConfig = fromConfiguration(configurationPath)
+    //ANDROID PORT
+    //override val configuration: SignatoryConfig = fromConfiguration(configurationPath)
+    //ANDROID PORT
 
     override fun issue(templateId: String, config: ProofConfig): String {
 

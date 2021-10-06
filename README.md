@@ -88,6 +88,8 @@ The SSI Kit by walt.id is Open Source software released under the [Apache 2.0 li
 
 23. CryptFun.kt -> LazySodiumJava cannot be executed by an Android environment. Instead, the LazySodiumAndroid variant must be used. As this is a Java library, and it cannot import the LazySodiumAndroid despite being able to resolve the dependency, the constructor was called using getKClass functions from ReflectionUtils.
 
+24. SignatoryService.kt -> Removed configuration file due to the previous error about the fromConfiguration function not able to parse .conf files. Since this configuration file is not used for now, it wasn't replaced by another means to get its information.
+
 ## Android Application Requirements
 
 1. Place the jars of waltid-ssikit, waltid-vclib, waltid-servicematrix in app/libs. Add those libraries to the project with the following line "implementation fileTree(include: ['*.jar'], dir: './libs')" inside the build.gradle of the project.
