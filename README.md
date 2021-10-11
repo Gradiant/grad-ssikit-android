@@ -90,6 +90,8 @@ The SSI Kit by walt.id is Open Source software released under the [Apache 2.0 li
 
 24. SignatoryService.kt -> Removed configuration file due to the previous error about the fromConfiguration function not able to parse .conf files. Since this configuration file is not used for now, it wasn't replaced by another means to get its information.
 
+25. TrustedIssuerClient.kt -> Added setTrustedIssuerDomain function to be able to use our own eos instead of the one hardcoded in the library.
+
 ## Android Application Requirements
 
 1. Place the jars of waltid-ssikit, waltid-vclib, waltid-servicematrix in app/libs. Add those libraries to the project with the following line "implementation fileTree(include: ['*.jar'], dir: './libs')" inside the build.gradle of the project.
