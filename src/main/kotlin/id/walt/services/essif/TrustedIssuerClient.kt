@@ -21,11 +21,13 @@ import id.walt.model.TrustedIssuer
 object TrustedIssuerClient {
 
     // TODO: move to config file
-    val domain = "https://api.preprod.ebsi.eu"
+    //ANDROID PORT
+    var domain = "https://api.preprod.ebsi.eu"
     //val domain = "https://api.test.intebsi.xyz"
 
-    val authorisation = "$domain/authorisation/v1"
-    val onboarding = "$domain/users-onboarding/v1"
+    var authorisation = "$domain/authorisation/v1"
+    var onboarding = "$domain/users-onboarding/v1"
+    //ANDROID PORT
     val trustedIssuerUrl = "http://localhost:7001/v2/trusted-issuer"
 
     private val enterpriseWalletService = EnterpriseWalletService.getService()
@@ -220,4 +222,12 @@ object TrustedIssuerClient {
         }
 
     }
+
+    //ANDROID PORT
+    fun setTrustedIssuerDomain(domain: String) {
+        this.domain = domain
+        this.authorisation = "${TrustedIssuerClient.domain}/authorisation/v1"
+        this.onboarding = "${TrustedIssuerClient.domain}/users-onboarding/v1"
+    }
+    //ANDROID PORT
 }

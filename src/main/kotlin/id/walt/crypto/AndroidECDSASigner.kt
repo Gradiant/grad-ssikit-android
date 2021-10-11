@@ -10,14 +10,22 @@ import java.util.*
 
 object AndroidECDSASigner {
 
-    fun sign(key: ECPrivateKey, payload: String?): Base64URL {
+    fun sign(key: ECPrivateKey, signingInput: String?): Base64URL {
         val md = MessageDigest.getInstance("SHA-256")
-        md.update(payload?.toByteArray())
+        md.update(signingInput?.toByteArray())
         val digest = md.digest()
         var keyBytes = key.s.toByteArray()
         if (keyBytes.size == 33) {
             keyBytes = Arrays.copyOfRange(keyBytes, 1, keyBytes.size)
         }
+        val signature = Secp256k1.sign(digest, keyBytes)
+        return Base64URL.encode(signature)
+    }
+
+    fun sign(keyBytes: ByteArray, signingInput: ByteArray): Base64URL {
+        val md = MessageDigest.getInstance("SHA-256")
+        md.update(signingInput)
+        val digest = md.digest()
         val signature = Secp256k1.sign(digest, keyBytes)
         return Base64URL.encode(signature)
     }

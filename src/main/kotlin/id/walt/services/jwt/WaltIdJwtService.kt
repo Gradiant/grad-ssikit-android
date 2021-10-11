@@ -113,10 +113,13 @@ class WaltIdJwtService : JwtService() {
             }
             KeyAlgorithm.ECDSA_Secp256k1 -> {
                 //ANDROID PORT
-                val signature = AndroidECDSASigner.sign(issuerKey.keyPair!!.private as ECPrivateKey, payload)
+                val jwsHeader = JWSHeader.Builder(JWSAlgorithm.ES256K).keyID(keyAlias).type(JOSEObjectType.JWT).build().toBase64URL()
+                val jwsClaimsSet = Base64URL.encode(payload)
+                val signingInput = "$jwsHeader.$jwsClaimsSet"
+                val signature = AndroidECDSASigner.sign(issuerKey.keyPair!!.private as ECPrivateKey, signingInput)
                 val jwt = SignedJWT(
-                    JWSHeader.Builder(JWSAlgorithm.ES256K).keyID(keyAlias).type(JOSEObjectType.JWT).build().toBase64URL(),
-                    Base64URL.encode(payload),
+                    jwsHeader,
+                    jwsClaimsSet,
                     signature
                 )
                 //ANDROID PORT
@@ -149,7 +152,7 @@ class WaltIdJwtService : JwtService() {
             KeyAlgorithm.EdDSA_Ed25519 -> jwt.verify(Ed25519Verifier(keyService.toEd25519Jwk(verifierKey)))
             KeyAlgorithm.ECDSA_Secp256k1 -> {
                 //ANDROID PORT
-                AndroidECDSAVerifier.verify(jwt.signature.decode(), jwt.payload.toBytes(), verifierKey.getPublicKey() as ECPublicKey)
+                AndroidECDSAVerifier.verify(jwt.signature.decode(), jwt.signingInput, verifierKey.getPublicKey() as ECPublicKey)
                 //ANDROID PORT
             }
             else -> {
