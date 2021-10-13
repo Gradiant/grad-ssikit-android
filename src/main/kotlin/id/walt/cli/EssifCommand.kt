@@ -153,7 +153,7 @@ class EssifTirGetIssuerCommand : CliktCommand(
     name = "get",
     help = """Get issuer.
 
-    Get issuer by its DID. Use option raw to disable type checking."""
+        Get issuer by its DID. Use option raw to disable type checking."""
 ) {
     val did: String by option("-d", "--did", help = "DID of the issuer.").required()
     val raw by option("--raw", "-r").flag("--typed", "-t", default = false)

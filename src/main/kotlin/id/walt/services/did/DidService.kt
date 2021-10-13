@@ -18,8 +18,6 @@ import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
 import org.bouncycastle.asn1.ASN1BitString
 import org.bouncycastle.asn1.ASN1Sequence
-import java.nio.file.Files
-import java.nio.file.Path
 import java.util.*
 
 private val log = KotlinLogging.logger {}
@@ -358,7 +356,6 @@ object DidService {
             }
         } ?: return false
     }
-
 
     // TODO: consider the methods below. They might be deprecated!
 

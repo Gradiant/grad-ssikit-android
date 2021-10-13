@@ -52,62 +52,60 @@ class SignaturePolicy : VerificationPolicy {
 
 class JsonSchemaPolicy : VerificationPolicy { // Schema already validated by json-ld?
     override val description: String = "Verify by JSON schema"
-        override fun verify(vc: VerifiableCredential): Boolean {
-
-            return when (vc) {
-                is VerifiablePresentation -> true
-                else -> DidService.loadOrResolveAnyDid(VcUtils.getIssuer(vc)) != null
-            }
-        }
-    }
-
-class TrustedIssuerRegistryPolicy : VerificationPolicy {
-        override val description: String = "Verify by trusted EBSI Trusted Issuer Registry record"
-        override fun verify(vc: VerifiableCredential): Boolean {
-
-            // VPs are not considered
-            if (vc is VerifiablePresentation) {
-                return true
-            }
-
-            val issuerDid = VcUtils.getIssuer(vc)
-
-            val resolvedIssuerDid = DidService.loadOrResolveAnyDid(issuerDid) ?: throw Exception("Could not resolve issuer DID $issuerDid")
-
-            if (resolvedIssuerDid.id != issuerDid) {
-                log.debug { "Resolved DID ${resolvedIssuerDid.id} does not match the issuer DID $issuerDid" }
-                return false
-            }
-
-            val tirRecord = try {
-                TrustedIssuerClient.getIssuer(issuerDid)
-            } catch (e: Exception) {
-                throw Exception("Could not resolve issuer TIR record of $issuerDid", e)
-            }
-
-            return validTrustedIssuerRecord(tirRecord)
-
-        }
-
-        private fun validTrustedIssuerRecord(tirRecord: TrustedIssuer): Boolean {
-            var issuerRecordValid = true
-
-            if (tirRecord.attributes[0].body != "eyJAY29udGV4dCI6Imh0dHBzOi8vZWJzaS5ldSIsInR5cGUiOiJhdHRyaWJ1dGUiLCJuYW1lIjoiaXNzdWVyIiwiZGF0YSI6IjVkNTBiM2ZhMThkZGUzMmIzODRkOGM2ZDA5Njg2OWRlIn0=") {
-                issuerRecordValid = false
-                log.debug { "Body of TIR record ${tirRecord} not valid." }
-            }
-
-            if (tirRecord.attributes[0].hash != "14f2d3c3320f65b6fd9413608e4c17f831e3c595ad61222ec12f899752348718") {
-                issuerRecordValid = false
-                log.debug { "Body of TIR record ${tirRecord} not valid." }
-            }
-            return issuerRecordValid
-        }
+    override fun verify(vc: VerifiableCredential) = true // TODO validate policy
 }
 
 class TrustedIssuerDidPolicy : VerificationPolicy {
     override val description: String = "Verify by trusted issuer did"
-    override fun verify(vc: VerifiableCredential) = true // TODO validate policy
+    override fun verify(vc:VerifiableCredential): Boolean {
+
+        return when (vc) {
+            is VerifiablePresentation -> true
+            else -> DidService.loadOrResolveAnyDid(VcUtils.getIssuer(vc)) != null
+        }
+    }
+}
+
+class TrustedIssuerRegistryPolicy : VerificationPolicy {
+    override val description: String = "Verify by trusted EBSI Trusted Issuer Registry record"
+    override fun verify(vc: VerifiableCredential): Boolean {
+
+        // VPs are not considered
+        if (vc is VerifiablePresentation) {
+            return true
+        }
+
+        val issuerDid = VcUtils.getIssuer(vc)
+
+        val resolvedIssuerDid = DidService.loadOrResolveAnyDid(issuerDid) ?: throw Exception("Could not resolve issuer DID $issuerDid")
+
+        if (resolvedIssuerDid.id != issuerDid) {
+            log.debug { "Resolved DID ${resolvedIssuerDid.id} does not match the issuer DID $issuerDid" }
+                return false
+        }
+
+        val tirRecord = try {
+                TrustedIssuerClient.getIssuer(issuerDid)
+            } catch (e: Exception) {
+                throw Exception("Could not resolve issuer TIR record of $issuerDid", e)
+        }
+
+        return validTrustedIssuerRecord(tirRecord)
+    }
+
+    private fun validTrustedIssuerRecord(tirRecord: TrustedIssuer): Boolean {
+        var issuerRecordValid = true
+
+        if (tirRecord.attributes[0].body != "eyJAY29udGV4dCI6Imh0dHBzOi8vZWJzaS5ldSIsInR5cGUiOiJhdHRyaWJ1dGUiLCJuYW1lIjoiaXNzdWVyIiwiZGF0YSI6IjVkNTBiM2ZhMThkZGUzMmIzODRkOGM2ZDA5Njg2OWRlIn0=") {
+            issuerRecordValid = false
+            log.debug { "Body of TIR record ${tirRecord} not valid." }
+    }
+        if (tirRecord.attributes[0].hash != "14f2d3c3320f65b6fd9413608e4c17f831e3c595ad61222ec12f899752348718") {
+                issuerRecordValid = false
+                log.debug { "Body of TIR record ${tirRecord} not valid." }
+            }
+        return issuerRecordValid
+    }
 }
 
 class TrustedSubjectDidPolicy : VerificationPolicy {

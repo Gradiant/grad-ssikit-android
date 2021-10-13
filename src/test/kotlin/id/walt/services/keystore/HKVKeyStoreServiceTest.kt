@@ -9,11 +9,16 @@ import id.walt.test.RESOURCES_PATH
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.shouldBe
 import java.io.File
+//ANDROID PORT
+import java.io.FileInputStream
+//ANDROID PORT
 
 open class HKVKeyStoreServiceTest : AnnotationSpec() {//: KeyStoreServiceTest() {
 
     init {
-        ServiceMatrix("$RESOURCES_PATH/service-matrix.properties")
+        //ANDROID PORT
+        ServiceMatrix(FileInputStream(File("$RESOURCES_PATH/service-matrix.properties")))
+        //ANDROID PORT
         ServiceRegistry.registerService<KeyStoreService>(HKVKeyStoreService())
     }
 
@@ -52,6 +57,8 @@ open class HKVKeyStoreServiceTest : AnnotationSpec() {//: KeyStoreServiceTest() 
 
         keyId1 shouldBe key1.keyId
         keyId2 shouldBe key2.keyId
+
+        hkvKeyStoreService.listKeys().size shouldBe 2
 
         hkvKeyStoreService.delete(keyId1.id)
         hkvKeyStoreService.delete(keyId2.id)

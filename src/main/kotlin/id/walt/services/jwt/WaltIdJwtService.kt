@@ -17,12 +17,13 @@ import id.walt.services.key.KeyService
 import id.walt.services.keystore.KeyType
 import java.security.interfaces.ECPrivateKey
 //ANDROID PORT
+import java.security.Provider
 import java.security.interfaces.ECPublicKey
 import java.util.*
 
 val keyId = "123" // FIXME static keyId
 
-class WaltIdJwtService : JwtService() {
+open class WaltIdJwtService : JwtService() {
 
     private val log = KotlinLogging.logger {}
 
@@ -30,8 +31,8 @@ class WaltIdJwtService : JwtService() {
         .keyID(keyId)
         .generate()
 
-    private val keyService = KeyService.getService()
-
+    open val keyService = KeyService.getService()
+    open val provider: Provider = WaltIdProvider()
 
     override fun encrypt(
         kid: String,
@@ -49,7 +50,7 @@ class WaltIdJwtService : JwtService() {
 
         val pubEncKey = pubEncKey.toPublicJWK()
         val encrypter = X25519Encrypter(pubEncKey)
-        // encrypter.jcaContext.provider = WaltIdProvider()
+        // encrypter.jcaContext.provider = waltIdProvider
         jweObject.encrypt(encrypter)
         return jweObject.serialize()
     }
@@ -68,7 +69,7 @@ class WaltIdJwtService : JwtService() {
             throw Exception("Could not load verifying key for $keyId")
         }
         val decrypter = X25519Decrypter(encKey)
-        decrypter.jcaContext.provider = WaltIdProvider()
+        decrypter.jcaContext.provider = provider
         jweObj.decrypt(decrypter)
 
         return jweObj.payload.toString()

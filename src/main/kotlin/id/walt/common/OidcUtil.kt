@@ -4,13 +4,13 @@ import com.beust.klaxon.Klaxon
 import com.nimbusds.jose.jwk.JWK
 import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.SignedJWT
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.jsonObject
-import mu.KotlinLogging
 import id.walt.model.*
 import id.walt.services.essif.userwallet.UserWalletService
 import id.walt.services.jwt.JwtService
 import id.walt.services.key.KeyService
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
+import mu.KotlinLogging
 import java.time.Instant
 import java.util.*
 
@@ -89,7 +89,7 @@ object OidcUtil {
         val clientId = urlEncode(didAuthReq.client_id)
         val scope = urlEncode(didAuthReq.scope)
 
-        val uri = "openid://?response_type=id_token&client_id=$clientId&scope=$scope&request=$authRequestJwt&request=${didAuthReq.nonce}"
+        val uri = "openid://?response_type=id_token&client_id=$clientId&scope=$scope&request=$authRequestJwt&nonce=${didAuthReq.nonce}"
         return OidcRequest(uri, didAuthReq.callback)
     }
 

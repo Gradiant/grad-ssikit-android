@@ -36,7 +36,6 @@ abstract class BaseDid {
     }
 }
 
-
 @Serializable
 data class Did (
     @SerialName("@context")

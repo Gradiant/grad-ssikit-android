@@ -46,10 +46,11 @@ open class WaltIdJwtCredentialService : JwtCredentialService() {
             .notBeforeTime(validDate)
             .expirationTime(config.expirationDate)
 
-        when(val crd = jsonCred.toCredential()) {
+        config.verifierDid?.let { jwtClaimsSet.audience(config.verifierDid) }
+        config.nonce?.let { jwtClaimsSet.claim("nonce", config.nonce) }
+
+        when (val crd = jsonCred.toCredential()) {
             is VerifiablePresentation -> jwtClaimsSet
-                .audience(config.verifierDid!!)
-                .claim("nonce", config.nonce!!)
                 .claim(JWT_VP_CLAIM, crd.toMap())
             else -> jwtClaimsSet
                 .subject(config.subjectDid)
@@ -90,7 +91,7 @@ open class WaltIdJwtCredentialService : JwtCredentialService() {
     override fun verifyVp(vp: String): Boolean =
         verifyVc(vp)
 
-    override fun present(vcs: List<String>, holderDid: String, verifierDid: String, challenge: String): String {
+    override fun present(vcs: List<String>, holderDid: String, verifierDid: String?, challenge: String?): String {
         //ANDROID PORT
         //log.debug { "Creating a presentation for VCs:\n$vcs" }
         //ANDROID PORT

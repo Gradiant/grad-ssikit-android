@@ -13,6 +13,7 @@ import id.walt.services.essif.EssifClient
 import id.walt.services.essif.EssifServer
 import id.walt.services.essif.userwallet.UserWalletService
 import id.walt.services.jwt.JwtService
+import id.walt.services.key.InMemoryKeyService
 import id.walt.services.key.KeyService
 import id.walt.test.RESOURCES_PATH
 import io.kotest.core.spec.style.AnnotationSpec
@@ -77,7 +78,7 @@ class VcIssuanceFlowTest : AnnotationSpec() {
         val clientId = urlEncode(didAuthReq.client_id)
         val scope = urlEncode(didAuthReq.scope)
 
-        val uri = "openid://?response_type=id_token&client_id=$clientId&scope=$scope&request=$authRequestJwt&request=${didAuthReq.nonce}"
+        val uri = "openid://?response_type=id_token&client_id=$clientId&scope=$scope&request=$authRequestJwt&nonce=${didAuthReq.nonce}"
         return OidcRequest(uri, didAuthReq.callback)
     }
 
@@ -91,7 +92,7 @@ class VcIssuanceFlowTest : AnnotationSpec() {
 //            .keyUse(KeyUse.SIGNATURE)
 //            .keyID("123")
 //            .generate()
-        val emphKeyId = KeyService.getService().generate(KeyAlgorithm.ECDSA_Secp256k1)
+        val emphKeyId = InMemoryKeyService.getService().generate(KeyAlgorithm.ECDSA_Secp256k1)
 
         val verifiedClaims = "{}"
         val nonce = ""
