@@ -48,5 +48,5 @@ class InMemoryKeyStoreServiceTest : StringSpec({
 })
 
 fun cleanUpStore(inMemoryKeyStore: KeyStoreService) {
-        inMemoryKeyStore.listKeys().forEach { inMemoryKeyStore.delete(it.keyId.id) }
-    }
+    inMemoryKeyStore.listKeys().forEach { inMemoryKeyStore.delete(it.keyId.id) }
+}

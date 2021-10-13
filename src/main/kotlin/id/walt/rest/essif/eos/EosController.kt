@@ -1,9 +1,12 @@
 package id.walt.rest.essif.eos
 
+import io.javalin.http.Context
+import io.javalin.plugin.openapi.annotations.OpenApi
+import io.javalin.plugin.openapi.annotations.OpenApiContent
+import io.javalin.plugin.openapi.annotations.OpenApiRequestBody
 import id.walt.model.AuthRequestResponse
 import id.walt.rest.ErrorResponse
 import id.walt.services.essif.TrustedIssuerClient
-import io.javalin.http.Context
 import io.javalin.plugin.openapi.dsl.document
 
 /**
@@ -37,7 +40,8 @@ object EosController {
 //        ]
 //    )
     fun onboardsDocs() = document()
-    .operation { it.summary("Establishes a mutual authenticated DID-SIOP session.").operationId("openSession").addTagsItem("ESSIF Enterprise Wallet")   }
+    .operation { it.summary("Request Verifiable Authorization. Returns the DID ownership request.").operationId("onboards").addTagsItem("ESSIF Enterprise Wallet")   }
+    .body<String>() { it.description("DID to be registered") }
     .json<String>("200") { it.description("Request DID ownership") }
     .json<ErrorResponse>("400") { it.description("Bad request") }
     .json<ErrorResponse>("500") { it.description("Server Error") }

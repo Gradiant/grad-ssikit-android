@@ -10,7 +10,7 @@ import java.nio.file.Path
 /*class HKVStoreTest : StringSpec({
 
     fun hkvTest() {
-        val hkvStore = HKVStoreService.getService()
+        val hkvStore = WaltContext.hkvStore
         val testData = "test data"
 
         println("Adding items...")

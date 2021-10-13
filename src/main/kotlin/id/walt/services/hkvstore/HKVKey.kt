@@ -1,13 +1,13 @@
 package id.walt.services.hkvstore
 
-//ANDROID PORT
-//ANDROID PORT
 import java.net.URLDecoder
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 import java.nio.file.Path
 import java.util.*
+//ANDROID PORT
 import kotlin.io.path.Path
+//ANDROID PORT
 
 class HKVKey(
     private val rootKey: String,
@@ -62,5 +62,7 @@ class HKVKey(
             val rootKey = parts[0]
             return HKVKey(rootKey, *parts.subList(1, parts.size).toTypedArray())
         }
+
+        fun combine(root: HKVKey, vararg subKey: String) = HKVKey(root.rootKey, *root.subKeys.plus(subKey).toTypedArray())
     }
 }

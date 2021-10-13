@@ -57,7 +57,7 @@ class JsonSchemaPolicy : VerificationPolicy { // Schema already validated by jso
 
 class TrustedIssuerDidPolicy : VerificationPolicy {
     override val description: String = "Verify by trusted issuer did"
-    override fun verify(vc:VerifiableCredential): Boolean {
+    override fun verify(vc: VerifiableCredential): Boolean {
 
         return when (vc) {
             is VerifiablePresentation -> true
@@ -81,13 +81,13 @@ class TrustedIssuerRegistryPolicy : VerificationPolicy {
 
         if (resolvedIssuerDid.id != issuerDid) {
             log.debug { "Resolved DID ${resolvedIssuerDid.id} does not match the issuer DID $issuerDid" }
-                return false
+            return false
         }
 
         val tirRecord = try {
-                TrustedIssuerClient.getIssuer(issuerDid)
-            } catch (e: Exception) {
-                throw Exception("Could not resolve issuer TIR record of $issuerDid", e)
+            TrustedIssuerClient.getIssuer(issuerDid)
+        } catch (e: Exception) {
+            throw Exception("Could not resolve issuer TIR record of $issuerDid", e)
         }
 
         return validTrustedIssuerRecord(tirRecord)
@@ -99,11 +99,12 @@ class TrustedIssuerRegistryPolicy : VerificationPolicy {
         if (tirRecord.attributes[0].body != "eyJAY29udGV4dCI6Imh0dHBzOi8vZWJzaS5ldSIsInR5cGUiOiJhdHRyaWJ1dGUiLCJuYW1lIjoiaXNzdWVyIiwiZGF0YSI6IjVkNTBiM2ZhMThkZGUzMmIzODRkOGM2ZDA5Njg2OWRlIn0=") {
             issuerRecordValid = false
             log.debug { "Body of TIR record ${tirRecord} not valid." }
-    }
+        }
+
         if (tirRecord.attributes[0].hash != "14f2d3c3320f65b6fd9413608e4c17f831e3c595ad61222ec12f899752348718") {
-                issuerRecordValid = false
-                log.debug { "Body of TIR record ${tirRecord} not valid." }
-            }
+            issuerRecordValid = false
+            log.debug { "Body of TIR record ${tirRecord} not valid." }
+        }
         return issuerRecordValid
     }
 }
@@ -164,12 +165,12 @@ object AuditorService : IAuditor {
         val vc = vcStr.toCredential()
         val policyResults = policies.associateBy(keySelector = VerificationPolicy::id) { policy ->
             policy.verify(vc) &&
-                when (vc) {
-                    is VerifiablePresentation -> vc.verifiableCredential.all { cred ->
-                        policy.verify(cred)
+                    when (vc) {
+                        is VerifiablePresentation -> vc.verifiableCredential.all { cred ->
+                            policy.verify(cred)
+                        }
+                        else -> true
                     }
-                    else -> true
-                }
         }
 
         return VerificationResult(allAccepted(policyResults), policyResults)
