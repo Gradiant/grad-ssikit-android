@@ -119,6 +119,8 @@ The SSI Kit by walt.id is Open Source software released under the [Apache 2.0 li
 
 25. TrustedIssuerClient.kt -> Added setTrustedIssuerDomain function to be able to use our own eos instead of the one hardcoded in the library.
 
+26. WaltIdInMemoryProvider.kt -> Same reason as in point 19.
+
 ## Android Application Requirements
 
 1. Place the jars of waltid-ssikit, waltid-vclib, waltid-servicematrix in app/libs. Add those libraries to the project with the following line "implementation fileTree(include: ['*.jar'], dir: './libs')" inside the build.gradle of the project.
