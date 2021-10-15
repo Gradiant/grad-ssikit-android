@@ -27,6 +27,7 @@ object TrustedIssuerClient {
 
     var authorisation = "$domain/authorisation/v1"
     var onboarding = "$domain/users-onboarding/v1"
+    var authentication ="$domain/authentication/v1"
     //ANDROID PORT
     val trustedIssuerUrl = "http://localhost:7001/v2/trusted-issuer"
 
@@ -109,6 +110,29 @@ object TrustedIssuerClient {
             body = mapOf("id_token" to idToken)
         }
     }
+
+    //ANDROID PORT
+    fun postAuthenticationRequests(): AuthRequestResponse = runBlocking {
+        return@runBlocking WaltIdServices.http.post<AuthRequestResponse>("$authentication/authentication-requests") {
+            contentType(ContentType.Application.Json)
+            headers {
+                append(HttpHeaders.Accept, "application/json")
+            }
+            body = mapOf("scope" to "ebsi users onboarding")
+        }
+    }
+
+    fun postAuthenticationResponse(idToken: String, bearerToken: String): String = runBlocking {
+        return@runBlocking WaltIdServices.http.post<String>("$authentication/authentication-responses") {
+            contentType(ContentType.Application.Json)
+            headers {
+                append(HttpHeaders.Accept, "application/json")
+                append(HttpHeaders.Authorization, "Bearer $bearerToken")
+            }
+            body = mapOf("id_token" to idToken)
+        }
+    }
+    //ANDROID PORT
 
     // GET /issuers/{did}
     // returns trusted issuer record
