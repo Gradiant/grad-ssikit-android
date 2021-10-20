@@ -121,7 +121,7 @@ The SSI Kit by walt.id is Open Source software released under the [Apache 2.0 li
 
 26. WaltIdInMemoryProvider.kt -> Same reason as in point 19.
 
-27. TrustedIssuerClient.kt -> Added two methods for making did authentication against the eos endpoint that returns a verifiable credential.
+27. TrustedIssuerClient.kt -> Added two methods for making did authentication against the eos endpoint that returns a verifiable credential. Added the new endpoint authentication to the setTrustedIssuerDomain function from point 25.
 
 ## Android Application Requirements
 

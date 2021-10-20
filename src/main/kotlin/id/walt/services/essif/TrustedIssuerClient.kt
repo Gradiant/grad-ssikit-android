@@ -252,6 +252,7 @@ object TrustedIssuerClient {
         this.domain = domain
         this.authorisation = "${TrustedIssuerClient.domain}/authorisation/v1"
         this.onboarding = "${TrustedIssuerClient.domain}/users-onboarding/v1"
+        this.authentication ="${TrustedIssuerClient.domain}/authentication/v1"
     }
     //ANDROID PORT
 }
