@@ -4,6 +4,7 @@ import io.javalin.http.Context
 import io.javalin.plugin.openapi.annotations.OpenApi
 import io.javalin.plugin.openapi.annotations.OpenApiContent
 import io.javalin.plugin.openapi.annotations.OpenApiRequestBody
+import io.javalin.plugin.openapi.annotations.OpenApiResponse
 import id.walt.model.AuthRequestResponse
 import id.walt.rest.ErrorResponse
 import id.walt.services.essif.TrustedIssuerClient
