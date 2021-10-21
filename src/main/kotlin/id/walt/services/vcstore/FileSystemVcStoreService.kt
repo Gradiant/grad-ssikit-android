@@ -4,10 +4,15 @@ import id.walt.vclib.Helpers.encode
 import id.walt.vclib.Helpers.toCredential
 import id.walt.vclib.model.VerifiableCredential
 import java.io.File
+//ANDROID PORT
+import id.walt.servicematrix.utils.AndroidUtils
+//ANDROID PORT
 
 open class FileSystemVcStoreService : VcStoreService() {
 
-    val store = File("credential-store").apply { mkdir() }
+    //ANDROID PORT
+    val store = File("${AndroidUtils.getAndroidDataDir()}/credential-store").apply { mkdir() }
+    //ANDROID PORT
 
     private fun getGroupDir(group: String) = File(store.absolutePath, group).apply { mkdirs() }
     private fun getFileById(id: String, group: String) = File(getGroupDir(group),"${id}.cred")
