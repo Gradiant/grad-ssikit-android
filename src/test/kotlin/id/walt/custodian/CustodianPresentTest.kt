@@ -51,7 +51,7 @@ class CustodianPresentTest : StringSpec() {
 
     init {
         "Json ld presentation" {
-            val presStr = CustodianService.getService().createPresentation(listOf(vcJsonLd), did, did, null, null)
+            val presStr = Custodian.getService().createPresentation(listOf(vcJsonLd), did, did, null, null)
             println("Created VP: ${presStr}")
 
             val pres = presStr.toCredential()
@@ -60,14 +60,14 @@ class CustodianPresentTest : StringSpec() {
         }
 
         "Jwt presentation" {
-            val presStr = CustodianService.getService().createPresentation(listOf(vcJwt), did, did, null, "abcd")
+            val presStr = Custodian.getService().createPresentation(listOf(vcJwt), did, did, null, "abcd")
             println("Created VP: ${presStr}")
 
             checkVerifiablePresentation(presStr)
         }
 
         "Jwt presentation without audience or nonce" {
-            val presStr = CustodianService
+            val presStr = Custodian
                 .getService()
                 .createPresentation(listOf(vcJwt), did, null, null, "abcd")
             println("Created VP: ${presStr}")
@@ -76,7 +76,7 @@ class CustodianPresentTest : StringSpec() {
         }
 
         "Jwt presentation without nonce" {
-            val presStr = CustodianService
+            val presStr = Custodian
                 .getService()
                 .createPresentation(listOf(vcJwt), did, did, null)
             println("Created VP: ${presStr}")
@@ -86,7 +86,7 @@ class CustodianPresentTest : StringSpec() {
 
         "Json ld and jwt presentation" {
             assertThrows<IllegalStateException> {
-                CustodianService
+                Custodian
                     .getService()
                     .createPresentation(listOf(vcJsonLd, vcJwt), did, did, null, "abcd")
             }

@@ -1,6 +1,7 @@
 package id.walt.services.hkvstore
 
 import id.walt.servicematrix.ServiceRegistry
+import id.walt.services.context.WaltContext
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe

@@ -1,27 +1,23 @@
 package id.walt.signatory
 
 import com.nimbusds.jwt.SignedJWT
-import id.walt.custodian.CustodianService
 import id.walt.model.DidMethod
 import id.walt.servicematrix.ServiceMatrix
 import id.walt.services.context.WaltContext
 import id.walt.services.did.DidService
 import id.walt.services.jwt.JwtService
 import id.walt.services.vc.JsonLdCredentialService
-import id.walt.services.vcstore.VcStoreService
 import id.walt.test.RESOURCES_PATH
 import id.walt.vclib.Helpers.toCredential
-import id.walt.vclib.vclist.VerifiableId
 import id.walt.vclib.vclist.VerifiableDiploma
+import id.walt.vclib.vclist.VerifiableId
 import io.kotest.core.spec.style.StringSpec
-import io.kotest.matchers.collections.shouldNotContain
-import io.kotest.matchers.collections.shouldNotContainAnyOf
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.types.beInstanceOf
-import java.text.SimpleDateFormat
+import java.time.LocalDateTime
 
 //ANDROID TEST
 /*class SignatoryServiceTest : StringSpec({
@@ -35,7 +31,7 @@ import java.text.SimpleDateFormat
             "VerifiableId", ProofConfig(
                 subjectDid = did,
                 issuerDid = did,
-                issueDate = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").parse("2020-11-03T00:00:00Z"),
+                issueDate = LocalDateTime.of(2020, 11, 3, 0, 0),
                 issuerVerificationMethod = "Ed25519Signature2018"
             )
         )
@@ -75,7 +71,7 @@ import java.text.SimpleDateFormat
             "VerifiableDiploma", ProofConfig(
                 subjectDid = did,
                 issuerDid = did,
-                issueDate = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").parse("2020-11-03T00:00:00Z"),
+                issueDate = LocalDateTime.of(2020, 11, 3, 0, 0),
                 issuerVerificationMethod = "Ed25519Signature2018"
             )
         )

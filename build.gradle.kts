@@ -1,7 +1,9 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.5.20"
+    //ANDROID PORT
+    kotlin("jvm") version "1.5.21"
+    //ANDROID PORT
     kotlin("plugin.serialization") version "1.5.20"
     id("com.github.kkdad.dependency-license-report") version "1.16.6"
     id("org.owasp.dependencycheck") version "6.1.6"
@@ -43,7 +45,7 @@ dependencies {
     implementation("org.web3j:core:5.0.0")
     implementation("org.web3j:crypto:5.0.0")
 
-    implementation("com.google.guava:guava:30.1.1-jre")
+    implementation("com.google.guava:guava:31.0.1-jre")
 
     // VC
     //ANDROID PORT
@@ -53,6 +55,9 @@ dependencies {
     // JSON
     implementation("org.json:json:20210307")
     implementation("com.beust:klaxon:5.5")
+    //ANDROID PORT
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.0")
+    //ANDROID PORT
     //implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
 
     //ANDROID PORT
@@ -65,20 +70,25 @@ dependencies {
     implementation("com.zaxxer:HikariCP:5.0.0")
 
     // CLI
-    implementation("com.github.ajalt.clikt:clikt-jvm:3.2.0")
-    implementation("com.github.ajalt.clikt:clikt:3.2.0")
+    implementation("com.github.ajalt.clikt:clikt-jvm:3.3.0")
+    implementation("com.github.ajalt.clikt:clikt:3.3.0")
 
     // Misc
     implementation("commons-io:commons-io:2.11.0")
 
     // HTTP
+    //ANDROID PORT
     implementation("io.ktor:ktor-client-core:1.6.3")
     implementation("io.ktor:ktor-client-cio:1.6.3")
     implementation("io.ktor:ktor-client-serialization:1.6.3")
     implementation("io.ktor:ktor-client-logging:1.6.3")
+    //ANDROID PORT
+    implementation("io.github.rybalkinsd", "kohttp", "0.12.0")
 
     // REST
+    //ANDROID PORT
     implementation("io.javalin:javalin-bundle:4.0.0")
+    //ANDROID PORT
 
     // Logging
     implementation("org.slf4j:slf4j-api:2.0.0-alpha2")
@@ -88,9 +98,9 @@ dependencies {
     implementation("io.github.microutils:kotlin-logging-jvm:2.0.11")
 
     // Config
-    implementation("com.sksamuel.hoplite:hoplite-core:1.4.7")
-    implementation("com.sksamuel.hoplite:hoplite-yaml:1.4.7")
-    implementation("com.sksamuel.hoplite:hoplite-hikaricp:1.4.7")
+    implementation("com.sksamuel.hoplite:hoplite-core:1.4.9")
+    implementation("com.sksamuel.hoplite:hoplite-yaml:1.4.9")
+    implementation("com.sksamuel.hoplite:hoplite-hikaricp:1.4.9")
 
     // Service-Matrix
     //ANDROID PORT
@@ -104,9 +114,11 @@ dependencies {
     //testImplementation(kotlin("test-junit"))
     testImplementation("io.mockk:mockk:1.12.0")
 
+    //ANDROID PORT
     testImplementation("io.kotest:kotest-runner-junit5:4.6.1")
     testImplementation("io.kotest:kotest-assertions-core:4.6.1")
     testImplementation("io.kotest:kotest-assertions-json:4.6.1")
+    //ANDROID PORT
 }
 
 tasks.withType<Test> {

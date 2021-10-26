@@ -291,7 +291,7 @@ open class WaltIdJsonLdCredentialService : JsonLdCredentialService() {
             proofType = ProofType.LD_PROOF,
             domain = domain,
             nonce = challenge,
-            id = id
+            credentialId = id
         )
         val vpReqStr = VerifiablePresentation(
             id = id,

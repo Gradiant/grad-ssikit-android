@@ -7,11 +7,17 @@ import id.walt.services.keystore.KeyStoreService
 import id.walt.services.keystore.SqlKeyStoreService
 import id.walt.test.RESOURCES_PATH
 import io.kotest.core.spec.style.StringSpec
+//ANDROID PORT
+import java.io.File
+import java.io.FileInputStream
+//ANDROID PORT
 
 class CustodianSqlKeyTests : StringSpec({
 
-    ServiceMatrix("$RESOURCES_PATH/service-matrix.properties")
-    val custodian = CustodianService.getService()
+    //ANDROID PORT
+    ServiceMatrix(FileInputStream(File("$RESOURCES_PATH/service-matrix.properties")))
+    //ANDROID PORT
+    val custodian = Custodian.getService()
 
     ServiceRegistry.registerService<KeyStoreService>(SqlKeyStoreService())
     standardKeyTests(custodian)

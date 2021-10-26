@@ -10,11 +10,17 @@ import id.walt.vclib.vclist.VerifiableAttestation
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.ints.shouldBeGreaterThanOrEqual
 import io.kotest.matchers.shouldBe
+//ANDROID PORT
+import java.io.File
+import java.io.FileInputStream
+//ANDROID PORT
 
 class InMemoryVcStoreTests : StringSpec({
 
-    ServiceMatrix("$RESOURCES_PATH/service-matrix.properties")
-    val custodian = CustodianService.getService()
+    //ANDROID PORT
+    ServiceMatrix(FileInputStream(File("$RESOURCES_PATH/service-matrix.properties")))
+    //ANDROID PORT
+    val custodian = Custodian.getService()
     ServiceRegistry.registerService<VcStoreService>(InMemoryVcStoreService())
 
     val vc = Europass.template!!.invoke()

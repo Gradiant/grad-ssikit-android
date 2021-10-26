@@ -5,9 +5,23 @@ import id.walt.auditor.AuditorRestAPI
 import id.walt.rest.core.CoreAPI
 import id.walt.rest.custodian.CustodianAPI
 import id.walt.rest.essif.EssifAPI
-import id.walt.signatory.SignatoryRestAPI
+import id.walt.servicematrix.ServiceMatrix
+import id.walt.signatory.rest.SignatoryRestAPI
+//ANDROID PORT
+//import mu.KotlinLogging
+import java.io.File
+import java.io.FileInputStream
+//private val log = KotlinLogging.logger {}
+//ANDROID PORT
 
 fun main() {
+
+    //ANDROID PORT
+    //log.debug { "SSI Kit starting to serve REST APIs" }
+
+    ServiceMatrix(FileInputStream(File("service-matrix.properties")))
+    //ANDROID PORT
+
     val bindAddress = "127.0.0.1"
     CoreAPI.start(7000, bindAddress)
     SignatoryRestAPI.start(7001, bindAddress)
