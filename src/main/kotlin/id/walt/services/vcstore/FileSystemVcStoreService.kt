@@ -11,7 +11,7 @@ import id.walt.servicematrix.utils.AndroidUtils
 open class FileSystemVcStoreService : VcStoreService() {
 
     //ANDROID PORT
-    val store = File("${AndroidUtils.getAndroidDataDir()}/credential-store").apply { mkdir() }
+    val store = File("${AndroidUtils.getDataRoot()}/credential-store").apply { mkdir() }
     //ANDROID PORT
 
     private fun getGroupDir(group: String) = File(store.absolutePath, group).apply { mkdirs() }

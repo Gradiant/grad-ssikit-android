@@ -11,6 +11,9 @@ import id.walt.vclib.Helpers.encode
 import id.walt.vclib.Helpers.toCredential
 import id.walt.vclib.model.VerifiableCredential
 import id.walt.vclib.templates.VcTemplateManager
+//ANDROID PORT
+//import mu.KotlinLogging
+//ANDROID PORT
 import java.time.LocalDateTime
 import java.util.*
 
@@ -72,6 +75,7 @@ class WaltSignatory() : Signatory() {
     private val VC_GROUP = "signatory"
     //ANDROID PORT
     //override val configuration: SignatoryConfig = fromConfiguration(configurationPath)
+    //private val log = KotlinLogging.logger {}
     //ANDROID PORT
 
     override fun issue(templateId: String, config: ProofConfig): String {
@@ -101,10 +105,17 @@ class WaltSignatory() : Signatory() {
         val dataProvider = DataProviderRegistry.getProvider(vcTemplate::class) // vclib.getUniqueId(vcTemplate)
         val vcRequest = dataProvider.populate(vcTemplate, configDP)
 
+        //ANDROID PORT
+        //log.info { "Signing credential with proof using ${config.proofType.name}..." }
+        //log.debug { "Signing credential with proof using ${config.proofType.name}, credential is: $vcRequest" }
+        //ANDROID PORT
         val signedVc = when (config.proofType) {
             ProofType.LD_PROOF -> JsonLdCredentialService.getService().sign(vcRequest.encode(), config)
             ProofType.JWT -> JwtCredentialService.getService().sign(vcRequest.encode(), config)
         }
+        //ANDROID PORT
+        //log.debug { "Signed VC is: $signedVc" }
+        //ANDROID PORT
         WaltContext.vcStore.storeCredential(configDP.credentialId!!, signedVc.toCredential(), VC_GROUP)
         return signedVc
     }

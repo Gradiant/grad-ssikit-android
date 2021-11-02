@@ -1,16 +1,20 @@
 package id.walt.crypto
 
 import id.walt.servicematrix.ServiceMatrix
-import io.kotest.core.spec.style.AnnotationSpec
-import io.kotest.matchers.shouldBe
 import id.walt.services.crypto.SunCryptoService
 import id.walt.test.RESOURCES_PATH
+import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.matchers.shouldBe
+//ANDROID PORT
+import java.io.File
+import java.io.FileInputStream
+//ANDROID PORT
 
 class SunCryptoTest : AnnotationSpec() {
 
     @Before
     fun setup() {
-        ServiceMatrix("$RESOURCES_PATH/service-matrix.properties")
+        ServiceMatrix(FileInputStream(File("$RESOURCES_PATH/service-matrix.properties")))
     }
 
     val sunCryptoService = SunCryptoService()

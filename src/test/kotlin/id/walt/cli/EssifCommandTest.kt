@@ -20,6 +20,7 @@ import java.io.File
 //ANDROID PORT
 import java.io.FileInputStream
 //ANDROID PORT
+import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
 import kotlin.time.minutes
 import kotlin.time.seconds
@@ -93,7 +94,7 @@ class EssifCommandTest : StringSpec({
     }
 
     "did register --did".config(enabled = enableTests) {
-        retry(9, 2.minutes, delay = 4.seconds) {
+        retry(9, Duration.minutes(2), delay = Duration.seconds(4)) {
             println("Registering did")
             shouldNotThrowAny {
                 EssifDidRegisterCommand().parse(listOf("--did", did, "--eth-key", ethKey.id))

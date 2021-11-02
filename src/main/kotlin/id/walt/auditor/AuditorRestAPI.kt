@@ -77,7 +77,6 @@ object AuditorRestAPI {
                     swagger(SwaggerOptions("/v1/swagger").title("walt.id Auditor API"))
                     reDoc(ReDocOptions("/v1/redoc").title("walt.id Auditor API"))
                 }))
-
             }
 
             it.enableCorsForAllOrigins()
@@ -90,7 +89,6 @@ object AuditorRestAPI {
                 get("policies", documented(AuditorRestController.listPoliciesDocs(), AuditorRestController::listPolicies))
                 post("verify", documented(AuditorRestController.verifyVPDocs(), AuditorRestController::verifyVP))
             }
-
         }.exception(IllegalArgumentException::class.java) { e, ctx ->
             log.error(e.stackTraceToString())
             ctx.json(ErrorResponse(e.message ?: " Unknown application error", 400))

@@ -65,7 +65,6 @@ class SignatoryApiTest : AnnotationSpec() {
 
     @Test
     fun testListVcTemplates() = runBlocking {
-
         val templates = client.get<List<String>>("$SIGNATORY_API_URL/v1/templates") {
             contentType(ContentType.Application.Json)
         }
@@ -76,7 +75,6 @@ class SignatoryApiTest : AnnotationSpec() {
 
     @Test
     fun testGetVcDefaultTemplate() = runBlocking {
-
         val europassJson = client.get<String>("$SIGNATORY_API_URL/v1/templates/Europass") {
             contentType(ContentType.Application.Json)
         }

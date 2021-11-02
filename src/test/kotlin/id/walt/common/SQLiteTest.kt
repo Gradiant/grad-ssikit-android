@@ -1,14 +1,18 @@
 package id.walt.common
 
 import com.nimbusds.jose.util.Base64
-import id.walt.servicematrix.ServiceMatrix
-import io.kotest.core.spec.style.AnnotationSpec
-import io.kotest.matchers.shouldBe
-import org.bouncycastle.jce.provider.BouncyCastleProvider
 import id.walt.crypto.KeyAlgorithm
+import id.walt.servicematrix.ServiceMatrix
 import id.walt.services.key.KeyService
 import id.walt.services.keystore.KeyType
 import id.walt.test.RESOURCES_PATH
+import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.matchers.shouldBe
+import org.bouncycastle.jce.provider.BouncyCastleProvider
+//ANDROID PORT
+import java.io.File
+import java.io.FileInputStream
+//ANDROID PORT
 import java.security.Security
 
 class SQLiteTest : AnnotationSpec() {
@@ -17,7 +21,9 @@ class SQLiteTest : AnnotationSpec() {
     @Before
     fun setup() {
         Security.addProvider(BouncyCastleProvider())
-        ServiceMatrix("$RESOURCES_PATH/service-matrix.properties")
+        //ANDROID PORT
+        ServiceMatrix(FileInputStream(File("$RESOURCES_PATH/service-matrix.properties")))
+        //ANDROID PORT
     }
 
     @Test

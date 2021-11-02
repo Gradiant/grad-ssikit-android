@@ -21,10 +21,10 @@ open class SunCryptoService : CryptoService() {
 
     private var _customKeyStore: KeyStoreService? = null
     private val keyStore: KeyStoreService
-    get() = when(_customKeyStore) {
-        null -> WaltContext.keyStore
-        else -> _customKeyStore!!
-    }
+        get() = when(_customKeyStore) {
+            null -> WaltContext.keyStore
+            else -> _customKeyStore!!
+        }
 
     var ecJWK: ECKey? = null
 

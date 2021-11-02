@@ -27,6 +27,7 @@ import java.time.LocalDateTime
     val did = DidService.create(DidMethod.key)
 
     "VerifiableId ld-proof" {
+
         val vc = signatory.issue(
             "VerifiableId", ProofConfig(
                 subjectDid = did,

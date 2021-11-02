@@ -7,7 +7,6 @@ import cc.vileda.openapi.dsl.securityScheme
 import com.beust.klaxon.Klaxon
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.exc.InvalidFormatException
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import id.walt.Values
 import id.walt.rest.ErrorResponse
 import id.walt.rest.OpenAPIUtils.documentedIgnored
@@ -114,7 +113,6 @@ object CoreAPI {
                     override fun <T : Any?> fromJsonString(json: String, targetClass: Class<T>): T {
                         return JavalinJackson(mapper).fromJsonString(json, targetClass)
                     }
-
                 })
 
                 //addStaticFiles("/static")

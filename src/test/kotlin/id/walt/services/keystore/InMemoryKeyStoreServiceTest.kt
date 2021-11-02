@@ -39,7 +39,7 @@ class InMemoryKeyStoreServiceTest : StringSpec({
         inMemoryKeyStore.getKeyId(alias) shouldBe null
         shouldThrow<NullPointerException> { inMemoryKeyStore.load(key.keyId.id) }
         shouldThrow<NullPointerException> { inMemoryKeyStore.load(alias) }
-        }
+    }
 
     "All InMemoryKeyStoreService instances reference the same HKVStore" {
         inMemoryKeyStore.store(key)

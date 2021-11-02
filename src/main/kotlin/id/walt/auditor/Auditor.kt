@@ -1,7 +1,6 @@
 package id.walt.auditor
 
 import id.walt.model.TrustedIssuer
-import id.walt.services.WaltIdServices.log
 import id.walt.services.did.DidService
 import id.walt.services.essif.TrustedIssuerClient
 import id.walt.services.vc.JsonLdCredentialService
@@ -48,15 +47,23 @@ class SignaturePolicy : VerificationPolicy {
 
     override fun verify(vc: VerifiableCredential): Boolean {
         return try {
+            //ANDROID PORT
+            //log.debug { "is jwt: ${vc.jwt != null}" }
+            //ANDROID PORT
+
             DidService.importKey(VcUtils.getIssuer(vc)) && when (vc.jwt) {
                 null -> jsonLdCredentialService.verify(vc.json!!).verified
                 else -> jwtCredentialService.verify(vc.jwt!!).verified
             }
         } catch (e: Exception) {
+            //ANDROID PORT
+            //log.error(e.localizedMessage)
+            //ANDROID PORT
             false
         }
     }
 }
+
 class JsonSchemaPolicy : VerificationPolicy { // Schema already validated by json-ld?
     override val description: String = "Verify by JSON schema"
     override fun verify(vc: VerifiableCredential) = true // TODO validate policy
@@ -84,10 +91,13 @@ class TrustedIssuerRegistryPolicy : VerificationPolicy {
 
         val issuerDid = VcUtils.getIssuer(vc)
 
-        val resolvedIssuerDid = DidService.loadOrResolveAnyDid(issuerDid) ?: throw Exception("Could not resolve issuer DID $issuerDid")
+        val resolvedIssuerDid =
+            DidService.loadOrResolveAnyDid(issuerDid) ?: throw Exception("Could not resolve issuer DID $issuerDid")
 
         if (resolvedIssuerDid.id != issuerDid) {
-            log.debug { "Resolved DID ${resolvedIssuerDid.id} does not match the issuer DID $issuerDid" }
+            //ANDROID PORT
+            //log.debug { "Resolved DID ${resolvedIssuerDid.id} does not match the issuer DID $issuerDid" }
+            //ANDROID PORT
             return false
         }
 
@@ -98,6 +108,7 @@ class TrustedIssuerRegistryPolicy : VerificationPolicy {
         }
 
         return validTrustedIssuerRecord(tirRecord)
+
     }
 
     private fun validTrustedIssuerRecord(tirRecord: TrustedIssuer): Boolean {
@@ -105,12 +116,16 @@ class TrustedIssuerRegistryPolicy : VerificationPolicy {
 
         if (tirRecord.attributes[0].body != "eyJAY29udGV4dCI6Imh0dHBzOi8vZWJzaS5ldSIsInR5cGUiOiJhdHRyaWJ1dGUiLCJuYW1lIjoiaXNzdWVyIiwiZGF0YSI6IjVkNTBiM2ZhMThkZGUzMmIzODRkOGM2ZDA5Njg2OWRlIn0=") {
             issuerRecordValid = false
-            log.debug { "Body of TIR record ${tirRecord} not valid." }
+            //ANDROID PORT
+            //log.debug { "Body of TIR record ${tirRecord} not valid." }
+            //ANDROID PORT
         }
 
         if (tirRecord.attributes[0].hash != "14f2d3c3320f65b6fd9413608e4c17f831e3c595ad61222ec12f899752348718") {
             issuerRecordValid = false
-            log.debug { "Body of TIR record ${tirRecord} not valid." }
+            //ANDROID PORT
+            //log.debug { "Body of TIR record ${tirRecord} not valid." }
+            //ANDROID PORT
         }
         return issuerRecordValid
     }
@@ -170,15 +185,21 @@ object Auditor : IAuditor {
 
     override fun verify(vcJson: String, policies: List<VerificationPolicy>): VerificationResult {
         val vc = vcJson.toCredential()
-        val policyResults = policies.associateBy(keySelector = VerificationPolicy::id) { policy ->
-            policy.verify(vc) &&
-                    when (vc) {
-                        is VerifiablePresentation -> vc.verifiableCredential.all { cred ->
-                            policy.verify(cred)
+        val policyResults = policies
+            .associateBy(keySelector = VerificationPolicy::id) { policy ->
+                //ANDROID PORT
+                //log.debug { "Verifying vc with ${policy.id}..." }
+                //ANDROID PORT
+                policy.verify(vc) && when (vc) {
+                    is VerifiablePresentation -> vc.verifiableCredential.all { cred ->
+                        //ANDROID PORT
+                        //log.debug { "Verifying ${cred.type.last()} in VP with ${policy.id}..." }
+                        //ANDROID PORT
+                        policy.verify(cred)
                         }
-                        else -> true
-                    }
-        }
+                    else -> true
+                }
+            }
 
         return VerificationResult(allAccepted(policyResults), policyResults)
     }

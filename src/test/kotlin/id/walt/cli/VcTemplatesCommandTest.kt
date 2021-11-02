@@ -4,13 +4,17 @@ import id.walt.servicematrix.ServiceMatrix
 import io.kotest.core.spec.style.StringSpec
 import id.walt.cli.*
 import id.walt.test.RESOURCES_PATH
+//ANDROID PORT
+import java.io.File
+import java.io.FileInputStream
+//ANDROID PORT
 
 
 class VcTemplatesCommandTest : StringSpec({
 
-    ServiceMatrix("$RESOURCES_PATH/service-matrix.properties")
-
     //ANDROID PORT
+    ServiceMatrix(FileInputStream(File("$RESOURCES_PATH/service-matrix.properties")))
+
     /*"vc templates list" {
         VcTemplatesListCommand().parse(listOf())
     }*/

@@ -13,7 +13,7 @@ import id.walt.vclib.model.VerifiableCredential
 import id.walt.vclib.vclist.VerifiablePresentation
 import info.weboftrust.ldsignatures.LdProof
 //ANDROID PORT
-import mu.KotlinLogging
+//import mu.KotlinLogging
 //ANDROID PORT
 import java.nio.file.Files
 import java.nio.file.Path
