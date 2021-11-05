@@ -3,6 +3,7 @@ package id.walt.cli
 import com.github.ajalt.clikt.core.PrintHelpMessage
 import id.walt.crypto.KeyAlgorithm
 import id.walt.servicematrix.ServiceMatrix
+import id.walt.servicematrix.utils.AndroidUtils
 import id.walt.services.key.KeyService
 import id.walt.test.RESOURCES_PATH
 import io.kotest.assertions.throwables.shouldThrow
@@ -17,6 +18,7 @@ import java.io.FileInputStream
 class KeyCommandTest : StringSpec({
 
     //ANDROID PORT
+    AndroidUtils.setAndroidDataDir(System.getProperty("user.dir"))
     ServiceMatrix(FileInputStream(File("$RESOURCES_PATH/service-matrix.properties")))
     //ANDROID PORT
 

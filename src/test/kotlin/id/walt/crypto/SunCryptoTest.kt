@@ -1,6 +1,7 @@
 package id.walt.crypto
 
 import id.walt.servicematrix.ServiceMatrix
+import id.walt.servicematrix.utils.AndroidUtils
 import id.walt.services.crypto.SunCryptoService
 import id.walt.test.RESOURCES_PATH
 import io.kotest.core.spec.style.AnnotationSpec
@@ -14,7 +15,10 @@ class SunCryptoTest : AnnotationSpec() {
 
     @Before
     fun setup() {
+        //ANDROID PORT
+        AndroidUtils.setAndroidDataDir(System.getProperty("user.dir"))
         ServiceMatrix(FileInputStream(File("$RESOURCES_PATH/service-matrix.properties")))
+        //ANDROID PORT
     }
 
     val sunCryptoService = SunCryptoService()

@@ -63,8 +63,9 @@ object WaltIdServices {
         println("Walt.ID SSI-Kit ${Values.version} (running on Java $javaVersion)")
 
         //ANDROID PORT
-        val version = Integer.parseInt(System.getProperty("java.version"))
-        if (version < 11) {
+        val version = System.getProperty("java.version")
+        val versionNum = Integer.parseInt(version.split(".")[0])
+        if (versionNum < 11) {
             log.error { "Java version 11+ is required!" }
         }
         //ANDROID PORT

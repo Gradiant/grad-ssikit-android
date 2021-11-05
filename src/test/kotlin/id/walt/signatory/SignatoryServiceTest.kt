@@ -17,11 +17,14 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.types.beInstanceOf
+import java.io.File
+import java.io.FileInputStream
 import java.time.LocalDateTime
 
-//ANDROID TEST
-/*class SignatoryServiceTest : StringSpec({
-    ServiceMatrix("$RESOURCES_PATH/service-matrix.properties")
+class SignatoryServiceTest : StringSpec({
+    //ANDROID PORT
+    ServiceMatrix(FileInputStream(File("$RESOURCES_PATH/service-matrix.properties")))
+    //ANDROID PORT
     val signatory = Signatory.getService()
 
     val did = DidService.create(DidMethod.key)
@@ -115,5 +118,4 @@ import java.time.LocalDateTime
         cred should beInstanceOf<VerifiableId>()
         (cred as VerifiableId).id shouldBe vcObj.id
     }
-})*/
-//ANDROID TEST
+})

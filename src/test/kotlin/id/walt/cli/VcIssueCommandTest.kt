@@ -4,6 +4,7 @@ import com.github.ajalt.clikt.core.PrintHelpMessage
 import id.walt.crypto.KeyAlgorithm
 import id.walt.model.DidMethod
 import id.walt.servicematrix.ServiceMatrix
+import id.walt.servicematrix.utils.AndroidUtils
 import id.walt.services.did.DidService
 import id.walt.services.key.KeyService
 import id.walt.signatory.DataProviderRegistry
@@ -15,11 +16,18 @@ import id.walt.vclib.vclist.VerifiableAttestation
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.string.shouldContain
+//ANDROID PORT
+import java.io.File
+import java.io.FileInputStream
+//ANDROID PORT
 
 
 class VcIssueCommandTest : StringSpec({
 
-    ServiceMatrix("$RESOURCES_PATH/service-matrix.properties")
+    //ANDROID PORT
+    AndroidUtils.setAndroidDataDir(System.getProperty("user.dir"))
+    ServiceMatrix(FileInputStream(File("$RESOURCES_PATH/service-matrix.properties")))
+    //ANDROID PORT
 
     val key = KeyService.getService().generate(KeyAlgorithm.ECDSA_Secp256k1)
     var didIssuer = DidService.create(DidMethod.ebsi, keyAlias = key.id)

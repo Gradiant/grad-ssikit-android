@@ -3,6 +3,7 @@ package id.walt.custodian
 import id.walt.custodian.CustodianKeyTestUtils.standardKeyTests
 import id.walt.servicematrix.ServiceMatrix
 import id.walt.servicematrix.ServiceRegistry
+import id.walt.servicematrix.utils.AndroidUtils
 import id.walt.services.keystore.FileSystemKeyStoreService
 import id.walt.services.keystore.KeyStoreService
 import id.walt.test.RESOURCES_PATH
@@ -15,6 +16,7 @@ import java.io.FileInputStream
 class CustodianFileSystemKeyTests : StringSpec({
 
     //ANDROID PORT
+    AndroidUtils.setAndroidDataDir(System.getProperty("user.dir"))
     ServiceMatrix(FileInputStream(File("$RESOURCES_PATH/service-matrix.properties")))
     //ANDROID PORT
     val custodian = Custodian.getService()

@@ -2,6 +2,7 @@ package id.walt.custodian
 
 import id.walt.servicematrix.ServiceMatrix
 import id.walt.servicematrix.ServiceRegistry
+import id.walt.servicematrix.utils.AndroidUtils
 import id.walt.services.vcstore.FileSystemVcStoreService
 import id.walt.services.vcstore.VcStoreService
 import id.walt.test.RESOURCES_PATH
@@ -18,6 +19,8 @@ import java.io.FileInputStream
 class FileSystemVcStoreTests : StringSpec({
 
     //ANDROID PORT
+    AndroidUtils.setAndroidDataDir(System.getProperty("user.dir"))
+    AndroidUtils.setDataRoot(System.getProperty("user.dir") + "/data")
     ServiceMatrix(FileInputStream(File("$RESOURCES_PATH/service-matrix.properties")))
     //ANDROID PORT
     val custodian = Custodian.getService()

@@ -5,6 +5,7 @@ import id.walt.model.Did
 import id.walt.model.DidMethod
 import id.walt.model.DidUrl
 import id.walt.servicematrix.ServiceMatrix
+import id.walt.servicematrix.utils.AndroidUtils
 import id.walt.services.did.DidService
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.shouldBe
@@ -23,6 +24,7 @@ class DidServiceTest : AnnotationSpec() {
 
     init {
         //ANDROID PORT
+        AndroidUtils.setAndroidDataDir(System.getProperty("user.dir"))
         ServiceMatrix(FileInputStream(File("$RESOURCES_PATH/service-matrix.properties")))
         //ANDROID PORT
     }
@@ -48,6 +50,9 @@ class DidServiceTest : AnnotationSpec() {
     }
 
     @Test
+    //ANDROID PORT
+    @Ignore //Android Lazy Sodium
+    //ANDROID PORT
     fun createResolveDidKeyTest() {
         val ds = DidService
         val did = ds.create(DidMethod.key)

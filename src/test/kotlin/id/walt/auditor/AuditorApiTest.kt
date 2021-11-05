@@ -3,6 +3,9 @@ package id.walt.auditor
 import com.beust.klaxon.Klaxon
 import id.walt.model.DidMethod
 import id.walt.servicematrix.ServiceMatrix
+//ANDROID PORT
+import id.walt.servicematrix.utils.AndroidUtils
+//ANDROID PORT
 import id.walt.services.did.DidService
 import id.walt.signatory.ProofConfig
 import id.walt.signatory.Signatory
@@ -30,6 +33,7 @@ class AuditorApiTest : AnnotationSpec() {
 
     init {
         //ANDROID PORT
+        AndroidUtils.setAndroidDataDir(System.getProperty("user.dir"))
         ServiceMatrix(FileInputStream(File("$RESOURCES_PATH/service-matrix.properties")))
         //ANDROID PORT
     }
@@ -71,6 +75,9 @@ class AuditorApiTest : AnnotationSpec() {
     }
 
     @Test
+    //ANDROID PORT
+    @Ignore //Android Lazy Sodium
+    //ANDROID PORT
     fun testCredentialVerification() = runBlocking {
         val signatory = Signatory.getService()
         val did = DidService.create(DidMethod.key)

@@ -3,6 +3,7 @@ package id.walt.signatory
 import com.beust.klaxon.Klaxon
 import id.walt.model.DidMethod
 import id.walt.servicematrix.ServiceMatrix
+import id.walt.servicematrix.utils.AndroidUtils
 import id.walt.services.did.DidService
 import id.walt.signatory.rest.IssueCredentialRequest
 import id.walt.signatory.rest.SignatoryRestAPI
@@ -33,6 +34,7 @@ class SignatoryApiTest : AnnotationSpec() {
 
     init {
         //ANDROID PORT
+        AndroidUtils.setAndroidDataDir(System.getProperty("user.dir"))
         ServiceMatrix(FileInputStream(File("$RESOURCES_PATH/service-matrix.properties")))
         //ANDROID PORT
     }
@@ -83,6 +85,9 @@ class SignatoryApiTest : AnnotationSpec() {
     }
 
     @Test
+    //ANDROID PORT
+    @Ignore //Android Lazy Sodium
+    //ANDROID PORT
     fun testCredentialIssuance() = runBlocking {
         val did = DidService.create(DidMethod.key)
 

@@ -3,6 +3,7 @@ package id.walt.auditor
 import id.walt.custodian.Custodian
 import id.walt.model.DidMethod
 import id.walt.servicematrix.ServiceMatrix
+import id.walt.servicematrix.utils.AndroidUtils
 import id.walt.services.did.DidService
 import id.walt.signatory.ProofConfig
 import id.walt.signatory.ProofType
@@ -13,6 +14,10 @@ import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.collections.shouldBeSameSizeAs
 import io.kotest.matchers.collections.shouldContainAll
 import io.kotest.matchers.shouldBe
+//ANDROID PORT
+import java.io.File
+import java.io.FileInputStream
+//ANDROID PORT
 
 //ANDROID PORT
 /*
@@ -26,7 +31,10 @@ class AuditorCommandTest : StringSpec() {
     override fun beforeSpec(spec: Spec) {
         super.beforeSpec(spec)
 
-        ServiceMatrix("$RESOURCES_PATH/service-matrix.properties")
+        //ANDROID PORT
+        AndroidUtils.setAndroidDataDir(System.getProperty("user.dir"))
+        ServiceMatrix(FileInputStream(File("$RESOURCES_PATH/service-matrix.properties")))
+        //ANDROID PORT
 
         val signatory = Signatory.getService()
         val custodian = Custodian.getService()

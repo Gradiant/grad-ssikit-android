@@ -3,6 +3,7 @@ package id.walt.services.vc
 import id.walt.crypto.KeyAlgorithm
 import id.walt.model.DidMethod
 import id.walt.servicematrix.ServiceMatrix
+import id.walt.servicematrix.utils.AndroidUtils
 import id.walt.services.did.DidService
 import id.walt.services.jwt.JwtService
 import id.walt.services.key.KeyService
@@ -27,6 +28,7 @@ class WaltIdJwtCredentialServiceTest : AnnotationSpec() {
 
     init {
         //ANDROID PORT
+        AndroidUtils.setAndroidDataDir(System.getProperty("user.dir"))
         ServiceMatrix(FileInputStream(File("$RESOURCES_PATH/service-matrix.properties")))
         //ANDROID PORT
     }
@@ -51,6 +53,9 @@ class WaltIdJwtCredentialServiceTest : AnnotationSpec() {
     }
 
     @Test
+    //ANDROID PORT
+    @Ignore //Android Secp256k1 JNI
+    //ANDROID PORT
     fun testSignedVcAttributes() {
         val credential = credentialService.sign(
             Europass().encode(),
@@ -82,6 +87,9 @@ class WaltIdJwtCredentialServiceTest : AnnotationSpec() {
     }
 
     @Test
+    //ANDROID PORT
+    @Ignore //Android Secp256k1 JNI
+    //ANDROID PORT
     fun testOptionalConfigsAreNull() {
         val claims = jwtService.parseClaims(
             credentialService.sign(Europass().encode(), ProofConfig(issuerDid = issuerDid))
@@ -97,17 +105,26 @@ class WaltIdJwtCredentialServiceTest : AnnotationSpec() {
 
 
     @Test
+    //ANDROID PORT
+    @Ignore //Android Secp256k1 JNI
+    //ANDROID PORT
     fun testVerifyVc() = credentialService.verifyVc(
         credentialService.sign(Europass().encode(), ProofConfig(issuerDid = issuerDid))
     ) shouldBe true
 
     @Test
+    //ANDROID PORT
+    @Ignore //Android Secp256k1 JNI
+    //ANDROID PORT
     fun testVerifyVcWithIssuerDid() = credentialService.verifyVc(
         issuerDid,
         credentialService.sign(Europass().encode(), ProofConfig(issuerDid = issuerDid))
     ) shouldBe true
 
     @Test
+    //ANDROID PORT
+    @Ignore //Android Secp256k1 JNI
+    //ANDROID PORT
     fun testVerifyVcWithWrongIssuerDid() = credentialService.verifyVc(
         "wrong",
         credentialService.sign(Europass().encode(), ProofConfig(issuerDid = issuerDid)

@@ -7,7 +7,7 @@ import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 
 //ANDROID PORT
-/*class HKVStoreTest : StringSpec({
+class HKVStoreTest : StringSpec({
 
     fun hkvTest() {
         val hkvStore = WaltContext.hkvStore
@@ -34,8 +34,10 @@ import io.kotest.matchers.shouldBe
         hkvTest()
     }
     "FileSystemStore test" {
-        ServiceRegistry.registerService<HKVStoreService>(FileSystemHKVStore("./fsStore.conf"))
+        //ANDROID PORT
+        ServiceRegistry.registerService<HKVStoreService>(FileSystemHKVStore())
+        //ANDROID PORT
         hkvTest()
     }
-})*/
+})
 //ANDROID PORT

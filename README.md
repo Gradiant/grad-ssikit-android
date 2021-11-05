@@ -132,6 +132,8 @@ The SSI Kit by walt.id is Open Source software released under the [Apache 2.0 li
 
 28. FileSystemVcStoreService.kt -> Changed credential-store location to point towards the android application folder.
 
+29. All tests have been adapted to this ssikit (+ other modified libraries) version. There are still some executionErrors appearing due to the fact that SQLDroid Driver can only be executed in Android environments.
+
 ## Android Application Requirements
 
 1. Place the jars of waltid-ssikit, waltid-vclib, waltid-servicematrix in app/libs. Add those libraries to the project with the following line "implementation fileTree(include: ['*.jar'], dir: './libs')" inside the build.gradle of the project.

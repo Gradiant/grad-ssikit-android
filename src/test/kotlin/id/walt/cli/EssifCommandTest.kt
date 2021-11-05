@@ -5,6 +5,7 @@ import id.walt.crypto.KeyAlgorithm
 import id.walt.model.DidMethod
 import id.walt.model.DidUrl
 import id.walt.servicematrix.ServiceMatrix
+import id.walt.servicematrix.utils.AndroidUtils
 import id.walt.services.context.WaltContext
 import id.walt.services.did.DidService
 import id.walt.services.hkvstore.HKVKey
@@ -54,8 +55,8 @@ class EssifCommandTest : StringSpec({
     val enableTests = bearerToken.exists()
 
     //ANDROID PORT
-    ServiceMatrix(
-        FileInputStream(File("service-matrix.properties")))
+    AndroidUtils.setAndroidDataDir(System.getProperty("user.dir"))
+    ServiceMatrix(FileInputStream(File("service-matrix.properties")))
     //ANDROID PORT
 
     // DID used for onboarding

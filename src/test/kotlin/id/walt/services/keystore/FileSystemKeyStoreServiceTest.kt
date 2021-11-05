@@ -3,29 +3,41 @@ package id.walt.services.keystore
 import id.walt.crypto.KeyAlgorithm
 import id.walt.servicematrix.ServiceMatrix
 import id.walt.servicematrix.ServiceRegistry
+import id.walt.servicematrix.utils.AndroidUtils
 import id.walt.services.crypto.SunCryptoService
 import id.walt.services.key.KeyService
 import id.walt.test.RESOURCES_PATH
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.shouldBe
+//ANDROID PORT
+import java.io.File
+import java.io.FileInputStream
+//ANDROID PORT
 
 open class FileSystemKeyStoreServiceTest : AnnotationSpec() {//: KeyStoreServiceTest() {
 
     private val sunCryptoService = SunCryptoService()
     private val fileSystemKeyStoreService = FileSystemKeyStoreService()
-    private val sqlKeyStoreService = SqlKeyStoreService()
+    //ANDROID PORT
+    //private val sqlKeyStoreService = SqlKeyStoreService()
+    //ANDROID PORT
     private val keyService = KeyService.getService()
 
     @Before
     fun setUp() {
-        ServiceMatrix("$RESOURCES_PATH/service-matrix.properties")
+        //ANDROID PORT
+        AndroidUtils.setAndroidDataDir(System.getProperty("user.dir"))
+        ServiceMatrix(FileInputStream(File("$RESOURCES_PATH/service-matrix.properties")))
+        //ANDROID PORT
         ServiceRegistry.registerService<KeyStoreService>(FileSystemKeyStoreService())
         sunCryptoService.setKeyStore(fileSystemKeyStoreService)
     }
 
     @After
     fun tearDown() {
-        sunCryptoService.setKeyStore(sqlKeyStoreService)
+        //ANDROID PORT
+        //sunCryptoService.setKeyStore(sqlKeyStoreService)
+        //ANDROID PORT
     }
 
     @Test

@@ -5,6 +5,7 @@ import id.walt.auditor.PolicyRegistry
 import id.walt.custodian.Custodian
 import id.walt.model.DidMethod
 import id.walt.servicematrix.ServiceMatrix
+import id.walt.servicematrix.utils.AndroidUtils
 import id.walt.services.did.DidService
 import id.walt.services.vc.JsonLdCredentialService
 import id.walt.signatory.ProofConfig
@@ -22,6 +23,7 @@ import java.io.FileInputStream
 class VcVerifyCommandTest : StringSpec({
 
     //ANDROID PORT
+    AndroidUtils.setAndroidDataDir(System.getProperty("user.dir"))
     ServiceMatrix(FileInputStream(File("$RESOURCES_PATH/service-matrix.properties")))
     //ANDROID PORT
 

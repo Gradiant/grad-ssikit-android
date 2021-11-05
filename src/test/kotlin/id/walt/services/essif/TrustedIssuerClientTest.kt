@@ -1,6 +1,7 @@
 package id.walt.services.essif
 
 import id.walt.servicematrix.ServiceMatrix
+import id.walt.servicematrix.utils.AndroidUtils
 import id.walt.test.RESOURCES_PATH
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.shouldBe
@@ -17,6 +18,7 @@ class TrustedIssuerClientTest : AnnotationSpec() {
     init {
         println("Running ServiceMatrix")
         //ANDROID PORT
+        AndroidUtils.setAndroidDataDir(System.getProperty("user.dir"))
         ServiceMatrix(FileInputStream(File("$RESOURCES_PATH/service-matrix.properties")))
         //ANDROID PORT
         println("Done running the ServiceMatrix")

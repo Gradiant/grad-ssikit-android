@@ -9,6 +9,7 @@ import id.walt.crypto.KeyAlgorithm
 import id.walt.crypto.encBase64
 import id.walt.model.*
 import id.walt.servicematrix.ServiceMatrix
+import id.walt.servicematrix.utils.AndroidUtils
 import id.walt.services.essif.EssifClient
 import id.walt.services.essif.EssifServer
 import id.walt.services.essif.userwallet.UserWalletService
@@ -30,6 +31,7 @@ class VcIssuanceFlowTest : AnnotationSpec() {
 
     init {
         //ANDROID PORT
+        AndroidUtils.setAndroidDataDir(System.getProperty("user.dir"))
         ServiceMatrix(FileInputStream(File("$RESOURCES_PATH/service-matrix.properties")))
         //ANDROID PORT
     }
@@ -84,6 +86,9 @@ class VcIssuanceFlowTest : AnnotationSpec() {
 
 
     @Test
+    //ANDROID PORT
+    @Ignore //Android Secp256k1 JNI
+    //ANDROID PORT
     fun testOpenSiopSession() {
 
         val siopRequest = EssifServer.generateAuthenticationRequest()

@@ -2,6 +2,7 @@ package id.walt.services.keystore
 
 import id.walt.crypto.KeyAlgorithm
 import id.walt.servicematrix.ServiceMatrix
+import id.walt.servicematrix.utils.AndroidUtils
 import id.walt.services.key.KeyService
 import id.walt.test.RESOURCES_PATH
 import io.kotest.assertions.throwables.shouldThrow
@@ -9,6 +10,10 @@ import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import org.bouncycastle.jce.provider.BouncyCastleProvider
+//ANDROID PORT
+import java.io.File
+import java.io.FileInputStream
+//ANDROID PORT
 import java.security.Security
 import java.util.*
 
@@ -18,7 +23,10 @@ open class KeyStoreServiceTest : AnnotationSpec() {
 
     init {
         Security.addProvider(BouncyCastleProvider())
-        ServiceMatrix("$RESOURCES_PATH/service-matrix.properties")
+        //ANDROID PORT
+        AndroidUtils.setAndroidDataDir(System.getProperty("user.dir"))
+        ServiceMatrix(FileInputStream(File("$RESOURCES_PATH/service-matrix.properties")))
+        //ANDROID PORT
     }
 
     @Test

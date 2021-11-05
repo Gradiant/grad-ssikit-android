@@ -2,6 +2,7 @@ package id.walt.custodian
 
 import id.walt.model.DidMethod
 import id.walt.servicematrix.ServiceMatrix
+import id.walt.servicematrix.utils.AndroidUtils
 import id.walt.services.did.DidService
 import id.walt.signatory.ProofConfig
 import id.walt.signatory.ProofType
@@ -15,9 +16,12 @@ import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import org.junit.jupiter.api.assertThrows
-
 //ANDROID PORT
+import java.io.File
+import java.io.FileInputStream
 /*
+//ANDROID PORT
+
 class CustodianPresentTest : StringSpec() {
     lateinit var did: String
     lateinit var vcJsonLd: String
@@ -26,7 +30,10 @@ class CustodianPresentTest : StringSpec() {
     override fun beforeSpec(spec: Spec) {
         super.beforeSpec(spec)
 
-        ServiceMatrix("$RESOURCES_PATH/service-matrix.properties")
+        //ANDROID PORT
+        AndroidUtils.setAndroidDataDir(System.getProperty("user.dir"))
+        ServiceMatrix(FileInputStream(File("$RESOURCES_PATH/service-matrix.properties")))
+        //ANDROID PORT
 
         did = DidService.create(DidMethod.key)
 

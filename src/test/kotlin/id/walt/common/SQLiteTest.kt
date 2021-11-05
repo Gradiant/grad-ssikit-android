@@ -3,6 +3,7 @@ package id.walt.common
 import com.nimbusds.jose.util.Base64
 import id.walt.crypto.KeyAlgorithm
 import id.walt.servicematrix.ServiceMatrix
+import id.walt.servicematrix.utils.AndroidUtils
 import id.walt.services.key.KeyService
 import id.walt.services.keystore.KeyType
 import id.walt.test.RESOURCES_PATH
@@ -22,11 +23,15 @@ class SQLiteTest : AnnotationSpec() {
     fun setup() {
         Security.addProvider(BouncyCastleProvider())
         //ANDROID PORT
+        AndroidUtils.setAndroidDataDir(System.getProperty("user.dir"))
         ServiceMatrix(FileInputStream(File("$RESOURCES_PATH/service-matrix.properties")))
         //ANDROID PORT
     }
 
     @Test
+    //ANDROID PORT
+    @Ignore //Android SQLDroid Driver
+    //ANDROID PORT
     fun createKeyStoreDb() {
         val keyId = keyService.generate(KeyAlgorithm.ECDSA_Secp256k1)
         val key = keyService.load(keyId.id, KeyType.PRIVATE)

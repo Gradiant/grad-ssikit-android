@@ -5,12 +5,16 @@ import id.walt.crypto.WaltIdProvider
 import id.walt.crypto.decBase64
 import id.walt.crypto.encBase64
 import id.walt.servicematrix.ServiceMatrix
+import id.walt.servicematrix.utils.AndroidUtils
 import id.walt.services.WaltIdServices
 import id.walt.test.RESOURCES_PATH
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import java.io.File
+//ANDROID PORT
+import java.io.FileInputStream
+//ANDROID PORT
 import java.security.KeyStore
 import java.security.Provider
 import java.security.Security
@@ -27,7 +31,10 @@ class CryptoServiceTest : AnnotationSpec() {
 
     @Before
     fun setup() {
-        ServiceMatrix("$RESOURCES_PATH/service-matrix.properties")
+        //ANDROID PORT
+        AndroidUtils.setAndroidDataDir(System.getProperty("user.dir"))
+        ServiceMatrix(FileInputStream(File("$RESOURCES_PATH/service-matrix.properties")))
+        //ANDROID PORT
     }
 
     @Test

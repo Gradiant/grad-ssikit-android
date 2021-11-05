@@ -4,10 +4,14 @@ import id.walt.crypto.KeyAlgorithm
 import id.walt.crypto.KeyId
 import id.walt.crypto.buildKey
 import id.walt.servicematrix.ServiceMatrix
+import id.walt.servicematrix.utils.AndroidUtils
 import id.walt.services.context.WaltContext
 import id.walt.services.essif.didebsi.DidEbsiService
 import id.walt.services.essif.didebsi.UnsignedTransaction
 import id.walt.services.hkvstore.HKVKey
+//ANDROID PORT
+import id.walt.test.RESOURCES_PATH
+//ANDROID PORT
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.shouldBe
 //ANDROID PORT
@@ -30,7 +34,8 @@ class DidEbsiServiceTest : AnnotationSpec() {
         // TODO replace with thest config
         //ServiceMatrix("$RESOURCES_PATH/service-matrix.properties")
         //ANDROID PORT
-        ServiceMatrix(FileInputStream(File("service-matrix.properties")))
+        AndroidUtils.setAndroidDataDir(System.getProperty("user.dir"))
+        ServiceMatrix(FileInputStream(File("$RESOURCES_PATH/service-matrix.properties")))
         //ANDROID PORT
         println("Done running the ServiceMatrix")
     }

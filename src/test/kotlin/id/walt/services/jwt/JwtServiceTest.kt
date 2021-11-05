@@ -12,6 +12,7 @@ import id.walt.crypto.decBase64
 import id.walt.model.DidEbsi
 import id.walt.model.DidMethod
 import id.walt.servicematrix.ServiceMatrix
+import id.walt.servicematrix.utils.AndroidUtils
 import id.walt.services.crypto.CryptoService
 import id.walt.services.did.DidService
 import id.walt.services.key.KeyService
@@ -24,6 +25,9 @@ import io.kotest.matchers.shouldBe
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.bouncycastle.util.encoders.Hex
 import java.io.File
+//ANDROID PORT
+import java.io.FileInputStream
+//ANDROID PORT
 import java.time.Instant
 import java.util.*
 import javax.crypto.Cipher
@@ -33,7 +37,10 @@ class JwtServiceTest : AnnotationSpec() {
 
     @Before
     fun setup() {
-        ServiceMatrix("$RESOURCES_PATH/service-matrix.properties")
+        //ANDROID PORT
+        AndroidUtils.setAndroidDataDir(System.getProperty("user.dir"))
+        ServiceMatrix(FileInputStream(File("$RESOURCES_PATH/service-matrix.properties")))
+        //ANDROID PORT
     }
 
     private val cryptoService = CryptoService.getService()
@@ -74,6 +81,9 @@ class JwtServiceTest : AnnotationSpec() {
     }
 
     @Test
+    //ANDROID PORT
+    @Ignore //Android Secp256k1 JNI
+    //ANDROID PORT
     fun genJwtSecp256k1() {
         val keyId = cryptoService.generateKey(KeyAlgorithm.ECDSA_Secp256k1)
 
@@ -105,6 +115,9 @@ class JwtServiceTest : AnnotationSpec() {
 
 
     @Test
+    //ANDROID PORT
+    @Ignore //Android Secp256k1 JNI
+    //ANDROID PORT
     fun genJwtCustomPayload() {
         val did = DidService.create(DidMethod.ebsi, keyService.generate(KeyAlgorithm.ECDSA_Secp256k1).id)
         val kid = DidService.loadDidEbsi(did).verificationMethod!![0].id
@@ -140,6 +153,9 @@ class JwtServiceTest : AnnotationSpec() {
 //    VA JSON Strcucture	vc
 
     @Test
+    //ANDROID PORT
+    @Ignore //Android Secp256k1 JNI
+    //ANDROID PORT
     fun genEbsiVerifiableAttestationJwtProof() {
         val issuerDid = DidService.create(DidMethod.ebsi, keyService.generate(KeyAlgorithm.ECDSA_Secp256k1).id)
 

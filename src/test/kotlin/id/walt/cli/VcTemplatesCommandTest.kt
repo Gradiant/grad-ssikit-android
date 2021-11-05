@@ -3,6 +3,7 @@ package id.walt.cli
 import id.walt.servicematrix.ServiceMatrix
 import io.kotest.core.spec.style.StringSpec
 import id.walt.cli.*
+import id.walt.servicematrix.utils.AndroidUtils
 import id.walt.test.RESOURCES_PATH
 //ANDROID PORT
 import java.io.File
@@ -13,6 +14,7 @@ import java.io.FileInputStream
 class VcTemplatesCommandTest : StringSpec({
 
     //ANDROID PORT
+    AndroidUtils.setAndroidDataDir(System.getProperty("user.dir"))
     ServiceMatrix(FileInputStream(File("$RESOURCES_PATH/service-matrix.properties")))
 
     /*"vc templates list" {

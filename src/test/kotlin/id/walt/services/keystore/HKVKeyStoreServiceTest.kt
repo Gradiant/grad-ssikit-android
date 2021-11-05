@@ -3,6 +3,7 @@ package id.walt.services.keystore
 import id.walt.crypto.KeyAlgorithm
 import id.walt.servicematrix.ServiceMatrix
 import id.walt.servicematrix.ServiceRegistry
+import id.walt.servicematrix.utils.AndroidUtils
 import id.walt.services.crypto.SunCryptoService
 import id.walt.services.key.KeyService
 import id.walt.test.RESOURCES_PATH
@@ -17,6 +18,7 @@ open class HKVKeyStoreServiceTest : AnnotationSpec() {//: KeyStoreServiceTest() 
 
     init {
         //ANDROID PORT
+        AndroidUtils.setAndroidDataDir(System.getProperty("user.dir"))
         ServiceMatrix(FileInputStream(File("$RESOURCES_PATH/service-matrix.properties")))
         //ANDROID PORT
         ServiceRegistry.registerService<KeyStoreService>(HKVKeyStoreService())
@@ -24,7 +26,9 @@ open class HKVKeyStoreServiceTest : AnnotationSpec() {//: KeyStoreServiceTest() 
 
     private val sunCryptoService = SunCryptoService()
     private val hkvKeyStoreService = HKVKeyStoreService()
-    private val sqlKeyStoreService = SqlKeyStoreService()
+    //ANDROID PORT
+    //private val sqlKeyStoreService = SqlKeyStoreService()
+    //ANDROID PORT
     private val keyService = KeyService.getService()
 
     @Before
@@ -34,7 +38,9 @@ open class HKVKeyStoreServiceTest : AnnotationSpec() {//: KeyStoreServiceTest() 
 
     @After
     fun tearDown() {
-        sunCryptoService.setKeyStore(sqlKeyStoreService)
+        //ANDROID PORT
+        //sunCryptoService.setKeyStore(sqlKeyStoreService)
+        //ANDROID PORT
     }
 
     @Test

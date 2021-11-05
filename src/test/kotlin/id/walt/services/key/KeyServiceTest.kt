@@ -11,6 +11,7 @@ import id.walt.crypto.KeyAlgorithm
 import id.walt.crypto.newKeyId
 import id.walt.model.Jwk
 import id.walt.servicematrix.ServiceMatrix
+import id.walt.servicematrix.utils.AndroidUtils
 import id.walt.services.crypto.CryptoService
 import id.walt.services.crypto.SunCryptoService
 import id.walt.services.keystore.InMemoryKeyStoreService
@@ -45,6 +46,7 @@ class KeyServiceTest : AnnotationSpec() {
     fun setup() {
         Security.addProvider(BouncyCastleProvider())
         //ANDROID PORT
+        AndroidUtils.setAndroidDataDir(System.getProperty("user.dir"))
         ServiceMatrix(FileInputStream(File("$RESOURCES_PATH/service-matrix.properties")))
         //ANDROID PORT
     }
