@@ -1,6 +1,5 @@
 package id.walt
 
-import deltadao.DeltaDao
 import id.walt.auditor.Auditor
 import id.walt.auditor.PolicyRegistry
 import id.walt.cli.logic.KeyCommandLogic
@@ -45,10 +44,6 @@ class DeltaDaoTest : StringSpec({
     //ANDROID PORT
     ServiceMatrix(FileInputStream(File("service-matrix.properties")))
     //ANDROID PORT
-
-    DeltaDao.registerDeltaDaoCredentials()
-
-    DeltaDao.registerDeltaDaoDataProvider()
 
     if (Path("bearer-token.txt").exists())
         Path("bearer-token.txt").moveTo(Path("data/bearer-token.txt"))
@@ -213,7 +208,7 @@ class DeltaDaoTest : StringSpec({
 //            }
 //        )
 
-        val verificationResult = Auditor.verify(src.readText(), policies.map { PolicyRegistry.getPolicy(it) })
+        val verificationResult = Auditor.getService().verify(src.readText(), policies.map { PolicyRegistry.getPolicy(it) })
 
         println("\nResults:\n")
 

@@ -1,7 +1,6 @@
 package id.walt.services.vc
 
 import com.nimbusds.jwt.SignedJWT
-import deltadao.GaiaxCredential
 import id.walt.vclib.model.VerifiableCredential
 import id.walt.vclib.vclist.*
 //ANDROID PORT
@@ -33,7 +32,7 @@ object VcUtils {
         }
     }
 
-    fun getHolder(vcObj: VerifiableCredential): String = when (vcObj) {
+    fun getSubject(vcObj: VerifiableCredential): String = when (vcObj) {
         is Europass -> vcObj.credentialSubject!!.id!!
         is VerifiableId -> vcObj.credentialSubject!!.id!!
         is VerifiableDiploma -> vcObj.credentialSubject!!.id!!
@@ -50,4 +49,59 @@ object VcUtils {
         }
     }
 
+    fun getIssuanceDate(vc: VerifiableCredential) = when (vc) {
+        is Europass -> vc.issuanceDate
+        is VerifiableId -> vc.issuanceDate
+        is VerifiableDiploma -> vc.issuanceDate
+        is UniversityDegree -> vc.issuanceDate
+        is VerifiableAttestation -> vc.issuanceDate
+        is VerifiableAuthorization -> vc.issuanceDate
+        else -> {
+            //ANDROID PORT
+            //log.warn { "No getIssuanceDate for ${vc.type.last()}!" }
+            //ANDROID PORT
+            ""
+        }
+    }
+
+    fun getValidFrom(vc: VerifiableCredential) = when (vc) {
+        is Europass -> vc.validFrom
+        is VerifiableId -> vc.validFrom
+        is VerifiableDiploma -> vc.validFrom
+        is VerifiableAttestation -> vc.validFrom
+        is VerifiableAuthorization -> vc.validFrom
+        else -> {
+            //ANDROID PORT
+            //log.warn { "No getValidFrom for ${vc.type.last()}!" }
+            //ANDROID PORT
+            ""
+        }
+    }
+
+    fun getExpirationDate(vc: VerifiableCredential) = when (vc) {
+        is Europass -> vc.expirationDate
+        is VerifiableId -> vc.expirationDate
+        is VerifiableDiploma -> vc.expirationDate
+        is VerifiableAuthorization -> vc.expirationDate
+        else -> {
+            //ANDROID PORT
+            //log.warn { "No getExpirationDate for ${vc.type.last()}!" }
+            //ANDROID PORT
+            ""
+        }
+    }
+
+    fun getCredentialSchema(vc: VerifiableCredential) = when (vc) {
+        is Europass -> vc.credentialSchema
+        is VerifiableId -> vc.credentialSchema
+        is VerifiableDiploma -> vc.credentialSchema
+        is VerifiableAttestation -> vc.credentialSchema
+        is VerifiableAuthorization -> vc.credentialSchema
+        else -> {
+            //ANDROID PORT
+            //log.warn { "No getCredentialSchema for ${vc.type.last()}!" }
+            //ANDROID PORT
+            null
+        }
+    }
 }

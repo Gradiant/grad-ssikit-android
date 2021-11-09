@@ -43,9 +43,6 @@ class VcCommand : CliktCommand(
     }
 }
 
-fun readCredOffer(templateName: String) =
-    File("templates/${templateName}.json").readText(Charsets.UTF_8)
-
 class VcIssueCommand : CliktCommand(
     name = "issue",
     help = """Issues and save VC.
@@ -198,7 +195,7 @@ class VerifyVcCommand : CliktCommand(
 //            }
 //        )
 
-        val verificationResult = Auditor.verify(src.readText(), policies.map { PolicyRegistry.getPolicy(it) })
+        val verificationResult = Auditor.getService().verify(src.readText(), policies.map { PolicyRegistry.getPolicy(it) })
 
         echo("\nResults:\n")
 

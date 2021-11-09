@@ -3,10 +3,16 @@ package id.walt.services.vc
 import com.beust.klaxon.Klaxon
 import id.walt.model.DidMethod
 import id.walt.servicematrix.ServiceMatrix
+//ANDROID PORT
 import id.walt.servicematrix.utils.AndroidUtils
+//ANDROID PORT
 import id.walt.services.WaltIdServices
 import id.walt.services.did.DidService
+import id.walt.signatory.DataProviderRegistry
 import id.walt.signatory.ProofConfig
+import id.walt.signatory.ProofType
+import id.walt.signatory.Signatory
+import id.walt.test.DummySignatoryDataProvider
 import id.walt.test.RESOURCES_PATH
 import id.walt.test.getTemplate
 import id.walt.test.readCredOffer
@@ -14,10 +20,7 @@ import id.walt.vclib.Helpers.encode
 import id.walt.vclib.Helpers.toCredential
 import id.walt.vclib.model.CredentialSchema
 import id.walt.vclib.model.CredentialStatus
-import id.walt.vclib.vclist.Europass
-import id.walt.vclib.vclist.PermanentResidentCard
-import id.walt.vclib.vclist.VerifiableAttestation
-import id.walt.vclib.vclist.VerifiablePresentation
+import id.walt.vclib.vclist.*
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
@@ -29,7 +32,19 @@ import java.io.FileInputStream
 
 class WaltIdJsonLdCredentialServiceTest : AnnotationSpec() {
 
+    init {
+        //ANDROID PORT
+        AndroidUtils.setAndroidDataDir(System.getProperty("user.dir"))
+        ServiceMatrix(FileInputStream(File("$RESOURCES_PATH/service-matrix.properties")))
+        //ANDROID PORT
+    }
+
     private val credentialService = JsonLdCredentialService.getService()
+    private val issuerWebDid = DidService.create(DidMethod.web)
+    private val issuerKeyDid = DidService.create(DidMethod.key)
+    private val subjectKeyDid = DidService.create(DidMethod.key)
+    private val anotherKeyDid = DidService.create(DidMethod.key)
+    private val issuerEbsiDid = DidService.create(DidMethod.ebsi)
 
 
     val VC_PATH = "src/test/resources/verifiable-credentials"
@@ -59,7 +74,7 @@ class WaltIdJsonLdCredentialServiceTest : AnnotationSpec() {
 
         vcVerified.verificationType shouldBe VerificationType.VERIFIABLE_CREDENTIAL
 
-        val holderDid = VcUtils.getHolder(vc)
+        val holderDid = VcUtils.getSubject(vc)
         val vpStr = credentialService.present(listOf(vcStr), holderDid, "domain.com", "nonce")
         println("Presentation generated: $vpStr")
 
@@ -79,14 +94,12 @@ class WaltIdJsonLdCredentialServiceTest : AnnotationSpec() {
     fun signEbsiVerifiableAttestation() {
         val template = getTemplate("ebsi-attestation") as VerifiableAttestation
 
-        val issuerDid = DidService.create(DidMethod.web)
-
-        template.issuer = issuerDid
-        template.credentialSubject!!.id = issuerDid // self signed
+        template.issuer = issuerWebDid
+        template.credentialSubject!!.id = issuerWebDid // self signed
 
         val credOffer = Klaxon().toJsonString(template)
 
-        genericSignVerify(issuerDid, credOffer)
+        genericSignVerify(issuerWebDid, credOffer)
     }
 
     @Test
@@ -96,17 +109,15 @@ class WaltIdJsonLdCredentialServiceTest : AnnotationSpec() {
     fun signEuropass() {
         val template = getTemplate("europass") as Europass
 
-        val issuerDid = DidService.create(DidMethod.key)
-
-        template.issuer = issuerDid
-        template.credentialSubject!!.id = issuerDid // self signed
+        template.issuer = issuerKeyDid
+        template.credentialSubject!!.id = issuerKeyDid // self signed
         template.credentialSubject!!.learningAchievement!!.title = "Some Europass specific title"
 
         val credOffer = Klaxon().toJsonString(template)
 
         println("GENERIC SIGN VERIFY")
         WaltIdServices.setLogLevel(Level.DEBUG)
-        genericSignVerify(issuerDid, credOffer)
+        genericSignVerify(issuerKeyDid, credOffer)
     }
 
     @Test
@@ -116,22 +127,20 @@ class WaltIdJsonLdCredentialServiceTest : AnnotationSpec() {
     fun signPermanentResidentCard() {
         val template = getTemplate("permanent-resident-card") as PermanentResidentCard
 
-        val issuerDid = DidService.create(DidMethod.key)
-
-        template.issuer = issuerDid
-        template.credentialSubject!!.id = issuerDid // self signed
+        template.issuer = issuerKeyDid
+        template.credentialSubject!!.id = issuerKeyDid // self signed
         template.credentialSubject!!.givenName = "Given Name"
 
         val credOffer = Klaxon().toJsonString(template)
 
-        genericSignVerify(issuerDid, credOffer)
+        genericSignVerify(issuerKeyDid, credOffer)
     }
 
     // TODO: create DID for holder @Test
     fun presentVa() {
         val vaStr = File("$VC_PATH/vc-ebsi-verifiable-authorisation.json").readText()
 
-        val vp = credentialService.present(listOf(vaStr), VcUtils.getHolder(vaStr.toCredential()), null, null)
+        val vp = credentialService.present(listOf(vaStr), VcUtils.getSubject(vaStr.toCredential()), null, null)
 
         println(vp)
     }
@@ -142,8 +151,6 @@ class WaltIdJsonLdCredentialServiceTest : AnnotationSpec() {
     //ANDROID PORT
     fun presentEuropassTest() {
 
-        val issuerDid = DidService.create(DidMethod.ebsi)
-        val subjectDid = DidService.create(DidMethod.key)
         val domain = "example.com"
         val challenge: String = "asdf"
 
@@ -206,17 +213,17 @@ class WaltIdJsonLdCredentialServiceTest : AnnotationSpec() {
             )
         )
 
-        template.issuer = issuerDid
-        template.credentialSubject!!.id = subjectDid
+        template.issuer = issuerEbsiDid
+        template.credentialSubject!!.id = subjectKeyDid
         template.credentialSubject!!.learningAchievement!!.title = "Some Europass specific title"
 
-        val vc = credentialService.sign(template.encode() , ProofConfig(issuerDid = issuerDid))
+        val vc = credentialService.sign(template.encode() , ProofConfig(issuerDid = issuerEbsiDid))
 
         println("Signed vc: $vc")
         val vcSigned = vc.toCredential()
         println(vcSigned.toString())
 
-        val vp = credentialService.present(listOf(vc), VcUtils.getHolder(vcSigned), domain, challenge)
+        val vp = credentialService.present(listOf(vc), VcUtils.getSubject(vcSigned), domain, challenge)
         println("Presentation generated: $vp")
 
         val vpVerified = credentialService.verifyVp(vp)
@@ -231,15 +238,14 @@ class WaltIdJsonLdCredentialServiceTest : AnnotationSpec() {
 
         val credOffer = readCredOffer("WorkHistory")
 
-        val issuerDid = DidService.create(DidMethod.web) // DID web uses an ECDSA Secp256k1
         val domain = "example.com"
         val nonce: String? = null
 
-        val vc = credentialService.sign(credOffer, ProofConfig(issuerDid = issuerDid, nonce = nonce, domain = domain))
+        val vc = credentialService.sign(credOffer, ProofConfig(issuerDid = issuerWebDid, nonce = nonce, domain = domain))
         vc shouldNotBe null
         println("Credential generated: $vc")
 
-        val vcVerified = credentialService.verifyVc(issuerDid, vc)
+        val vcVerified = credentialService.verifyVc(issuerWebDid, vc)
         vcVerified shouldBe true
     }
 
@@ -255,11 +261,11 @@ class WaltIdJsonLdCredentialServiceTest : AnnotationSpec() {
         val domain = "example.com"
         val nonce: String? = null
 
-        val vc = credentialService.sign(credOffer, ProofConfig(issuerDid = issuerDid, nonce = nonce, domain = domain))
+        val vc = credentialService.sign(credOffer, ProofConfig(issuerDid = issuerKeyDid, nonce = nonce, domain = domain))
         vc shouldNotBe null
         println("Credential generated: $vc")
 
-        val vcVerified = credentialService.verifyVc(issuerDid, vc)
+        val vcVerified = credentialService.verifyVc(issuerKeyDid, vc)
         vcVerified shouldBe true
     }
 
@@ -271,15 +277,14 @@ class WaltIdJsonLdCredentialServiceTest : AnnotationSpec() {
 
         val credOffer = readCredOffer("VerifiableAttestation-Europass")
 
-        val issuerDid = DidService.create(DidMethod.key) // DID key uses an EdDSA Ed25519k1 key
         val domain = "example.com"
         val nonce: String? = null
 
-        val vc = credentialService.sign(credOffer, ProofConfig(issuerDid = issuerDid, nonce = nonce, domain = domain))
+        val vc = credentialService.sign(credOffer, ProofConfig(issuerDid = issuerKeyDid, nonce = nonce, domain = domain))
         vc shouldNotBe null
         println("Credential generated: $vc")
 
-        val vcVerified = credentialService.verifyVc(issuerDid, vc)
+        val vcVerified = credentialService.verifyVc(issuerKeyDid, vc)
         vcVerified shouldBe true
     }
 
@@ -292,18 +297,37 @@ class WaltIdJsonLdCredentialServiceTest : AnnotationSpec() {
 
         val credOffer = readCredOffer("WorkHistory")
 
-        val issuerDid = DidService.create(DidMethod.key)
-        val anotherDid = DidService.create(DidMethod.key)
-
-        val vc = credentialService.sign(credOffer, ProofConfig(issuerDid = issuerDid))
+        val vc = credentialService.sign(credOffer, ProofConfig(issuerDid = issuerKeyDid))
 
         vc shouldNotBe null
         println("Credential generated: $vc")
 
-        val vcVerified = credentialService.verifyVc(anotherDid, vc)
+        val vcVerified = credentialService.verifyVc(anotherKeyDid, vc)
         vcVerified shouldBe false
     }
 
+    @Test
+    fun testValidateSchema() {
+        // Required at the moment because EBSI did not upgrade V_ID schema with necessary changes.
+        DataProviderRegistry.register(VerifiableId::class, DummySignatoryDataProvider())
+
+        val noSchemaVc = VerifiableId().encode()
+        val validVc = Signatory.getService().issue("VerifiableId", ProofConfig(
+            issuerDid = issuerKeyDid,
+            subjectDid = subjectKeyDid,
+            proofPurpose = "testing",
+            issuerVerificationMethod = "testing",
+            proofType = ProofType.LD_PROOF))
+        val invalidDataVc = Signatory.getService().issue("VerifiableId", ProofConfig(
+            issuerDid = issuerKeyDid,
+            proofType = ProofType.LD_PROOF))
+        val notParsableVc = ""
+
+        credentialService.validateSchema(noSchemaVc) shouldBe true
+        credentialService.validateSchema(validVc) shouldBe true
+        credentialService.validateSchema(invalidDataVc) shouldBe false
+        credentialService.validateSchema(notParsableVc) shouldBe false
+    }
 
 /*@Test
 fun signCredentialInvalidDataTest() {

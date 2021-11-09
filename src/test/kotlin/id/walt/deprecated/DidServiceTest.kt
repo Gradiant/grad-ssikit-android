@@ -1,11 +1,12 @@
 package id.walt.deprecated
 
 import com.beust.klaxon.Klaxon
-import id.walt.model.Did
 import id.walt.model.DidMethod
 import id.walt.model.DidUrl
 import id.walt.servicematrix.ServiceMatrix
+//ANDROID PORT
 import id.walt.servicematrix.utils.AndroidUtils
+//ANDROID PORT
 import id.walt.services.did.DidService
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.shouldBe

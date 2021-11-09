@@ -14,12 +14,13 @@ import id.walt.vclib.vclist.VerifiableId
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.types.beInstanceOf
 import java.io.File
+//ANDROID PORT
 import java.io.FileInputStream
 import java.time.LocalDateTime
+//ANDROID PORT
 
 class SignatoryServiceTest : StringSpec({
     //ANDROID PORT
@@ -113,7 +114,7 @@ class SignatoryServiceTest : StringSpec({
         val vc = signatory.issue("VerifiableId", ProofConfig(subjectDid = did, issuerDid = did, proofType = ProofType.LD_PROOF))
         val vcObj = vc.toCredential()
         vcObj should beInstanceOf<VerifiableId>()
-        (vcObj as VerifiableId).id.isNullOrBlank() shouldNotBe true
+        (vcObj as VerifiableId).id.isNullOrBlank() shouldBe false
         val cred = WaltContext.vcStore.getCredential(vcObj.id!!, "signatory")
         cred should beInstanceOf<VerifiableId>()
         (cred as VerifiableId).id shouldBe vcObj.id

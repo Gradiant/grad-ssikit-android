@@ -3,7 +3,9 @@ package id.walt.context
 import id.walt.model.DidMethod
 import id.walt.servicematrix.ServiceMatrix
 import id.walt.servicematrix.ServiceRegistry
+//ANDROID PORT
 import id.walt.servicematrix.utils.AndroidUtils
+//ANDROID PORT
 import id.walt.services.context.WaltContext
 import id.walt.services.did.DidService
 import id.walt.test.RESOURCES_PATH

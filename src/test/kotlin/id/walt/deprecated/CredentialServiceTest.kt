@@ -4,7 +4,9 @@ import foundation.identity.jsonld.JsonLDObject
 import foundation.identity.jsonld.JsonLDUtils
 import id.walt.model.DidMethod
 import id.walt.servicematrix.ServiceMatrix
+//ANDROID PORT
 import id.walt.servicematrix.utils.AndroidUtils
+//ANDROID PORT
 import id.walt.services.did.DidService
 import id.walt.services.key.KeyService
 import id.walt.services.vc.JsonLdCredentialService
@@ -191,7 +193,7 @@ class CredentialServiceTest : AnnotationSpec() {
     //ANDROID PORT
     fun issuePermanentResidentCardCredential() {
 
-        val credOffer = readCredOffer("PermanentResidentCard")
+        val credOffer = readCredOffer("PermanentResidentCardExample")
 
         val issuerDid = DidService.create(DidMethod.key)
         val domain = "example.com"

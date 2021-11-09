@@ -9,6 +9,7 @@ import id.walt.services.context.WaltContext
 import id.walt.services.crypto.CryptoService
 import id.walt.services.keystore.KeyStoreService
 import id.walt.services.keystore.KeyType
+import mu.KotlinLogging
 import org.bouncycastle.asn1.ASN1BitString
 import org.bouncycastle.asn1.ASN1OctetString
 import org.bouncycastle.asn1.ASN1Sequence
@@ -24,6 +25,8 @@ import java.security.KeyFactory
 import java.security.KeyPair
 import java.security.interfaces.ECPublicKey
 import java.util.*
+
+private val log = KotlinLogging.logger {}
 
 open class WaltIdKeyService : KeyService() {
 
@@ -45,27 +48,11 @@ open class WaltIdKeyService : KeyService() {
             else -> toPem(keyAlias, exportKeyType)
         }
 
-    override fun import(keyStr: String): KeyId {
-
+    override fun importKey(keyStr: String): KeyId {
         val key = parseJwkKey(keyStr)
-//        PEM keys are currently not supported
-//        val key = with(keyStr.trim()) {
-//            when {
-//                startsWith("---") -> parsePemKey(this)
-//                startsWith("{") -> parseJwkKey(this)
-//                else -> throw IllegalArgumentException("Invalid key format (must be PEM or JWK)")
-//            }
-//        }
+        log.debug { "Importing key ${key.keyId}" }
         keyStore.store(key)
         return key.keyId
-    }
-
-    private fun parsePemKey(pemKeyStr: String): Key {
-
-        val privateKey = if (pemKeyStr.contains("PRIVATE")) decodePrivKeyPem(pemKeyStr, KeyFactory.getInstance("Ed25519")) else null
-        val publicKey = if (pemKeyStr.contains("PUBLIC")) decodePubKeyPem(pemKeyStr, KeyFactory.getInstance("Ed25519")) else null
-
-        return Key(newKeyId(), KeyAlgorithm.EdDSA_Ed25519, CryptoProvider.SUN, KeyPair(publicKey, privateKey))
     }
 
     private fun parseJwkKey(jwkKeyStr: String): Key {
@@ -175,20 +162,20 @@ open class WaltIdKeyService : KeyService() {
 
     override fun delete(alias: String) = keyStore.delete(alias)
 
-    // TODO: consider deprecated methods below
-
-    @Deprecated(message = "outdated")
-    private fun generateKeyId(): String = "Walt-Key-${UUID.randomUUID().toString().replace("-", "")}"
-
-
-    @Deprecated(message = "outdated")
-    override fun getSupportedCurveNames(): List<String> {
-        val ecNames = ArrayList<String>()
-        for (name in ECNamedCurveTable.getNames()) {
-            ecNames.add(name.toString())
-        }
-        return ecNames
+    companion object {
+        private const val RSA_KEY_SIZE = 4096
     }
+
+}
+
+//    @Deprecated(message = "outdated")
+//    override fun getSupportedCurveNames(): List<String> {
+//        val ecNames = ArrayList<String>()
+//        for (name in ECNamedCurveTable.getNames()) {
+//            ecNames.add(name.toString())
+//        }
+//        return ecNames
+//    }
 
 //    @Deprecated(message = "outdated")
 //    fun generateEcKeyPair(ecCurveName: String): String {
@@ -308,7 +295,7 @@ open class WaltIdKeyService : KeyService() {
 //        return keys.keyId
 //    }
 
-    //    @Deprecated(message = "outdated")
+//    @Deprecated(message = "outdated")
 //    fun loadKeys(keyId: String): Keys? {
 //        return ks.getKeyId(keyId)?.let { it -> ks.loadKeyPair(it) }
 //    }
@@ -324,8 +311,3 @@ open class WaltIdKeyService : KeyService() {
 //    fun getBase58PublicKey(keyId: String): String? {
 //        return ks.loadKeyPair(keyId)?.getPubKey()?.encodeBase58()
 //    }
-    companion object {
-        private const val RSA_KEY_SIZE = 4096
-    }
-
-}

@@ -5,7 +5,9 @@ import id.walt.crypto.WaltIdProvider
 import id.walt.crypto.decBase64
 import id.walt.crypto.encBase64
 import id.walt.servicematrix.ServiceMatrix
+//ANDROID PORT
 import id.walt.servicematrix.utils.AndroidUtils
+//ANDROID PORT
 import id.walt.services.WaltIdServices
 import id.walt.test.RESOURCES_PATH
 import io.kotest.core.spec.style.AnnotationSpec
@@ -93,7 +95,7 @@ class CryptoServiceTest : AnnotationSpec() {
             val info: String = p.info
             println(p.toString() + " - " + info)
 
-            if (p.toString().contains("Walt version 1.0", true)) {
+            if (p.toString().contains("Walt", true)) {
                 waltIdProviderFound = true
             }
 
@@ -113,7 +115,7 @@ class CryptoServiceTest : AnnotationSpec() {
         val keyId = sunCryptoService.generateKey(KeyAlgorithm.ECDSA_Secp256k1)
 
         for (i in 1..10) {
-            var signature = sunCryptoService.sign(keyId, data)
+            val signature = sunCryptoService.sign(keyId, data)
             val verify = sunCryptoService.verify(keyId, signature, data)
             verify shouldBe true
         }

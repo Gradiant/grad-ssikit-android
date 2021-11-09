@@ -4,7 +4,9 @@ import id.walt.crypto.KeyAlgorithm
 import id.walt.crypto.KeyId
 import id.walt.crypto.buildKey
 import id.walt.servicematrix.ServiceMatrix
+//ANDROID PORT
 import id.walt.servicematrix.utils.AndroidUtils
+//ANDROID PORT
 import id.walt.services.context.WaltContext
 import id.walt.services.essif.didebsi.DidEbsiService
 import id.walt.services.essif.didebsi.UnsignedTransaction

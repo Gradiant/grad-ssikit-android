@@ -7,6 +7,8 @@
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=walt-id_waltid-ssikit&metric=ncloc)](https://sonarcloud.io/dashboard?id=walt-id_waltid-ssikit)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=walt-id_waltid-ssikit-examples&metric=alert_status)](https://sonarcloud.io/dashboard?id=walt-id_waltid-ssikit)
 
+[![CI/CD Workflow for walt.id SSI Kit](https://github.com/walt-id/waltid-ssikit/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/walt-id/waltid-ssikit/actions/workflows/build.yml)
+
 The Walt.ID SSI Kit is a holistic SSI solution, with primarily focus on the European EBSI/ESSIF ecosystem.
 
 The core services are in the scope of:
@@ -57,12 +59,12 @@ Following code snipped gives a first impression how to use the SSI Kit for creat
         val vcJwt = Signatory.getService().issue("VerifiableId", ProofConfig(issuerDid = issuerDid, subjectDid = holderDid, proofType = ProofType.JWT))
     
         // Present VC in JSON-LD and JWT format (for show-casing both formats)
-        val vpJson = CustodianService.getService().createPresentation(listOf(vcJson), holderDid)
-        val vpJwt = CustodianService.getService().createPresentation(listOf(vcJwt), holderDid)
+        val vpJson = Custodian.getService().createPresentation(listOf(vcJson), holderDid)
+        val vpJwt = Custodian.getService().createPresentation(listOf(vcJwt), holderDid)
     
         // Verify VPs, using Signature, JsonSchema and a custom policy
-        val resJson = AuditorService.verify(vpJson, listOf(SignaturePolicy(), JsonSchemaPolicy()))
-        val resJwt = AuditorService.verify(vpJwt, listOf(SignaturePolicy(), JsonSchemaPolicy()))
+        val resJson = Auditor.verify(vpJson, listOf(SignaturePolicy(), JsonSchemaPolicy()))
+        val resJwt = Auditor.verify(vpJwt, listOf(SignaturePolicy(), JsonSchemaPolicy()))
     
         println("JSON verification result: ${resJson.overallStatus}")
         println("JWT verification result: ${resJwt.overallStatus}")

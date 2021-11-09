@@ -10,7 +10,9 @@ import id.walt.model.DidMethod
 import id.walt.model.DidUrl
 import id.walt.rest.core.*
 import id.walt.servicematrix.ServiceMatrix
+//ANDROID PORT
 import id.walt.servicematrix.utils.AndroidUtils
+//ANDROID PORT
 import id.walt.services.did.DidService
 import id.walt.services.key.KeyFormat
 import id.walt.services.key.KeyService
@@ -316,7 +318,7 @@ class CoreApiTest : AnnotationSpec() {
         println("OUR VC STR: $vcStr")
         val vc = vcStr.toCredential()
 
-        println("Credential generated: ${vc}")
+        println("Credential generated: $vc")
 
         val vp = client.post<String>("$CORE_API_URL/v1/vc/present") {
             contentType(ContentType.Application.Json)

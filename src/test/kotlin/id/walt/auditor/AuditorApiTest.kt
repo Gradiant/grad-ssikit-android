@@ -10,6 +10,7 @@ import id.walt.services.did.DidService
 import id.walt.signatory.ProofConfig
 import id.walt.signatory.Signatory
 import id.walt.test.RESOURCES_PATH
+import id.walt.test.readVerifiableCredential
 import io.github.rybalkinsd.kohttp.dsl.httpPost
 import io.github.rybalkinsd.kohttp.ext.asString
 import io.kotest.core.spec.style.AnnotationSpec
@@ -38,8 +39,9 @@ class AuditorApiTest : AnnotationSpec() {
         //ANDROID PORT
     }
 
+    val Auditor_HOST = "localhost"
     val Auditor_API_PORT = 7001
-    val Auditor_API_URL = "http://localhost:$Auditor_API_PORT"
+    val Auditor_API_URL = "http://$Auditor_HOST:$Auditor_API_PORT"
 
     val client = HttpClient(CIO) {
         install(JsonFeature) {
@@ -74,6 +76,46 @@ class AuditorApiTest : AnnotationSpec() {
         policies shouldContain VerificationPolicyMetadata("Verify by JSON schema", "JsonSchemaPolicy")
     }
 
+    private fun postAndVerify(vcToVerify: String, policyList: String = "SignaturePolicy") {
+        val verificationResultJson = httpPost {
+            host = Auditor_HOST
+            port = Auditor_API_PORT
+            path = "/v1/verify"
+            param {
+                "policyList" to policyList
+            }
+            body {
+                json(vcToVerify)
+            }
+        }.asString()!!
+
+        println(verificationResultJson)
+
+        @Test
+        fun testVerifiableDiploma() {
+            postAndVerify(readVerifiableCredential("VerifiableDiploma"))
+    }
+
+        @Test
+        fun testVerifiableId() {
+            postAndVerify(readVerifiableCredential("VerifiableId"))
+        }
+
+        @Test
+        fun testDeqarCredential() {
+            postAndVerify(readVerifiableCredential("DeqarCredential"))
+        }
+
+        @Test
+        fun testGaiaxCredential() {
+            postAndVerify(readVerifiableCredential("GaiaxCredential"), "JsonSchemaPolicy")
+        }
+
+        @Test
+        fun testPermanentResidentCardCredential() {
+            postAndVerify(readVerifiableCredential("PermanentResidentCard"))
+        }
+
     @Test
     //ANDROID PORT
     @Ignore //Android Lazy Sodium
@@ -86,22 +128,22 @@ class AuditorApiTest : AnnotationSpec() {
             "VerifiableId", ProofConfig(
                 subjectDid = did,
                 issuerDid = did,
-                issueDate = LocalDateTime.of(2020, 11, 3, 0, 0),
-                issuerVerificationMethod = "Ed25519Signature2018"
+                issueDate = LocalDateTime.of(2020, 11, 3, 0, 0)
             )
         )
 
-        val verificationResultJson = httpPost {
-            host = Auditor_API_URL.drop(Auditor_API_URL.indexOf("/") + 2).split(":").first()
-            port = Auditor_API_PORT
-            path = "/v1/verify"
+        postAndVerify(vcToVerify, "SignaturePolicy")
+    }
 
-            body {
-                json(vcToVerify)
-            }
-        }.asString()!!
+    @Test
+    fun testVerifiableAuthorizationCredential() {
+        postAndVerify(readVerifiableCredential("VerifiableAuthorization"), "SignaturePolicy,JsonSchemaPolicy,TrustedSubjectDidPolicy,TrustedIssuerDidPolicy")
+    }
 
-        println(verificationResultJson)
+    @Test
+    fun testVerifiableAttestationCredential() {
+        postAndVerify(readVerifiableCredential("VerifiableAttestation"))
+    }
 
         val vr = Klaxon().parse<VerificationResult>(verificationResultJson)!!
         vr.overallStatus shouldBe true

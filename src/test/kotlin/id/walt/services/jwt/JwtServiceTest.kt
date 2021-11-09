@@ -12,7 +12,9 @@ import id.walt.crypto.decBase64
 import id.walt.model.DidEbsi
 import id.walt.model.DidMethod
 import id.walt.servicematrix.ServiceMatrix
+//ANDROID PORT
 import id.walt.servicematrix.utils.AndroidUtils
+//ANDROID PORT
 import id.walt.services.crypto.CryptoService
 import id.walt.services.did.DidService
 import id.walt.services.key.KeyService

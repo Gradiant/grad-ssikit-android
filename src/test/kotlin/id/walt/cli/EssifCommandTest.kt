@@ -5,11 +5,12 @@ import id.walt.crypto.KeyAlgorithm
 import id.walt.model.DidMethod
 import id.walt.model.DidUrl
 import id.walt.servicematrix.ServiceMatrix
+//ANDROID PORT
 import id.walt.servicematrix.utils.AndroidUtils
+//ANDROID PORT
 import id.walt.services.context.WaltContext
 import id.walt.services.did.DidService
 import id.walt.services.hkvstore.HKVKey
-import id.walt.services.hkvstore.HKVStoreService
 import id.walt.services.key.KeyService
 import io.kotest.assertions.retry
 import io.kotest.assertions.throwables.shouldNotThrowAny
@@ -62,7 +63,7 @@ class EssifCommandTest : StringSpec({
     // DID used for onboarding
     val key = KeyService.getService().generate(KeyAlgorithm.EdDSA_Ed25519)
     val ethKey = KeyService.getService().generate(KeyAlgorithm.ECDSA_Secp256k1)
-    var did = DidService.create(DidMethod.ebsi, keyAlias = key.id)
+    val did = DidService.create(DidMethod.ebsi, keyAlias = key.id)
     val identifier = DidUrl.from(did).identifier
 
     "onboard --help" {

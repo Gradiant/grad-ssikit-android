@@ -8,6 +8,7 @@ import io.javalin.plugin.openapi.dsl.document
 
 /**
 EOS
+
 EosService.onboards()
 EosService.didOwnershipResponse("")
 EosService.getCredential("")
@@ -15,6 +16,7 @@ EosService.getCredentials()
 EosService.requestCredentialUri()
 EosService.requestVerifiableCredential("")
 EosService.signedChallenge("")
+
  **/
 
 object EosController {

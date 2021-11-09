@@ -7,14 +7,12 @@ plugins {
     kotlin("plugin.serialization") version "1.5.20"
     id("com.github.kkdad.dependency-license-report") version "1.16.6"
     id("org.owasp.dependencycheck") version "6.1.6"
-    //id("org.sonatype.gradle.plugins.scan") version "2.0.9"
-    //id("org.sonarqube") version "3.2.0"
     application
     `maven-publish`
 }
 
 group = "id.walt"
-version = "1.0-SNAPSHOT"
+version = "1.1-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -49,7 +47,7 @@ dependencies {
 
     // VC
     //ANDROID PORT
-    //implementation("id.walt:waltid-ssikit-vclib:1.4.9")
+    //implementation("id.walt:waltid-ssikit-vclib:1.5.3")
     //ANDROID PORT
 
     // JSON
@@ -58,6 +56,7 @@ dependencies {
     //ANDROID PORT
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.0")
     //ANDROID PORT
+    implementation("net.pwall.json:json-kotlin-schema:0.29")
     //implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
 
     //ANDROID PORT
@@ -179,7 +178,7 @@ publishing {
     publications {
         create<MavenPublication>("mavenJava") {
             pom {
-                name.set("Walt.ID SSI-Kit")
+                name.set("walt.id SSI Kit")
                 description.set("Kotlin/Java library for SSI core services, with primary focus on European EBSI/ESSIF ecosystem.")
                 url.set("https://walt.id")
             }
