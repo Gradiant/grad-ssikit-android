@@ -56,7 +56,7 @@ abstract class Signatory : WaltIdService() {
     open fun loadTemplate(templateId: String): VerifiableCredential = implementation.loadTemplate(templateId)
 }
 //ANDROID PORT
-class WaltSignatory() : Signatory() {
+class WaltIdSignatory() : Signatory() {
 //ANDROID PORT
     private val VC_GROUP = "signatory"
     //ANDROID PORT
