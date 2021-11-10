@@ -211,7 +211,9 @@ open class SqlKeyStoreService : KeyStoreService() {
 
             deleteKeyByAliases(alias, con)
 
-            con.commit()
+            //ANDROID PORT
+            //con.commit()
+            //ANDROID PORT
 
         }
     }
