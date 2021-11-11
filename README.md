@@ -2,7 +2,11 @@
 
 This is the Android Ported Version of the Walt.ID SSI Kit, developed by Gradiant.
 
-This repository demonstrates how to integrate the Android SSI Kit Project inside an Android Application: 
+- This repository demonstrates how to integrate the Android SSI Kit Project inside an Android Application: https://github.com/Gradiant/grad-ssikit-example-android 
+- Android Ported Version of the servicematrix: https://github.com/Gradiant/grad-servicematrix-android
+- Android Ported Version of the ssikit vclib: https://github.com/Gradiant/grad-ssikit-vclib-android
+
+- Original Walt.ID SSI Kit: https://github.com/walt-id/waltid-ssikit
 
 ## Changes that were added in chronological order
 
