@@ -1,4 +1,4 @@
-# Android SSI Kit
+# Android SSI Kit - Reviewing
 
 This is the Android Ported Version of the Walt.ID SSI Kit, developed by Gradiant.
 
