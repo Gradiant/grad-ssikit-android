@@ -26,6 +26,7 @@ object TrustedIssuerClient {
     var authorisation = "$domain/authorisation/v1"
     var onboarding = "$domain/users-onboarding/v1"
     var authentication ="$domain/authentication/v1"
+    var verification = "$domain/verification/v1"
     //ANDROID PORT
     val trustedIssuerUrl = "http://localhost:7001/v2/trusted-issuer"
 
@@ -110,8 +111,16 @@ object TrustedIssuerClient {
     }
 
     //ANDROID PORT
-    fun postAuthenticationRequests(): AuthRequestResponse = runBlocking {
-        return@runBlocking WaltIdServices.http.post<AuthRequestResponse>("$authentication/authentication-requests") {
+    enum class OperationType {
+        AUTHENTICATION, VERIFICATION
+    }
+
+    fun postAuthenticationRequests(operationType: OperationType): AuthRequestResponse = runBlocking {
+        val operationUrl: String = when(operationType) {
+            OperationType.AUTHENTICATION -> authentication
+            OperationType.VERIFICATION -> verification
+        }
+        return@runBlocking WaltIdServices.http.post<AuthRequestResponse>("$operationUrl/authentication-requests") {
             contentType(ContentType.Application.Json)
             headers {
                 append(HttpHeaders.Accept, "application/json")
@@ -120,8 +129,12 @@ object TrustedIssuerClient {
         }
     }
 
-    fun postAuthenticationResponse(idToken: String, bearerToken: String): String = runBlocking {
-        return@runBlocking WaltIdServices.http.post<String>("$authentication/authentication-responses") {
+    fun postAuthenticationResponse(idToken: String, bearerToken: String, operationType: OperationType): String = runBlocking {
+        val operationUrl: String = when(operationType) {
+            OperationType.AUTHENTICATION -> authentication
+            OperationType.VERIFICATION -> verification
+        }
+        return@runBlocking WaltIdServices.http.post<String>("$operationUrl/authentication-responses") {
             contentType(ContentType.Application.Json)
             headers {
                 append(HttpHeaders.Accept, "application/json")
@@ -250,7 +263,8 @@ object TrustedIssuerClient {
         this.domain = domain
         this.authorisation = "${TrustedIssuerClient.domain}/authorisation/v1"
         this.onboarding = "${TrustedIssuerClient.domain}/users-onboarding/v1"
-        this.authentication ="${TrustedIssuerClient.domain}/authentication/v1"
+        this.authentication = "${TrustedIssuerClient.domain}/authentication/v1"
+        this.verification = "${TrustedIssuerClient.domain}/verification/v1"
     }
     //ANDROID PORT
 }
