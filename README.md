@@ -95,9 +95,13 @@ The ESSIF/EBSI functions are in the scope of:
 
 The library is written in **Kotlin/Java based library** and can be directly integrated as Maven/Gradle dependency. Alternatively the library or the additional **Docker container** can be run as RESTful webservice.
 
-The **CLI tool** conveniently allows running all included functions manually. Please see for yourself by just running the following command:
+## Getting Started
+
+The easiest way to getting your hands diry and to "play" with the functions the SSI Kit provides is by running the **CLI tool** with Docker.
 
     docker run -itv $(pwd)/data:/app/data waltid/ssikit -h
+
+Please go ahead and find further CLI commands and well as other ways how to use the SSI Kit in the documentation section below.
 
 ## Documentation
 
@@ -108,7 +112,7 @@ Direct links for using the SSI Kit are:
 - Quick Start (running the SSI Kit with Docker or with **ssikit.sh**): https://docs.walt.id/ssikit/ssikit-usage.html#quick-start
 - Building the SSI Kit with Gradle or with Docker: https://docs.walt.id/ssikit/ssikit-usage.html#build
 - CLI Tool: https://docs.walt.id/ssikit/ssikit-usage.html#cli
-- APIs: https://docs.walt.id/ssikit/ssikit-usage.html#apis
+- APIs: https://docs.walt.id/ssikit/ssikit-usage.html#rest-apis
 - Configuration: https://docs.walt.id/ssikit/ssikit-usage.html#configuration
 
 ## Examples
@@ -133,8 +137,8 @@ Following code snipped gives a first impression how to use the SSI Kit for creat
         val vpJwt = Custodian.getService().createPresentation(listOf(vcJwt), holderDid)
     
         // Verify VPs, using Signature, JsonSchema and a custom policy
-        val resJson = Auditor.verify(vpJson, listOf(SignaturePolicy(), JsonSchemaPolicy()))
-        val resJwt = Auditor.verify(vpJwt, listOf(SignaturePolicy(), JsonSchemaPolicy()))
+        val resJson = Auditor.getService().verify(vpJson, listOf(SignaturePolicy(), JsonSchemaPolicy()))
+        val resJwt = Auditor.getService().verify(vpJwt, listOf(SignaturePolicy(), JsonSchemaPolicy()))
     
         println("JSON verification result: ${resJson.overallStatus}")
         println("JWT verification result: ${resJwt.overallStatus}")
@@ -143,5 +147,3 @@ Following code snipped gives a first impression how to use the SSI Kit for creat
 ## License
 
 The SSI Kit by walt.id is Open Source software released under the [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0.html).
-
-

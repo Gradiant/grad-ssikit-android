@@ -2,9 +2,11 @@ package id.walt.services.essif.didebsi
 
 import com.beust.klaxon.Klaxon
 import id.walt.crypto.canonicalize
+//ANDROID PORT
 import id.walt.model.ContextConverter
+//ANDROID PORT
 import id.walt.services.WaltIdServices
-import id.walt.services.context.WaltContext
+import id.walt.services.context.ContextManager
 import id.walt.services.crypto.CryptoService
 import id.walt.services.did.DidService
 import id.walt.services.essif.EssifClient
@@ -48,7 +50,7 @@ open class WaltIdDidEbsiService : DidEbsiService() {
         //TODO re-run auth-flow, if token is expired -> io.ktor.client.features.ClientRequestException: Client request(https://api.preprod.ebsi.eu/did-registry/v2/jsonrpc) invalid: 401 Unauthorized. Text: "{"title":"Unauthorized","status":401,"type":"about:blank","detail":"Invalid JWT: JWT has expired: exp: 1623244001 < now: 1623245358"}"
         // val token = readWhenContent(EssifClient.ebsiAccessTokenFile)
         val token =
-            WaltContext.hkvStore.getAsString(HKVKey("ebsi", did.substringAfterLast(":"), EssifClient.ebsiAccessTokenFile))!!
+            ContextManager.hkvStore.getAsString(HKVKey("ebsi", did.substringAfterLast(":"), EssifClient.ebsiAccessTokenFile))!!
 
         // Insert DID document request
         val insertDocumentParams = buildInsertDocumentParams(did, ethKeyAlias)
@@ -77,7 +79,9 @@ open class WaltIdDidEbsiService : DidEbsiService() {
 
     // TODO: Verify all params are properly defined according to EBSI expectations => https://ec.europa.eu/cefdigital/wiki/pages/viewpage.action?spaceKey=EBP&title=DID+Registry+Smart+Contract
     override fun buildInsertDocumentParams(did: String, ethKeyAlias: String?): List<InsertDidDocumentParams> {
+        //ANDROID PORT
         val didDocumentString = Klaxon().converter(ContextConverter()).toJsonString(DidService.loadDidEbsi(did))
+        //ANDROID PORT
 
         val from = keyService.getEthereumAddress(ethKeyAlias ?: did)
         val identifier = Numeric.toHexString(did.toByteArray())

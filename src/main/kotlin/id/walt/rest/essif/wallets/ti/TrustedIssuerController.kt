@@ -9,6 +9,7 @@ import io.javalin.plugin.openapi.dsl.document
 
 /**
 EnterpriseWalletService
+
 EnterpriseWalletService.onboardTrustedIssuer("")
 EnterpriseWalletService.token("")
 EnterpriseWalletService.createDid()

@@ -455,7 +455,9 @@ class JwtServiceTest : AnnotationSpec() {
 
     // @Test
     fun ake1DecryptPayload() {
+        //ANDROID PORT
         val ebsiDid = Klaxon().converter(ContextConverter()).parse<DidEbsi>(File("src/test/resources/ebsi/ake1-did.json").readText())!!
+        //ANDROID PORT
         val jwkStr = Klaxon().toJsonString(ebsiDid.verificationMethod!![0].publicKeyJwk)
         println(jwkStr)
 

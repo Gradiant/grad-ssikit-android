@@ -8,7 +8,7 @@
     "awardingOpportunity" : {
       "awardingBody" : {
         "homepage" : "https://leaston.bcdiploma.com/",
-        "id" : "did:ebsi:zhhdvx3tS4hJsA23gXs7Qc9",
+        "id" : "did:ebsi:zfPHQeMuKeSE7Ff35BcH7xL",
         "preferredName" : "Leaston University",
         "registration" : "0597065J"
       },
@@ -25,7 +25,7 @@
       "id" : "https://leaston.bcdiploma.com/law-economics-management#GradingScheme",
       "title" : "Lower Second-Class Honours"
     },
-    "id" : "did:ebsi:zhhdvx3tS4hJsA23gXs7Qc9",
+    "id" : "did:ebsi:z21BT4RrmLyZJYVzd9vpUGCw",
     "identifier" : "0904008084H",
     "learningAchievement" : {
       "additionalNote" : [ "DISTRIBUTION MANAGEMENT" ],
@@ -41,17 +41,17 @@
       "nqfLevel" : [ "7" ]
     }
   },
-  "id" : "identity#VerifiableDiploma#77cac54c-ac51-4b2e-9fca-26ea2653f955",
-  "issuanceDate" : "2021-11-07T10:38:46Z",
-  "issuer" : "did:ebsi:zhhdvx3tS4hJsA23gXs7Qc9",
-  "validFrom" : "2021-11-07T10:38:46Z",
+  "id" : "identity#VerifiableDiploma#0f8522b8-89f1-4262-b6ef-d5f2a4e14c90",
+  "issuanceDate" : "2021-11-12T11:55:40Z",
+  "issuer" : "did:ebsi:zfPHQeMuKeSE7Ff35BcH7xL",
+  "validFrom" : "2021-11-12T11:55:40Z",
   "type" : [ "VerifiableCredential", "VerifiableAttestation", "VerifiableDiploma" ],
   "proof" : {
     "type" : "EcdsaSecp256k1Signature2019",
-    "creator" : "did:ebsi:zhhdvx3tS4hJsA23gXs7Qc9",
-    "created" : "2021-11-07T10:38:47Z",
+    "creator" : "did:ebsi:zfPHQeMuKeSE7Ff35BcH7xL",
+    "created" : "2021-11-12T11:55:49Z",
     "domain" : "https://api.preprod.ebsi.eu",
-    "nonce" : "635e00b6-9abe-4037-b3cc-d174d89ae77e",
-    "jws" : "eyJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdLCJhbGciOiJFUzI1NksifQ..ScGveYrGr0EzBTn8M9dKBR9OO_KsulBGqp1CSAaYVRG7v88NCOlEadNotLYe2Z46fwnyzJen1W-58Q3VzxMs0g"
+    "nonce" : "f7b4f1ae-174c-4c94-9198-167aa7e325e6",
+    "jws" : "eyJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdLCJhbGciOiJFUzI1NksifQ..t2ov2H3RW7gLOKRkkG6Pm2sXjeSoFoE4bIZf7hw73i483pJYr7LTaCEH_9zrLh-NvKHJ0XLTpCjDP4AHL_O6gQ"
   }
 }

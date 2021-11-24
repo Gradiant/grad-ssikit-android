@@ -1,11 +1,15 @@
 package id.walt.model
 
+//ANDROID PORT
 import com.beust.klaxon.*
+//ANDROID PORT
 import id.walt.vclib.model.Proof
 
 data class DidEbsi (
     @Json(name = "@context")
+    //ANDROID PORT
     val context: EbsiContext,
+    //ANDROID PORT
     override val id: String,
     @Json(serializeNull = false) val verificationMethod: List<VerificationMethod>? = null,
     @Json(serializeNull = false) val authentication: List<String>? = null,
@@ -17,6 +21,7 @@ data class DidEbsi (
     @Json(serializeNull = false) var proof: Proof? = null,
 ) : BaseDid()
 
+//ANDROID PORT
 open class EbsiContext
 
 class EbsiContextStr(val value: String): EbsiContext()
@@ -48,3 +53,4 @@ class ContextConverter: Converter {
         return if (ebsiContext is EbsiContextList) ebsiContext.value.joinToString("\", \"", "[\"", "\"]", ) else "\"${(ebsiContext as EbsiContextStr).value}\""
     }
 }
+//ANDROID PORT

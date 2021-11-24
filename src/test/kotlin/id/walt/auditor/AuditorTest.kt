@@ -9,10 +9,10 @@ import id.walt.servicematrix.ServiceMatrix
 import id.walt.servicematrix.utils.AndroidUtils
 //ANDROID PORT
 import id.walt.services.did.DidService
-import id.walt.signatory.ProofConfig
-import id.walt.signatory.ProofType
-import id.walt.signatory.Signatory
+import id.walt.signatory.*
+import id.walt.test.DummySignatoryDataProvider
 import id.walt.test.RESOURCES_PATH
+import id.walt.vclib.vclist.VerifiableDiploma
 import io.kotest.core.spec.Spec
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.collections.shouldBeSameSizeAs
@@ -47,7 +47,6 @@ class AuditorCommandTest : StringSpec() {
         did = DidService.create(DidMethod.key)
 
         println("Generated: $did")
-
         vcStr = signatory.issue(
             "VerifiableDiploma", ProofConfig(
                 issuerDid = did,
@@ -132,7 +131,7 @@ class AuditorCommandTest : StringSpec() {
             }
         }
     }
-   +
+
     override fun afterSpec(spec: Spec) {
         super.afterSpec(spec)
         // Required at the moment because EBSI did not upgrade V_ID schema with necessary changes.

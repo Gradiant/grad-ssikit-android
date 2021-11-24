@@ -257,7 +257,6 @@ class WaltIdJsonLdCredentialServiceTest : AnnotationSpec() {
 
         val credOffer = readCredOffer("WorkHistory")
 
-        val issuerDid = DidService.create(DidMethod.key) // DID key uses an EdDSA Ed25519k1 key
         val domain = "example.com"
         val nonce: String? = null
 

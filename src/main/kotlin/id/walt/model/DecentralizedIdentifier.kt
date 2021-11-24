@@ -21,14 +21,18 @@ abstract class BaseDid {
     @Json(ignored = true) val method: DidMethod
         get() = DidMethod.valueOf(url.method)
 
+    //ANDROID PORT
     fun encode() = Klaxon().converter(ContextConverter()).toJsonString(this)
     fun encodePretty() = Klaxon().converter(ContextConverter()).toJsonString(this).prettyPrint()
+    //ANDROID PORT
 
     companion object {
         fun decode(id: String, didDoc: String): BaseDid? {
             return when(DidUrl.from(id).method) {
                 "key" -> Klaxon().parse<Did>(didDoc)
+                //ANDROID PORT
                 "ebsi" -> Klaxon().converter(ContextConverter()).parse<DidEbsi>(didDoc)
+                //ANDROID PORT
                 // TODO: support did:web
                 else -> null
             }

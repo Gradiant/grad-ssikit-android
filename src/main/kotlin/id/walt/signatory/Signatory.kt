@@ -4,7 +4,7 @@ import com.beust.klaxon.Json
 import id.walt.servicematrix.ServiceConfiguration
 import id.walt.servicematrix.ServiceProvider
 import id.walt.services.WaltIdService
-import id.walt.services.context.WaltContext
+import id.walt.services.context.ContextManager
 import id.walt.services.vc.JsonLdCredentialService
 import id.walt.services.vc.JwtCredentialService
 import id.walt.vclib.Helpers.encode
@@ -51,7 +51,7 @@ abstract class Signatory : WaltIdService() {
         override fun getService() = object : Signatory() {}
     }
 
-    open fun issue(templateId: String, config: ProofConfig): String = implementation.issue(templateId, config)
+    open fun issue(templateId: String, config: ProofConfig, dataProvider: SignatoryDataProvider? = null): String = implementation.issue(templateId, config, dataProvider)
     open fun listTemplates(): List<String> = implementation.listTemplates()
     open fun loadTemplate(templateId: String): VerifiableCredential = implementation.loadTemplate(templateId)
 }
@@ -64,7 +64,7 @@ class WaltIdSignatory() : Signatory() {
     //private val log = KotlinLogging.logger {}
     //ANDROID PORT
 
-    override fun issue(templateId: String, config: ProofConfig): String {
+    override fun issue(templateId: String, config: ProofConfig, dataProvider: SignatoryDataProvider?): String {
 
         // TODO: load proof-conf from signatory.conf and optionally substitute values on request basis
         val vcTemplate = VcTemplateManager.loadTemplate(templateId)
@@ -88,8 +88,8 @@ class WaltIdSignatory() : Signatory() {
             else -> config
         }
 
-        val dataProvider = DataProviderRegistry.getProvider(vcTemplate::class)
-        val vcRequest = dataProvider.populate(vcTemplate, configDP)
+        val selectedDataProvider = dataProvider ?: DataProviderRegistry.getProvider(vcTemplate::class)
+        val vcRequest = selectedDataProvider.populate(vcTemplate, configDP)
 
         //ANDROID PORT
         //log.info { "Signing credential with proof using ${config.proofType.name}..." }
@@ -102,7 +102,7 @@ class WaltIdSignatory() : Signatory() {
         //ANDROID PORT
         //log.debug { "Signed VC is: $signedVc" }
         //ANDROID PORT
-        WaltContext.vcStore.storeCredential(configDP.credentialId!!, signedVc.toCredential(), VC_GROUP)
+        ContextManager.vcStore.storeCredential(configDP.credentialId!!, signedVc.toCredential(), VC_GROUP)
         return signedVc
     }
 

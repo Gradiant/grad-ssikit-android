@@ -54,6 +54,9 @@ object SqlDbManager {
         // Logger.getLogger("").level = ALL
 
         //  ds = HikariDataSource(config)
+        //ANDROID PORT
+        //dataSource = WaltIdServices.loadHikariDataSource()
+        //ANDROID PORT
 
         createDatabase()
     }

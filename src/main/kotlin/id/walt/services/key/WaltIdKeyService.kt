@@ -5,7 +5,7 @@ import com.nimbusds.jose.jwk.*
 import com.nimbusds.jose.util.Base64URL
 import id.walt.crypto.*
 import id.walt.services.CryptoProvider
-import id.walt.services.context.WaltContext
+import id.walt.services.context.ContextManager
 import id.walt.services.crypto.CryptoService
 import id.walt.services.keystore.KeyStoreService
 import id.walt.services.keystore.KeyType
@@ -14,17 +14,13 @@ import org.bouncycastle.asn1.ASN1BitString
 import org.bouncycastle.asn1.ASN1OctetString
 import org.bouncycastle.asn1.ASN1Sequence
 import org.bouncycastle.jcajce.provider.digest.Keccak
-import org.bouncycastle.jce.ECNamedCurveTable
 import org.bouncycastle.util.encoders.Hex
 import org.web3j.crypto.ECDSASignature
 import org.web3j.crypto.Hash
 import org.web3j.crypto.Keys
 import org.web3j.crypto.Sign
 import org.web3j.utils.Numeric
-import java.security.KeyFactory
-import java.security.KeyPair
 import java.security.interfaces.ECPublicKey
-import java.util.*
 
 private val log = KotlinLogging.logger {}
 
@@ -33,7 +29,7 @@ open class WaltIdKeyService : KeyService() {
     open val cryptoService: CryptoService = CryptoService.getService()
 
     open val keyStore: KeyStoreService
-        get() = WaltContext.keyStore
+        get() = ContextManager.keyStore
 
     override fun generate(keyAlgorithm: KeyAlgorithm) = cryptoService.generateKey(keyAlgorithm)
 
@@ -167,6 +163,8 @@ open class WaltIdKeyService : KeyService() {
     }
 
 }
+
+
 
 //    @Deprecated(message = "outdated")
 //    override fun getSupportedCurveNames(): List<String> {

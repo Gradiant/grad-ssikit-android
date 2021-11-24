@@ -1,7 +1,9 @@
 package id.walt.json
 
 import com.beust.klaxon.Klaxon
+//ANDROID PORT
 import id.walt.model.ContextConverter
+//ANDROID PORT
 import id.walt.model.DidEbsi
 import id.walt.model.DidWeb
 import id.walt.test.readDid
@@ -86,9 +88,13 @@ class JsonSerializeDidsTest : AnnotationSpec() {
     fun serializeDidEbsi() {
         val didEbsi = readDid("did-ebsi")
 
+        //ANDROID PORT
         val obj = Klaxon().converter(ContextConverter()).parse<DidEbsi>(didEbsi)
+        //ANDROID PORT
         // println(obj)
+        //ANDROID PORT
         val encoded = format.converter(ContextConverter()).toJsonString(obj)
+        //ANDROID PORT
         // println(encoded)
         didEbsi shouldEqualJson encoded
     }
@@ -97,7 +103,9 @@ class JsonSerializeDidsTest : AnnotationSpec() {
     fun serializeDidEbsiLT() {
         val didEbsi = readDid("did-ebsi-lt")
 
+        //ANDROID PORT
         val obj = Klaxon().converter(ContextConverter()).parse<DidEbsi>(didEbsi)
+        //ANDROID PORT
         // println(obj)
         val encoded = format.toJsonString(obj)
         // println(encoded)

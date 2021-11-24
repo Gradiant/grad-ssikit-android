@@ -41,6 +41,7 @@ object VcUtils {
         is VerifiableAttestation -> vcObj.credentialSubject!!.id
         is VerifiableAuthorization -> vcObj.credentialSubject.id
         is GaiaxCredential -> vcObj.credentialSubject.id
+        is VerifiablePresentation -> vcObj.holder!!
         else -> {
             //ANDROID PORT
             //log.warn { "No getHolder for ${vcObj.type.last()}!" }
@@ -103,5 +104,26 @@ object VcUtils {
             //ANDROID PORT
             null
         }
+    }
+
+    fun getChallenge(vc: VerifiableCredential): String? = when (vc.jwt) {
+        null -> when (vc) {
+            is Europass -> vc.proof!!.nonce
+            is VerifiableId -> vc.proof!!.nonce
+            is VerifiableDiploma -> vc.proof!!.nonce
+            is PermanentResidentCard -> vc.proof!!.nonce
+            is UniversityDegree -> vc.proof!!.nonce
+            is VerifiableAttestation -> vc.proof!!.nonce
+            is VerifiableAuthorization -> vc.proof!!.nonce
+            is VerifiablePresentation -> vc.proof!!.nonce
+            is GaiaxCredential -> vc.proof!!.nonce
+            else -> {
+                //ANDROID PORT
+                //log.warn { "No getCredentialSchema for ${vc.type.last()}!" }
+                //ANDROID PORT
+                null
+            }
+        }
+        else -> SignedJWT.parse(vc.jwt).jwtClaimsSet.getClaim("nonce").toString()
     }
 }

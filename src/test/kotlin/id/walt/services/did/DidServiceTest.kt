@@ -4,7 +4,9 @@ import com.beust.klaxon.Klaxon
 import id.walt.common.prettyPrint
 import id.walt.crypto.KeyAlgorithm
 import id.walt.crypto.decodeBase58
+//ANDROID PORT
 import id.walt.model.ContextConverter
+//ANDROID PORT
 import id.walt.model.DidMethod
 import id.walt.model.DidUrl
 import id.walt.servicematrix.ServiceMatrix
@@ -63,7 +65,9 @@ class DidServiceTest : AnnotationSpec() {
 
         // Resolve
         val resolvedDid = ds.resolve(did)
+        //ANDROID PORT
         val encoded = Klaxon().converter(ContextConverter()).toJsonString(resolvedDid)
+        //ANDROID PORT
         println(encoded)
     }
 
@@ -79,7 +83,9 @@ class DidServiceTest : AnnotationSpec() {
 
         // Resolve
         val resolvedDid = ds.resolve(did)
+        //ANDROID PORT
         val encoded = Klaxon().converter(ContextConverter()).toJsonString(resolvedDid)
+        //ANDROID PORT
         println(encoded)
     }
 
@@ -103,22 +109,30 @@ class DidServiceTest : AnnotationSpec() {
 
         // Load
         val resolvedDid = ds.loadDidEbsi(did)
+        //ANDROID PORT
         val encoded = Klaxon().converter(ContextConverter()).toJsonString(resolvedDid)
+        //ANDROID PORT
         println(encoded)
 
         // Update
         resolvedDid.assertionMethod = listOf(resolvedDid.verificationMethod!!.get(0).id)
         ds.updateDidEbsi(resolvedDid)
+        //ANDROID PORT
         val encodedUpd = Klaxon().converter(ContextConverter()).toJsonString(resolvedDid)
+        //ANDROID PORT
         println(encodedUpd)
     }
 
     @Test
     @Ignore // TODO: ESSIF backend issue
     fun resolveDidEbsiTest() {
+        //ANDROID PORT
         val did = "did:ebsi:zcGvqgZTHCtkjgtcKRL7H8k"
+        //ANDROID PORT
         val didDoc = DidService.resolveDidEbsi(did)
+        //ANDROID PORT
         val encDidEbsi = Klaxon().converter(ContextConverter()).toJsonString(didDoc)
+        //ANDROID PORT
         println(encDidEbsi)
     }
 

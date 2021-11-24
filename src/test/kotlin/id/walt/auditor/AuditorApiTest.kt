@@ -91,30 +91,9 @@ class AuditorApiTest : AnnotationSpec() {
 
         println(verificationResultJson)
 
-        @Test
-        fun testVerifiableDiploma() {
-            postAndVerify(readVerifiableCredential("VerifiableDiploma"))
+        val vr = Klaxon().parse<VerificationResult>(verificationResultJson)!!
+        vr.overallStatus shouldBe true
     }
-
-        @Test
-        fun testVerifiableId() {
-            postAndVerify(readVerifiableCredential("VerifiableId"))
-        }
-
-        @Test
-        fun testDeqarCredential() {
-            postAndVerify(readVerifiableCredential("DeqarCredential"))
-        }
-
-        @Test
-        fun testGaiaxCredential() {
-            postAndVerify(readVerifiableCredential("GaiaxCredential"), "JsonSchemaPolicy")
-        }
-
-        @Test
-        fun testPermanentResidentCardCredential() {
-            postAndVerify(readVerifiableCredential("PermanentResidentCard"))
-        }
 
     @Test
     //ANDROID PORT
@@ -145,7 +124,34 @@ class AuditorApiTest : AnnotationSpec() {
         postAndVerify(readVerifiableCredential("VerifiableAttestation"))
     }
 
-        val vr = Klaxon().parse<VerificationResult>(verificationResultJson)!!
-        vr.overallStatus shouldBe true
+    @Test
+    fun testVerifiableDiploma() {
+        postAndVerify(readVerifiableCredential("VerifiableDiploma"))
     }
+
+    @Test
+    fun testTrustedIssuerRegistryPolicy() {
+        postAndVerify(readVerifiableCredential("VerifiableDiplomaWithIssuerTirRecord"), "TrustedIssuerRegistryPolicy")
+    }
+
+    @Test
+    fun testVerifiableId() {
+        postAndVerify(readVerifiableCredential("VerifiableId"))
+    }
+
+    @Test
+    fun testDeqarCredential() {
+        postAndVerify(readVerifiableCredential("DeqarCredential"))
+    }
+
+    @Test
+    fun testGaiaxCredential() {
+        postAndVerify(readVerifiableCredential("GaiaxCredential"), "JsonSchemaPolicy")
+    }
+
+    @Test
+    fun testPermanentResidentCardCredential() {
+        postAndVerify(readVerifiableCredential("PermanentResidentCard"))
+    }
+
 }
