@@ -1,9 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    //ANDROID PORT
     kotlin("jvm") version "1.5.31"
-    //ANDROID PORT
     kotlin("plugin.serialization") version "1.5.20"
     id("com.github.kkdad.dependency-license-report") version "1.16.6"
     id("org.owasp.dependencycheck") version "6.1.6"
@@ -53,9 +51,7 @@ dependencies {
     // JSON
     implementation("org.json:json:20210307")
     implementation("com.beust:klaxon:5.5")
-    //ANDROID PORT
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.0")
-    //ANDROID PORT
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.0")
     implementation("net.pwall.json:json-kotlin-schema:0.29")
     //implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
 
@@ -85,9 +81,7 @@ dependencies {
     implementation("io.github.rybalkinsd", "kohttp", "0.12.0")
 
     // REST
-    //ANDROID PORT
-    implementation("io.javalin:javalin-bundle:4.0.0")
-    //ANDROID PORT
+    implementation("io.javalin:javalin-bundle:4.1.1")
 
     // Logging
     implementation("org.slf4j:slf4j-api:2.0.0-alpha2")
