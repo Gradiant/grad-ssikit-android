@@ -10,8 +10,8 @@ import id.walt.services.vc.JwtCredentialService
 import id.walt.services.vc.VcUtils
 import id.walt.vclib.Helpers.encode
 import id.walt.vclib.model.VerifiableCredential
-import id.walt.vclib.vclist.GaiaxCredential
-import id.walt.vclib.vclist.VerifiablePresentation
+import id.walt.vclib.credentials.GaiaxCredential
+import id.walt.vclib.credentials.VerifiablePresentation
 import kotlinx.serialization.Serializable
 import mu.KotlinLogging
 import java.text.SimpleDateFormat

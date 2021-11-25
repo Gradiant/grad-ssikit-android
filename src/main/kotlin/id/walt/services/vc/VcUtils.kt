@@ -2,7 +2,7 @@ package id.walt.services.vc
 
 import com.nimbusds.jwt.SignedJWT
 import id.walt.vclib.model.VerifiableCredential
-import id.walt.vclib.vclist.*
+import id.walt.vclib.credentials.*
 import mu.KotlinLogging
 
 private val log = KotlinLogging.logger("SSIKIT VcUtils")

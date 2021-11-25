@@ -21,8 +21,8 @@ import id.walt.vclib.model.CredentialSchema
 import id.walt.vclib.model.CredentialStatus
 import id.walt.vclib.model.Proof
 import id.walt.vclib.model.VerifiableCredential
-import id.walt.vclib.vclist.VerifiableAttestation
-import id.walt.vclib.vclist.VerifiablePresentation
+import id.walt.vclib.credentials.VerifiableAttestation
+import id.walt.vclib.credentials.VerifiablePresentation
 import info.weboftrust.ldsignatures.LdProof
 import info.weboftrust.ldsignatures.jsonld.LDSecurityContexts
 import mu.KotlinLogging

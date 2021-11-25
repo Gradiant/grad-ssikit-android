@@ -45,7 +45,7 @@ dependencies {
 
     // VC
     //ANDROID PORT
-    //implementation("id.walt:waltid-ssikit-vclib:1.5.3")
+    //implementation("id.walt:waltid-ssikit-vclib:1.5-SNAPSHOT")
     //ANDROID PORT
 
     // JSON

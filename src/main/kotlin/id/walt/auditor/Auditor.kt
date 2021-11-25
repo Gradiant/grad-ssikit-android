@@ -3,7 +3,7 @@ package id.walt.auditor
 import id.walt.servicematrix.ServiceProvider
 import id.walt.services.WaltIdService
 import id.walt.vclib.Helpers.toCredential
-import id.walt.vclib.vclist.VerifiablePresentation
+import id.walt.vclib.credentials.VerifiablePresentation
 import mu.KotlinLogging
 
 

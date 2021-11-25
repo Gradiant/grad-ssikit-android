@@ -10,7 +10,7 @@ import id.walt.vclib.Helpers.toCredential
 import id.walt.vclib.Helpers.toMap
 import id.walt.vclib.VcLibManager
 import id.walt.vclib.model.VerifiableCredential
-import id.walt.vclib.vclist.VerifiablePresentation
+import id.walt.vclib.credentials.VerifiablePresentation
 import info.weboftrust.ldsignatures.LdProof
 import mu.KotlinLogging
 import net.pwall.json.schema.JSONSchema
