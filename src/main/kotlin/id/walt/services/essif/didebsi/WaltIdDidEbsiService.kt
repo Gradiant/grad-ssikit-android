@@ -2,9 +2,6 @@ package id.walt.services.essif.didebsi
 
 import com.beust.klaxon.Klaxon
 import id.walt.crypto.canonicalize
-//ANDROID PORT
-import id.walt.model.ContextConverter
-//ANDROID PORT
 import id.walt.services.WaltIdServices
 import id.walt.services.context.ContextManager
 import id.walt.services.crypto.CryptoService
@@ -79,9 +76,7 @@ open class WaltIdDidEbsiService : DidEbsiService() {
 
     // TODO: Verify all params are properly defined according to EBSI expectations => https://ec.europa.eu/cefdigital/wiki/pages/viewpage.action?spaceKey=EBP&title=DID+Registry+Smart+Contract
     override fun buildInsertDocumentParams(did: String, ethKeyAlias: String?): List<InsertDidDocumentParams> {
-        //ANDROID PORT
-        val didDocumentString = Klaxon().converter(ContextConverter()).toJsonString(DidService.loadDidEbsi(did))
-        //ANDROID PORT
+        val didDocumentString = Klaxon().toJsonString(DidService.loadDidEbsi(did))
 
         val from = keyService.getEthereumAddress(ethKeyAlias ?: did)
         val identifier = Numeric.toHexString(did.toByteArray())
