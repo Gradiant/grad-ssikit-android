@@ -44,7 +44,7 @@ object WaltIdServices {
     //ANDROID PORT
 
     val httpLogging = false
-    val log = KotlinLogging.logger {}
+    private val log = KotlinLogging.logger {}
 
     val http = HttpClient(CIO) {
         install(JsonFeature) {
@@ -60,21 +60,21 @@ object WaltIdServices {
 
     init {
         val javaVersion = System.getProperty("java.runtime.version")
-        println("Walt.ID SSI-Kit ${Values.version} (running on Java $javaVersion)")
+        println("walt.id SSI Kit ${Values.version} (running on Java $javaVersion)")
 
         //ANDROID PORT
         val version = System.getProperty("java.version")
         val versionNum = Integer.parseInt(version.split(".")[0])
         if (versionNum < 11) {
             log.error { "Java version 11+ is required!" }
-        }
         //ANDROID PORT
+        }
 
         // BC is required for
         // - secp256k1 curve
         //ANDROID PORT
         Security.removeProvider("BC")
-        Security.addProvider(BouncyCastleProvider())
+        Security.insertProviderAt(BouncyCastleProvider(), 1)
         //ANDROID PORT
 
         TinkConfig.register()

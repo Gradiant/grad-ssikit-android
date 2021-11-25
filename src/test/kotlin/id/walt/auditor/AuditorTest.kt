@@ -12,7 +12,7 @@ import id.walt.services.did.DidService
 import id.walt.signatory.*
 import id.walt.test.DummySignatoryDataProvider
 import id.walt.test.RESOURCES_PATH
-import id.walt.vclib.vclist.VerifiableDiploma
+import id.walt.vclib.credentials.VerifiableDiploma
 import io.kotest.core.spec.Spec
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.collections.shouldBeSameSizeAs
@@ -74,14 +74,14 @@ class AuditorCommandTest : StringSpec() {
     init {
 
         "1. verify vp" {
-            val res = Auditor.getService().verify(vpStr, listOf(SignaturePolicy(), JsonSchemaPolicy()))
+            val res = Auditor.getService().verify(vpStr, listOf(SignaturePolicy(), TrustedSchemaRegistryPolicy()))
 
-            res.overallStatus shouldBe true
+            res.valid shouldBe true
 
-            res.policyResults.keys shouldBeSameSizeAs listOf(SignaturePolicy(), JsonSchemaPolicy())
+            res.policyResults.keys shouldBeSameSizeAs listOf(SignaturePolicy(), TrustedSchemaRegistryPolicy())
 
             res.policyResults.keys shouldContainAll
-                    listOf(SignaturePolicy(), JsonSchemaPolicy()).map { it.id }
+                    listOf(SignaturePolicy(), TrustedSchemaRegistryPolicy()).map { it.id }
 
             res.policyResults.values.forEach {
                 it shouldBe true
@@ -89,13 +89,13 @@ class AuditorCommandTest : StringSpec() {
         }
 
         "2. verify vc" {
-            val res = Auditor.getService().verify(vcStr, listOf(SignaturePolicy(), JsonSchemaPolicy()))
+            val res = Auditor.getService().verify(vcStr, listOf(SignaturePolicy(), TrustedSchemaRegistryPolicy()))
 
-            res.overallStatus shouldBe true
-            res.policyResults.keys shouldBeSameSizeAs listOf(SignaturePolicy(), JsonSchemaPolicy())
+            res.valid shouldBe true
+            res.policyResults.keys shouldBeSameSizeAs listOf(SignaturePolicy(), TrustedSchemaRegistryPolicy())
 
             res.policyResults.keys shouldContainAll
-                    listOf(SignaturePolicy(), JsonSchemaPolicy()).map { it.id }
+                    listOf(SignaturePolicy(), TrustedSchemaRegistryPolicy()).map { it.id }
 
             res.policyResults.values.forEach {
                 it shouldBe true
@@ -103,13 +103,13 @@ class AuditorCommandTest : StringSpec() {
         }
 
         "3. verify vc jwt" {
-            val res = Auditor.getService().verify(vcJwt, listOf(SignaturePolicy(), JsonSchemaPolicy()))
+            val res = Auditor.getService().verify(vcJwt, listOf(SignaturePolicy(), TrustedSchemaRegistryPolicy()))
 
-            res.overallStatus shouldBe true
-            res.policyResults.keys shouldBeSameSizeAs listOf(SignaturePolicy(), JsonSchemaPolicy())
+            res.valid shouldBe true
+            res.policyResults.keys shouldBeSameSizeAs listOf(SignaturePolicy(), TrustedSchemaRegistryPolicy())
 
             res.policyResults.keys shouldContainAll
-                    listOf(SignaturePolicy(), JsonSchemaPolicy()).map { it.id }
+                    listOf(SignaturePolicy(), TrustedSchemaRegistryPolicy()).map { it.id }
 
             res.policyResults.values.forEach {
                 it shouldBe true
@@ -117,14 +117,14 @@ class AuditorCommandTest : StringSpec() {
         }
 
         "4. verify vp jwt" {
-            val res = Auditor.getService().verify(vpJwt, listOf(SignaturePolicy(), JsonSchemaPolicy()))
+            val res = Auditor.getService().verify(vpJwt, listOf(SignaturePolicy(), TrustedSchemaRegistryPolicy()))
 
-            res.overallStatus shouldBe true
+            res.valid shouldBe true
 
-            res.policyResults.keys shouldBeSameSizeAs listOf(SignaturePolicy(), JsonSchemaPolicy())
+            res.policyResults.keys shouldBeSameSizeAs listOf(SignaturePolicy(), TrustedSchemaRegistryPolicy())
 
             res.policyResults.keys shouldContainAll
-                    listOf(SignaturePolicy(), JsonSchemaPolicy()).map { it.id }
+                    listOf(SignaturePolicy(), TrustedSchemaRegistryPolicy()).map { it.id }
 
             res.policyResults.values.forEach {
                 it shouldBe true

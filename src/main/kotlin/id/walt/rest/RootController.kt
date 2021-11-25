@@ -7,7 +7,7 @@ object RootController {
 
     fun rootCoreApi(ctx: Context) {
         ctx.html(
-            " <!DOCTYPE html>\n" +
+        " <!DOCTYPE html>\n" +
                     "<html>\n" +
                     "<body>\n" +
                     "\n" +

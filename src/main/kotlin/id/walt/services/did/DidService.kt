@@ -8,7 +8,6 @@ import id.walt.model.*
 import id.walt.services.WaltIdServices
 import id.walt.services.context.ContextManager
 import id.walt.services.crypto.CryptoService
-
 import id.walt.services.hkvstore.HKVKey
 import id.walt.services.key.KeyService
 import id.walt.services.vc.JsonLdCredentialService
@@ -19,7 +18,6 @@ import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
 import org.bouncycastle.asn1.ASN1BitString
 import org.bouncycastle.asn1.ASN1Sequence
-
 import java.util.*
 
 private val log = KotlinLogging.logger {}
@@ -92,9 +90,7 @@ object DidService {
                 log.debug { "Resolving did:ebsi at: https://api.preprod.ebsi.eu/did-registry/v2/identifiers/${didUrl.did}" }
                 didDoc = WaltIdServices.http.get("https://api.preprod.ebsi.eu/did-registry/v2/identifiers/${didUrl.did}")
                 log.debug { "Result: $didDoc" }
-                //ANDROID PORT
-                return@runBlocking Klaxon().converter(ContextConverter()).parse<DidEbsi>(didDoc)!!
-                //ANDROID PORT
+                return@runBlocking Did.decode(didDoc)!! as DidEbsi
             } catch (e: ClientRequestException) {
                 log.debug { "Resolving did ebsi failed: fail $i" }
                 Thread.sleep(1000)
@@ -106,11 +102,9 @@ object DidService {
     }
 
     fun loadDidEbsi(did: String): DidEbsi = loadDidEbsi(DidUrl.from(did))
-    //ANDROID PORT
-    fun loadDidEbsi(didUrl: DidUrl): DidEbsi = Klaxon().converter(ContextConverter()).parse<DidEbsi>(loadDid(didUrl.did)!!)!!
+    fun loadDidEbsi(didUrl: DidUrl): DidEbsi = Did.decode(loadDid(didUrl.did)!!)!! as DidEbsi
 
-    fun updateDidEbsi(did: DidEbsi) = storeDid(did.id, Klaxon().converter(ContextConverter()).toJsonString(did))
-    //ANDROID PORT
+    fun updateDidEbsi(did: DidEbsi) = storeDid(did.id, did.encode())
     // Private methods
 
     private fun createDidEbsi(keyAlias: String?, didEbsiOptions: DidEbsiOptions?): String {
@@ -135,16 +129,12 @@ object DidService {
         )
 
         val did = DidEbsi(
-            //ANDROID PORT
-            EbsiContextList(listOf(DID_CONTEXT_URL)), // TODO Context not working "https://ebsi.org/ns/did/v1"
-            //ANDROID PORT
+            listOf(DID_CONTEXT_URL), // TODO Context not working "https://ebsi.org/ns/did/v1"
             didUrlStr,
             verificationMethods,
             listOf(kid)
         )
-        //ANDROID PORT
-        val ebsiDid = Klaxon().converter(ContextConverter()).toJsonString(did)
-        //ANDROID PORT
+        val ebsiDid = did.encode()
 
 //        val ebsiDid = if (key.algorithm == EdDSA_Ed25519) {
 //            val pubKeyBytes = key.getPublicKey().encoded
@@ -254,9 +244,7 @@ object DidService {
         )
 
         return DidEbsi(
-            //ANDROID PORT
-            EbsiContextList(listOf(DID_CONTEXT_URL)), // TODO Context not working "https://ebsi.org/ns/did/v1"
-            //ANDROID PORT
+            listOf(DID_CONTEXT_URL), // TODO Context not working "https://ebsi.org/ns/did/v1"
             didUrl.did,
             verificationMethods,
             keyRef,
@@ -349,7 +337,7 @@ object DidService {
     fun listDids(): List<String> =
         ContextManager.hkvStore.listChildKeys(HKVKey("did", "created")).map { it.name }.toList()
 
-    fun loadOrResolveAnyDid(didStr: String): BaseDid? {
+    fun loadOrResolveAnyDid(didStr: String): Did? {
         log.debug { "Loading or resolving \"$didStr\"..." }
         val url = DidUrl.from(didStr)
         val storedDid = loadDid(didStr)
@@ -362,7 +350,7 @@ object DidService {
                 // TODO: implement did:web
                 else -> null
             }?.apply { storeDid(didStr, this.encodePretty()) }
-            else -> BaseDid.decode(didStr, storedDid)
+            else -> Did.decode(storedDid)
         }
     }
 
@@ -411,9 +399,9 @@ object DidService {
 
         kotlin.runCatching { KeyService.getService().load(keyAlias) }
             .getOrNull()?.let { throw Exception("Could not import key, as key alias \"$keyAlias\" is already existing.") }
-        log.debug { "Importing key: ${publicKeyJwk.kid}" }
 
         publicKeyJwk.kid = keyAlias
+        log.debug { "Importing key: ${publicKeyJwk.kid}" }
         val keyId = KeyService.getService().importKey(Klaxon().toJsonString(publicKeyJwk))
         ContextManager.keyStore.addAlias(keyId, keyAlias)
         return true
@@ -483,3 +471,4 @@ object DidService {
 //    }
 
 }
+

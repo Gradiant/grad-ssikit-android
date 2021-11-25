@@ -55,11 +55,6 @@ dependencies {
     implementation("net.pwall.json:json-kotlin-schema:0.29")
     //implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
 
-    //ANDROID PORT
-    //Secp256k1
-    implementation("fr.acinq.secp256k1:secp256k1-kmp:0.6.0")
-    //ANDROID PORT
-
     // DB
     implementation("org.xerial:sqlite-jdbc:3.36.0.2")
     implementation("com.zaxxer:HikariCP:5.0.0")
@@ -72,12 +67,10 @@ dependencies {
     implementation("commons-io:commons-io:2.11.0")
 
     // HTTP
-    //ANDROID PORT
-    implementation("io.ktor:ktor-client-core:1.6.3")
-    implementation("io.ktor:ktor-client-cio:1.6.3")
-    implementation("io.ktor:ktor-client-serialization:1.6.3")
-    implementation("io.ktor:ktor-client-logging:1.6.3")
-    //ANDROID PORT
+    implementation("io.ktor:ktor-client-core:1.6.4")
+    implementation("io.ktor:ktor-client-cio:1.6.4")
+    implementation("io.ktor:ktor-client-serialization:1.6.4")
+    implementation("io.ktor:ktor-client-logging:1.6.4")
     implementation("io.github.rybalkinsd", "kohttp", "0.12.0")
 
     // REST
@@ -91,9 +84,9 @@ dependencies {
     implementation("io.github.microutils:kotlin-logging-jvm:2.0.11")
 
     // Config
-    implementation("com.sksamuel.hoplite:hoplite-core:1.4.9")
-    implementation("com.sksamuel.hoplite:hoplite-yaml:1.4.9")
-    implementation("com.sksamuel.hoplite:hoplite-hikaricp:1.4.9")
+    implementation("com.sksamuel.hoplite:hoplite-core:1.4.11")
+    implementation("com.sksamuel.hoplite:hoplite-yaml:1.4.11")
+    implementation("com.sksamuel.hoplite:hoplite-hikaricp:1.4.11")
 
     // Service-Matrix
     //ANDROID PORT
@@ -107,11 +100,9 @@ dependencies {
     //testImplementation(kotlin("test-junit"))
     testImplementation("io.mockk:mockk:1.12.0")
 
-    //ANDROID PORT
-    testImplementation("io.kotest:kotest-runner-junit5:4.6.1")
-    testImplementation("io.kotest:kotest-assertions-core:4.6.1")
-    testImplementation("io.kotest:kotest-assertions-json:4.6.1")
-    //ANDROID PORT
+    testImplementation("io.kotest:kotest-runner-junit5:4.6.3")
+    testImplementation("io.kotest:kotest-assertions-core:4.6.3")
+    testImplementation("io.kotest:kotest-assertions-json:4.6.3")
 }
 
 tasks.withType<Test> {

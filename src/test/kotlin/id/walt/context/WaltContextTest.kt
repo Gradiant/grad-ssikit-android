@@ -20,45 +20,45 @@ import java.io.FileInputStream
 
 class WaltContextTest: AnnotationSpec() {
 
-    @BeforeAll
-    fun setup() {
-        //ANDROID PORT
-        AndroidUtils.setAndroidDataDir(System.getProperty("user.dir"))
-        ServiceMatrix(FileInputStream(File("$RESOURCES_PATH/service-matrix.properties")))
-        //ANDROID PORT
-        File(TEST_CONTEXT_DATA_ROOT).deleteRecursively()
-    }
-
-    @AfterAll
-    fun cleanup() {
-        File(TEST_CONTEXT_DATA_ROOT).deleteRecursively()
-    }
-
-    @Test
+  @BeforeAll
+  fun setup() {
     //ANDROID PORT
-    @Ignore //Android Lazy Sodium
+    AndroidUtils.setAndroidDataDir(System.getProperty("user.dir"))
+    ServiceMatrix(FileInputStream(File("$RESOURCES_PATH/service-matrix.properties")))
     //ANDROID PORT
-    fun testContext() {
-        val userAContext = TestContext("userA")
-        val userBContext = TestContext("userB")
+    File(TEST_CONTEXT_DATA_ROOT).deleteRecursively()
+}
 
-        var did1: String? = null
-        ContextManager.runWith(userAContext) {
-            did1 = DidService.create(DidMethod.key)
-        }
+  @AfterAll
+  fun cleanup() {
+    File(TEST_CONTEXT_DATA_ROOT).deleteRecursively()
+  }
 
-        ContextManager.runWith(userBContext) {
-            val did2 = DidService.create(DidMethod.key)
-            val didList2 = DidService.listDids()
-            didList2 shouldHaveSize 1
-            didList2.first() shouldBe did2
-        }
+@Test
+//ANDROID PORT
+@Ignore //Android Lazy Sodium
+//ANDROID PORT
+  fun testContext() {
+    val userAContext = TestContext("userA")
+    val userBContext = TestContext("userB")
 
-        ContextManager.runWith(userAContext) {
-            val didList1 = DidService.listDids()
-            didList1 shouldHaveSize 1
-            did1 shouldNotBe null
-            didList1.first() shouldBe did1
-        }
+    var did1: String? = null
+    ContextManager.runWith(userAContext) {
+      did1 = DidService.create(DidMethod.key)
     }
+
+    ContextManager.runWith(userBContext) {
+      val did2 = DidService.create(DidMethod.key)
+      val didList2 = DidService.listDids()
+      didList2 shouldHaveSize 1
+      didList2.first() shouldBe did2
+    }
+
+    ContextManager.runWith(userAContext) {
+      val didList1 = DidService.listDids()
+      didList1 shouldHaveSize 1
+      did1 shouldNotBe null
+      didList1.first() shouldBe did1
+    }
+  }
 }

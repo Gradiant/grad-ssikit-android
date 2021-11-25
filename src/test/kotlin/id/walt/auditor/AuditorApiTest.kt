@@ -43,6 +43,8 @@ class AuditorApiTest : AnnotationSpec() {
     val Auditor_API_PORT = 7001
     val Auditor_API_URL = "http://$Auditor_HOST:$Auditor_API_PORT"
 
+    val DEFAULT_POLICIES = "SignaturePolicy, JsonSchemaPolicy"
+
     val client = HttpClient(CIO) {
         install(JsonFeature) {
             serializer = KotlinxSerializer()
@@ -74,9 +76,10 @@ class AuditorApiTest : AnnotationSpec() {
 
         policies shouldContain VerificationPolicyMetadata("Verify by signature", "SignaturePolicy")
         policies shouldContain VerificationPolicyMetadata("Verify by JSON schema", "JsonSchemaPolicy")
+        policies shouldContain VerificationPolicyMetadata("Verify by EBSI Trusted Schema Registry", "TrustedSchemaRegistryPolicy")
     }
 
-    private fun postAndVerify(vcToVerify: String, policyList: String = "SignaturePolicy") {
+    private fun postAndVerify(vcToVerify: String, policyList: String = DEFAULT_POLICIES) {
         val verificationResultJson = httpPost {
             host = Auditor_HOST
             port = Auditor_API_PORT
@@ -92,7 +95,7 @@ class AuditorApiTest : AnnotationSpec() {
         println(verificationResultJson)
 
         val vr = Klaxon().parse<VerificationResult>(verificationResultJson)!!
-        vr.overallStatus shouldBe true
+        vr.valid shouldBe true
     }
 
     @Test
@@ -111,12 +114,12 @@ class AuditorApiTest : AnnotationSpec() {
             )
         )
 
-        postAndVerify(vcToVerify, "SignaturePolicy")
+        postAndVerify(vcToVerify)
     }
 
     @Test
     fun testVerifiableAuthorizationCredential() {
-        postAndVerify(readVerifiableCredential("VerifiableAuthorization"), "SignaturePolicy,JsonSchemaPolicy,TrustedSubjectDidPolicy,TrustedIssuerDidPolicy")
+        postAndVerify(readVerifiableCredential("VerifiableAuthorization"), "JsonSchemaPolicy, SignaturePolicy,TrustedSubjectDidPolicy,TrustedIssuerDidPolicy")
     }
 
     @Test
@@ -126,7 +129,7 @@ class AuditorApiTest : AnnotationSpec() {
 
     @Test
     fun testVerifiableDiploma() {
-        postAndVerify(readVerifiableCredential("VerifiableDiploma"))
+        postAndVerify(readVerifiableCredential("VerifiableDiploma"), "JsonSchemaPolicy,SignaturePolicy,TrustedSubjectDidPolicy,TrustedIssuerDidPolicy,TrustedSchemaRegistryPolicy")
     }
 
     @Test
@@ -141,12 +144,12 @@ class AuditorApiTest : AnnotationSpec() {
 
     @Test
     fun testDeqarCredential() {
-        postAndVerify(readVerifiableCredential("DeqarCredential"))
+        postAndVerify(readVerifiableCredential("DeqarCredential"), "SignaturePolicy")
     }
 
     @Test
     fun testGaiaxCredential() {
-        postAndVerify(readVerifiableCredential("GaiaxCredential"), "JsonSchemaPolicy")
+        postAndVerify(readVerifiableCredential("GaiaxCredential"))
     }
 
     @Test

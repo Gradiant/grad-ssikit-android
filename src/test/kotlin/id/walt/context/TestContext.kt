@@ -12,9 +12,9 @@ import id.walt.services.vcstore.HKVVcStoreService
 val TEST_CONTEXT_DATA_ROOT = "build/testdata/context"
 
 class TestContext(val username: String): Context {
-    override val keyStore = HKVKeyStoreService()
-    override val vcStore = HKVVcStoreService()
-    //ANDROID PORT
-    override val hkvStore = FileSystemHKVStore()
-    //ANDROID PORT
+  override val keyStore = HKVKeyStoreService()
+  override val vcStore = HKVVcStoreService()
+  //ANDROID PORT
+  override val hkvStore = FileSystemHKVStore()
+  //ANDROID PORT
 }

@@ -1,5 +1,9 @@
 package id.walt.common
 
+//ANDROID PORT
+//import com.zaxxer.hikari.HikariDataSource
+//import id.walt.services.WaltIdServices
+//ANDROID PORT
 import mu.KotlinLogging
 import java.sql.Connection
 //ANDROID PORT
@@ -8,7 +12,6 @@ import java.sql.DriverManager
 import id.walt.servicematrix.utils.AndroidUtils.getAndroidDataDir
 //ANDROID PORT
 import java.sql.Statement
-
 
 object SqlDbManager {
     private val log = KotlinLogging.logger {}

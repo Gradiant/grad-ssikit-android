@@ -211,7 +211,6 @@ object TrustedIssuerClient {
 
         println("9. [Eos] Validate DID ownership")
         val didOwnershipRespHeader = readEssif("onboarding-did-ownership-resp-header")
-
         log.debug { "didOwnershipRespHeader: $didOwnershipRespHeader" }
         val didOwnershipRespBody = readEssif("onboarding-did-ownership-resp-body")
         log.debug { "didOwnershipRespBody: $didOwnershipRespBody" }

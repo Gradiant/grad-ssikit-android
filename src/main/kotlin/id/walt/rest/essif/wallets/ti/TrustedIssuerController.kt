@@ -27,7 +27,7 @@ object TrustedIssuerController {
 
     val enterpriseWalletService = EnterpriseWalletService()
 
-    //    @OpenApi(
+//    @OpenApi(
 //        summary = "Creates and registers DID on the EBSI Blockchain",
 //        operationId = "createDid",
 //        tags = ["Trusted Issuer"],
@@ -46,7 +46,7 @@ object TrustedIssuerController {
         ctx.json(enterpriseWalletService.createDid())
     }
 
-    //    @OpenApi(
+//    @OpenApi(
 //        summary = "Generates the DID ownership response and fetches the requested credential.",
 //        operationId = "getVerifiableCredential",
 //        tags = ["Trusted Issuer"],
@@ -68,7 +68,7 @@ object TrustedIssuerController {
         ctx.json(enterpriseWalletService.getVerifiableCredential("getVcReq.didOwnershipReq", "getVcReq.did"))
     }
 
-    //    @OpenApi(
+//    @OpenApi(
 //        summary = "Generates a DID-SIOP Auth Request",
 //        operationId = "generateAuthenticationRequest",
 //        tags = ["Trusted Issuer"],
@@ -79,15 +79,15 @@ object TrustedIssuerController {
 //        ]
 //    )
     fun generateAuthenticationRequestDocs() = document()
-        .operation { it.summary("Generates a DID-SIOP Auth Request.").operationId("generateAuthenticationRequest").addTagsItem("Trusted Issuer")   }
-        .json<String>("200") { it.description("DID Auth Request") }
-        .json<ErrorResponse>("400") { it.description("Bad request") }
-        .json<ErrorResponse>("500") { it.description("Server Error") }
+    .operation { it.summary("Generates a DID-SIOP Auth Request.").operationId("generateAuthenticationRequest").addTagsItem("Trusted Issuer")   }
+    .json<String>("200") { it.description("DID Auth Request") }
+    .json<ErrorResponse>("400") { it.description("Bad request") }
+    .json<ErrorResponse>("500") { it.description("Server Error") }
     fun generateAuthenticationRequest(ctx: Context) {
         ctx.result(EssifServer.generateAuthenticationRequest())
     }
 
-    //    @OpenApi(
+//    @OpenApi(
 //        summary = "Establishes a mutual authenticated DID-SIOP session",
 //        operationId = "generateAuthenticationRequest",
 //        tags = ["Trusted Issuer"],
@@ -98,10 +98,10 @@ object TrustedIssuerController {
 //        ]
 //    )
     fun openSessionDocs() = document()
-        .operation { it.summary("Establishes a mutual authenticated DID-SIOP session.").operationId("openSession").addTagsItem("Trusted Issuer")   }
-        .json<String>("200") { it.description("Encrypted access token") }
-        .json<ErrorResponse>("400") { it.description("Bad request") }
-        .json<ErrorResponse>("500") { it.description("Server Error") }
+    .operation { it.summary("Establishes a mutual authenticated DID-SIOP session.").operationId("openSession").addTagsItem("Trusted Issuer")   }
+    .json<String>("200") { it.description("Encrypted access token") }
+    .json<ErrorResponse>("400") { it.description("Bad request") }
+    .json<ErrorResponse>("500") { it.description("Server Error") }
     fun openSession(ctx: Context) {
         ctx.result(EssifServer.openSession(ctx.body()))
     }

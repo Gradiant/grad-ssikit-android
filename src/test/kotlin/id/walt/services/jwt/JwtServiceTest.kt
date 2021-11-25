@@ -9,7 +9,6 @@ import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.SignedJWT
 import id.walt.crypto.KeyAlgorithm
 import id.walt.crypto.decBase64
-import id.walt.model.ContextConverter
 import id.walt.model.DidEbsi
 import id.walt.model.DidMethod
 import id.walt.servicematrix.ServiceMatrix
@@ -22,7 +21,7 @@ import id.walt.services.key.KeyService
 import id.walt.services.keystore.KeyType
 import id.walt.test.RESOURCES_PATH
 import id.walt.vclib.Helpers.toCredential
-import id.walt.vclib.vclist.Europass
+import id.walt.vclib.credentials.Europass
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.shouldBe
 import org.bouncycastle.jce.provider.BouncyCastleProvider
@@ -455,12 +454,9 @@ class JwtServiceTest : AnnotationSpec() {
 
     // @Test
     fun ake1DecryptPayload() {
-        //ANDROID PORT
-        val ebsiDid = Klaxon().converter(ContextConverter()).parse<DidEbsi>(File("src/test/resources/ebsi/ake1-did.json").readText())!!
-        //ANDROID PORT
+        val ebsiDid = Klaxon().parse<DidEbsi>(File("src/test/resources/ebsi/ake1-did.json").readText())!!
         val jwkStr = Klaxon().toJsonString(ebsiDid.verificationMethod!![0].publicKeyJwk)
         println(jwkStr)
-
         val publicKey = JWK.parse(jwkStr) as ECKey
         print(publicKey)
 

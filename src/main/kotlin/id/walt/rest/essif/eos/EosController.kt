@@ -21,7 +21,7 @@ EosService.signedChallenge("")
 
 object EosController {
 
-    //    @OpenApi(
+//    @OpenApi(
 //        summary = "Request Verifiable Authorization. Returns the DID ownership request.",
 //        operationId = "onboards",
 //        tags = ["ESSIF Enterprise Wallet"],
@@ -37,11 +37,11 @@ object EosController {
 //        ]
 //    )
     fun onboardsDocs() = document()
-        .operation { it.summary("Request Verifiable Authorization. Returns the DID ownership request.").operationId("onboards").addTagsItem("ESSIF Enterprise Wallet")   }
-        .body<String> { it.description("DID to be registered") }
-        .json<String>("200") { it.description("Request DID ownership") }
-        .json<ErrorResponse>("400") { it.description("Bad request") }
-        .json<ErrorResponse>("500") { it.description("Server Error") }
+    .operation { it.summary("Request Verifiable Authorization. Returns the DID ownership request.").operationId("onboards").addTagsItem("ESSIF Enterprise Wallet")   }
+    .body<String> { it.description("DID to be registered") }
+    .json<String>("200") { it.description("Request DID ownership") }
+    .json<ErrorResponse>("400") { it.description("Bad request") }
+    .json<ErrorResponse>("500") { it.description("Server Error") }
     fun onboards(ctx: Context) {
         ctx.json(TrustedIssuerClient.onboards())
     }
@@ -62,16 +62,16 @@ object EosController {
 //        ]
 //    )
     fun signedChallengeDocs() = document()
-        .operation { it.summary("Processes the signed challenge in the scope of DID Auth and if successful, returns the Verifiable Authorization").operationId("signedChallenge").addTagsItem("ESSIF Enterprise Wallet")   }
-        .body<String> { it.description("Signed challenge") }
-        .json<String>("200") { it.description("Verifiable Authorization") }
-        .json<ErrorResponse>("400") { it.description("Bad request") }
-        .json<ErrorResponse>("500") { it.description("Server Error") }
+    .operation { it.summary("Processes the signed challenge in the scope of DID Auth and if successful, returns the Verifiable Authorization").operationId("signedChallenge").addTagsItem("ESSIF Enterprise Wallet")   }
+    .body<String> { it.description("Signed challenge") }
+    .json<String>("200") { it.description("Verifiable Authorization") }
+    .json<ErrorResponse>("400") { it.description("Bad request") }
+    .json<ErrorResponse>("500") { it.description("Server Error") }
     fun signedChallenge(ctx: Context) {
         ctx.json(TrustedIssuerClient.signedChallenge("signedChallenge"))
     }
 
-    //    @OpenApi(
+//    @OpenApi(
 //        summary = "Creates an OIDC authentication request URI",
 //        operationId = "requestCredentialUri",
 //        tags = ["ESSIF Enterprise Wallet"],
@@ -82,15 +82,15 @@ object EosController {
 //        ]
 //    )
     fun requestCredentialUriDocs() = document()
-        .operation { it.summary("Creates an OIDC authentication request URI.").operationId("requestCredentialUri").addTagsItem("ESSIF Enterprise Wallet")   }
-        .json<String>("200") { it.description("OIDC Authentication Request URI") }
-        .json<ErrorResponse>("400") { it.description("Bad request") }
-        .json<ErrorResponse>("500") { it.description("Server Error") }
+    .operation { it.summary("Creates an OIDC authentication request URI.").operationId("requestCredentialUri").addTagsItem("ESSIF Enterprise Wallet")   }
+    .json<String>("200") { it.description("OIDC Authentication Request URI") }
+    .json<ErrorResponse>("400") { it.description("Bad request") }
+    .json<ErrorResponse>("500") { it.description("Server Error") }
     fun requestCredentialUri(ctx: Context) {
         ctx.json(TrustedIssuerClient.requestCredentialUri())
     }
 
-    //    @OpenApi(
+//    @OpenApi(
 //        summary = "Auth request",
 //        operationId = "authReq",
 //        tags = ["ESSIF Enterprise Wallet"],
@@ -101,16 +101,16 @@ object EosController {
 //        ]
 //    )
     fun authReqDocs() = document()
-        .operation { it.summary("Auth request").operationId("authReq").addTagsItem("ESSIF Enterprise Wallet")   }
-        .json<String>("200") { it.description("") }
-        .json<ErrorResponse>("400") { it.description("Bad request") }
-        .json<ErrorResponse>("500") { it.description("Server Error") }
+    .operation { it.summary("Auth request").operationId("authReq").addTagsItem("ESSIF Enterprise Wallet")   }
+    .json<String>("200") { it.description("") }
+    .json<ErrorResponse>("400") { it.description("Bad request") }
+    .json<ErrorResponse>("500") { it.description("Server Error") }
     fun authReq(ctx: Context) {
         println("authReq: " + ctx.body())
         ctx.json(AuthRequestResponse("asdf2weswfsadfdf"))
     }
 
-    //    @OpenApi(
+//    @OpenApi(
 //        summary = "Returns the DID ownership request",
 //        operationId = "requestVerifiableCredential",
 //        tags = ["ESSIF Enterprise Wallet"],
@@ -126,11 +126,11 @@ object EosController {
 //        ]
 //    )
     fun requestVerifiableCredentialDocs() = document()
-        .operation { it.summary("Returns the DID ownership request").operationId("requestVerifiableCredential").addTagsItem("ESSIF Enterprise Wallet")   }
-        .body<String> { it.description("Credential request URI") }
-        .json<String>("200") { it.description("DID ownership request") }
-        .json<ErrorResponse>("400") { it.description("Bad request") }
-        .json<ErrorResponse>("500") { it.description("Server Error") }
+    .operation { it.summary("Returns the DID ownership request").operationId("requestVerifiableCredential").addTagsItem("ESSIF Enterprise Wallet")   }
+    .body<String> { it.description("Credential request URI") }
+    .json<String>("200") { it.description("DID ownership request") }
+    .json<ErrorResponse>("400") { it.description("Bad request") }
+    .json<ErrorResponse>("500") { it.description("Server Error") }
     fun requestVerifiableCredential(ctx: Context) {
         ctx.json(TrustedIssuerClient.requestVerifiableCredential())
     }
@@ -169,10 +169,10 @@ object EosController {
 //        ]
 //    )
     fun getCredentialDocs() = document()
-        .operation { it.summary("Returns DID Auth Request or the requested credential if a VC Token is presented").operationId("getCredential").addTagsItem("ESSIF Enterprise Wallet")   }
-        .json<String>("200") { it.description("DID Auth Request") }
-        .json<ErrorResponse>("400") { it.description("Bad request") }
-        .json<ErrorResponse>("500") { it.description("Server Error") }
+    .operation { it.summary("Returns DID Auth Request or the requested credential if a VC Token is presented").operationId("getCredential").addTagsItem("ESSIF Enterprise Wallet")   }
+    .json<String>("200") { it.description("DID Auth Request") }
+    .json<ErrorResponse>("400") { it.description("Bad request") }
+    .json<ErrorResponse>("500") { it.description("Server Error") }
     fun getCredential(ctx: Context) {
 
         val vcToken = ctx.body()

@@ -14,6 +14,7 @@ import id.walt.model.DidMethod
 import id.walt.model.DidUrl
 import id.walt.services.crypto.CryptoService
 import id.walt.services.did.DidService
+
 import java.io.File
 
 class DidCommand : CliktCommand(
@@ -35,7 +36,7 @@ class CreateDidCommand : CliktCommand(
 
         Creates a DID document based on the corresponding SSI ecosystem (DID method). 
         Optionally the associated asymmetric keypair is also created.
-        
+
         """
 ) {
     val config: CliConfig by requireObject()

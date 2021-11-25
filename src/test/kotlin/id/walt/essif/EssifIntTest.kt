@@ -37,7 +37,7 @@ import kotlin.io.path.exists
 import kotlin.io.path.readText
 
 @Ignored
-class EssifIntTest : StringSpec({
+class EssifIntTest() : StringSpec({
     val bearerTokenFile = "data/bearer-token.txt"
 
     resetDataDir()
@@ -245,9 +245,9 @@ private fun verifyCredential(src: File) {
         println("$policy:\t\t $result")
         result shouldBe true
     }
-    println("Verified:\t\t ${verificationResult.overallStatus}")
+    println("Verified:\t\t ${verificationResult.valid}")
 
-    verificationResult.overallStatus shouldBe true
+    verificationResult.valid shouldBe true
 }
 
 private fun privateKeyExists(keyAlias: String) =

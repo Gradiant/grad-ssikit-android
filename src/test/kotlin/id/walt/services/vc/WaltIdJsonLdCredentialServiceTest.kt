@@ -18,9 +18,10 @@ import id.walt.test.getTemplate
 import id.walt.test.readCredOffer
 import id.walt.vclib.Helpers.encode
 import id.walt.vclib.Helpers.toCredential
+import id.walt.vclib.VcUtils
 import id.walt.vclib.model.CredentialSchema
 import id.walt.vclib.model.CredentialStatus
-import id.walt.vclib.vclist.*
+import id.walt.vclib.credentials.*
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
@@ -193,12 +194,12 @@ class WaltIdJsonLdCredentialServiceTest : AnnotationSpec() {
                 ),
                 learningSpecification = Europass.CredentialSubject.LearningSpecification(
                     id = "https://leaston.bcdiploma.com/law-economics-management#LearningSpecification",
-                    iSCEDFCode = listOf(
+                    ISCEDFCode = listOf(
                         "7"
                     ),
-                    eCTSCreditPoints = 120,
-                    eQFLevel = 7,
-                    nQFLevel = listOf(
+                    ECTSCreditPoints = 120,
+                    EQFLevel = 7,
+                    NQFLevel = listOf(
                         "7"
                     )
                 )
@@ -322,10 +323,10 @@ class WaltIdJsonLdCredentialServiceTest : AnnotationSpec() {
             proofType = ProofType.LD_PROOF))
         val notParsableVc = ""
 
-        credentialService.validateSchema(noSchemaVc) shouldBe true
-        credentialService.validateSchema(validVc) shouldBe true
-        credentialService.validateSchema(invalidDataVc) shouldBe false
-        credentialService.validateSchema(notParsableVc) shouldBe false
+        credentialService.validateSchemaTsr(noSchemaVc) shouldBe false
+        credentialService.validateSchemaTsr(validVc) shouldBe true
+        credentialService.validateSchemaTsr(invalidDataVc) shouldBe false
+        credentialService.validateSchemaTsr(notParsableVc) shouldBe false
     }
 
 /*@Test

@@ -11,6 +11,7 @@ import java.io.FileInputStream
 //ANDROID PORT
 import io.kotest.core.spec.style.StringSpec
 
+
 class VcTemplatesCommandTest : StringSpec({
 
     //ANDROID PORT

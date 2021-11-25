@@ -16,6 +16,7 @@ import net.pwall.yaml.YAMLSimple.log
 import java.time.LocalDateTime
 import java.util.*
 
+private val log = KotlinLogging.logger {}
 
 enum class ProofType {
     JWT,
