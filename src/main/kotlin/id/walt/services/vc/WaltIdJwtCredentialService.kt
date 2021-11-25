@@ -12,9 +12,7 @@ import id.walt.vclib.VcLibManager
 import id.walt.vclib.model.VerifiableCredential
 import id.walt.vclib.vclist.VerifiablePresentation
 import info.weboftrust.ldsignatures.LdProof
-//ANDROID PORT
-//import mu.KotlinLogging
-//ANDROID PORT
+import mu.KotlinLogging
 import net.pwall.json.schema.JSONSchema
 import java.net.URL
 import java.nio.file.Files
@@ -24,9 +22,9 @@ import java.time.ZoneOffset
 import java.util.*
 //ANDROID PORT
 import kotlin.streams.toList
-
-//private val log = KotlinLogging.logger {}
 //ANDROID PORT
+
+private val log = KotlinLogging.logger {}
 
 private const val JWT_VC_CLAIM = "vc"
 private const val JWT_VP_CLAIM = "vp"
@@ -36,9 +34,7 @@ open class WaltIdJwtCredentialService : JwtCredentialService() {
     private val jwtService = JwtService.getService()
 
     override fun sign(jsonCred: String, config: ProofConfig): String {
-        //ANDROID PORT
-        //log.debug { "Signing JWT object with config: $config" }
-        //ANDROID PORT
+        log.debug { "Signing JWT object with config: $config" }
 
         val issuerDid = config.issuerDid
         val issueDate = config.issueDate ?: LocalDateTime.now()
@@ -64,17 +60,13 @@ open class WaltIdJwtCredentialService : JwtCredentialService() {
         }
 
         val payload = jwtClaimsSet.build().toString()
-        //ANDROID PORT
-        //log.debug { "Signing: $payload" }
-        //ANDROID PORT
+        log.debug { "Signing: $payload" }
 
         return jwtService.sign(issuerDid, payload)
     }
 
     override fun verifyVc(issuerDid: String, vc: String): Boolean {
-        //ANDROID PORT
-        //log.debug { "Verifying vc: $vc with issuerDid: $issuerDid" }
-        //ANDROID PORT
+        log.debug { "Verifying vc: $vc with issuerDid: $issuerDid" }
         return SignedJWT.parse(vc).header.keyID == issuerDid && verifyVc(vc)
     }
 
@@ -88,9 +80,7 @@ open class WaltIdJwtCredentialService : JwtCredentialService() {
         }
 
     override fun verifyVc(vc: String): Boolean {
-        //ANDROID PORT
-        //log.debug { "Verifying vc: $vc" }
-        //ANDROID PORT
+        log.debug { "Verifying vc: $vc" }
         return JwtService.getService().verify(vc)
     }
 
@@ -98,9 +88,7 @@ open class WaltIdJwtCredentialService : JwtCredentialService() {
         verifyVc(vp)
 
     override fun present(vcs: List<String>, holderDid: String, verifierDid: String?, challenge: String?): String {
-        //ANDROID PORT
-        //log.debug { "Creating a presentation for VCs:\n$vcs" }
-        //ANDROID PORT
+        log.debug { "Creating a presentation for VCs:\n$vcs" }
 
         val id = "urn:uuid:${UUID.randomUUID()}"
         val config = ProofConfig(
@@ -112,16 +100,12 @@ open class WaltIdJwtCredentialService : JwtCredentialService() {
         )
         val vpReqStr = VerifiablePresentation(verifiableCredential = vcs.map { it.toCredential() }).encode()
 
-        //ANDROID PORT
-        //log.trace { "VP request: $vpReqStr" }
-        //log.trace { "Proof config: $$config" }
-        //ANDROID PORT
+        log.trace { "VP request: $vpReqStr" }
+        log.trace { "Proof config: $$config" }
 
         val vp = sign(vpReqStr, config)
 
-        //ANDROID PORT
-        //log.debug { "VP created:$vp" }
-        //ANDROID PORT
+        log.debug { "VP created:$vp" }
         return vp
     }
 

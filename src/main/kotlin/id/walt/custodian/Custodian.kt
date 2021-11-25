@@ -10,11 +10,9 @@ import id.walt.services.vc.JsonLdCredentialService
 import id.walt.services.vc.JwtCredentialService
 import id.walt.vclib.VcLibManager
 import id.walt.vclib.model.VerifiableCredential
-//ANDROID PORT
-//import mu.KotlinLogging
+import mu.KotlinLogging
 
-//private val log = KotlinLogging.logger {}
-//ANDROID PORT
+private val log = KotlinLogging.logger {}
 
 abstract class Custodian : WaltIdService() {
     override val implementation get() = serviceImplementation<Custodian>()

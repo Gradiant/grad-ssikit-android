@@ -3,11 +3,9 @@ package id.walt.services.vc
 import com.nimbusds.jwt.SignedJWT
 import id.walt.vclib.model.VerifiableCredential
 import id.walt.vclib.vclist.*
-//ANDROID PORT
-//import mu.KotlinLogging
+import mu.KotlinLogging
 
-//private val log = KotlinLogging.logger("SSIKIT VcUtils")
-//ANDROID PORT
+private val log = KotlinLogging.logger("SSIKIT VcUtils")
 
 object VcUtils {
 
@@ -25,9 +23,7 @@ object VcUtils {
         }
         is GaiaxCredential -> vcObj.issuer
         else -> {
-            //ANDROID PORT
-            //log.warn { "No getIssuer for ${vcObj.type.last()}!" }
-            //ANDROID PORT
+            log.warn { "No getIssuer for ${vcObj.type.last()}!" }
             ""
         }
     }
@@ -43,9 +39,7 @@ object VcUtils {
         is GaiaxCredential -> vcObj.credentialSubject.id
         is VerifiablePresentation -> vcObj.holder!!
         else -> {
-            //ANDROID PORT
-            //log.warn { "No getHolder for ${vcObj.type.last()}!" }
-            //ANDROID PORT
+            log.warn { "No getHolder for ${vcObj.type.last()}!" }
             ""
         }
     }
@@ -58,9 +52,7 @@ object VcUtils {
         is VerifiableAttestation -> vc.issuanceDate
         is VerifiableAuthorization -> vc.issuanceDate
         else -> {
-            //ANDROID PORT
-            //log.warn { "No getIssuanceDate for ${vc.type.last()}!" }
-            //ANDROID PORT
+            log.warn { "No getIssuanceDate for ${vc.type.last()}!" }
             ""
         }
     }
@@ -72,9 +64,7 @@ object VcUtils {
         is VerifiableAttestation -> vc.validFrom
         is VerifiableAuthorization -> vc.validFrom
         else -> {
-            //ANDROID PORT
-            //log.warn { "No getValidFrom for ${vc.type.last()}!" }
-            //ANDROID PORT
+            log.warn { "No getValidFrom for ${vc.type.last()}!" }
             ""
         }
     }
@@ -85,9 +75,7 @@ object VcUtils {
         is VerifiableDiploma -> vc.expirationDate
         is VerifiableAuthorization -> vc.expirationDate
         else -> {
-            //ANDROID PORT
-            //log.warn { "No getExpirationDate for ${vc.type.last()}!" }
-            //ANDROID PORT
+            log.warn { "No getExpirationDate for ${vc.type.last()}!" }
             ""
         }
     }
@@ -99,9 +87,7 @@ object VcUtils {
         is VerifiableAttestation -> vc.credentialSchema
         is VerifiableAuthorization -> vc.credentialSchema
         else -> {
-            //ANDROID PORT
-            //log.warn { "No getCredentialSchema for ${vc.type.last()}!" }
-            //ANDROID PORT
+            log.warn { "No getCredentialSchema for ${vc.type.last()}!" }
             null
         }
     }
@@ -118,9 +104,7 @@ object VcUtils {
             is VerifiablePresentation -> vc.proof!!.nonce
             is GaiaxCredential -> vc.proof!!.nonce
             else -> {
-                //ANDROID PORT
-                //log.warn { "No getCredentialSchema for ${vc.type.last()}!" }
-                //ANDROID PORT
+                log.warn { "No getCredentialSchema for ${vc.type.last()}!" }
                 null
             }
         }

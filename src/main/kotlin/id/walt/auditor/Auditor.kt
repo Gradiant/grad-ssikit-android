@@ -4,12 +4,10 @@ import id.walt.servicematrix.ServiceProvider
 import id.walt.services.WaltIdService
 import id.walt.vclib.Helpers.toCredential
 import id.walt.vclib.vclist.VerifiablePresentation
-//ANDROID PORT
-//import mu.KotlinLogging
+import mu.KotlinLogging
 
 
-//val log = KotlinLogging.logger {}
-//ANDROID PORT
+private val log = KotlinLogging.logger {}
 
 abstract class Auditor : WaltIdService() {
 
@@ -30,14 +28,10 @@ class WaltIdAuditor : Auditor() {
         val vc = vcJson.toCredential()
         val policyResults = policies
             .associateBy(keySelector = VerificationPolicy::id) { policy ->
-                //ANDROID PORT
-                //log.debug { "Verifying vc with ${policy.id}..." }
-                //ANDROID PORT
+                log.debug { "Verifying vc with ${policy.id}..." }
                 policy.verify(vc) && when (vc) {
                     is VerifiablePresentation -> vc.verifiableCredential.all { cred ->
-                        //ANDROID PORT
-                        //log.debug { "Verifying ${cred.type.last()} in VP with ${policy.id}..." }
-                        //ANDROID PORT
+                        log.debug { "Verifying ${cred.type.last()} in VP with ${policy.id}..." }
                         policy.verify(cred)
                     }
                     else -> true

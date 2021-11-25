@@ -8,7 +8,7 @@ This is the Android Ported Version of the Walt.ID SSI Kit, developed by Gradiant
 
 - Original Walt.ID SSI Kit: https://github.com/walt-id/waltid-ssikit
 
-## Changes that were added in chronological order
+## Changelog
 
 1. WaltIdJsonLdCredentialService.kt, WaltIdJwtCredentialService.kt -> kotlin.streams.toList must be imported.
 
@@ -67,6 +67,8 @@ This is the Android Ported Version of the Walt.ID SSI Kit, developed by Gradiant
 28. FileSystemVcStoreService.kt -> Changed credential-store location to point towards the android application folder.
 
 29. All tests have been adapted to this ssikit (+ other modified libraries) version. There are still some executionErrors appearing due to the fact that SQLDroid Driver can only be executed in Android environments. Other tests were ignored due to a similar problem (Android Lazy Sodium can only be executed in Android environments)
+
+30. All commented logs have been uncommented again, since they do not suppose a problem anymore.
 
 # Walt.ID SSI Kit
 

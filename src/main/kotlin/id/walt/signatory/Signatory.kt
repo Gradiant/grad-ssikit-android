@@ -11,9 +11,7 @@ import id.walt.vclib.Helpers.encode
 import id.walt.vclib.Helpers.toCredential
 import id.walt.vclib.model.VerifiableCredential
 import id.walt.vclib.templates.VcTemplateManager
-//ANDROID PORT
-//import mu.KotlinLogging
-//ANDROID PORT
+import mu.KotlinLogging
 import net.pwall.yaml.YAMLSimple.log
 import java.time.LocalDateTime
 import java.util.*
@@ -61,8 +59,8 @@ class WaltIdSignatory() : Signatory() {
     private val VC_GROUP = "signatory"
     //ANDROID PORT
     //override val configuration: SignatoryConfig = fromConfiguration(configurationPath)
-    //private val log = KotlinLogging.logger {}
     //ANDROID PORT
+    private val log = KotlinLogging.logger {}
 
     override fun issue(templateId: String, config: ProofConfig, dataProvider: SignatoryDataProvider?): String {
 
@@ -91,17 +89,13 @@ class WaltIdSignatory() : Signatory() {
         val selectedDataProvider = dataProvider ?: DataProviderRegistry.getProvider(vcTemplate::class)
         val vcRequest = selectedDataProvider.populate(vcTemplate, configDP)
 
-        //ANDROID PORT
-        //log.info { "Signing credential with proof using ${config.proofType.name}..." }
-        //log.debug { "Signing credential with proof using ${config.proofType.name}, credential is: $vcRequest" }
-        //ANDROID PORT
+        log.info { "Signing credential with proof using ${config.proofType.name}..." }
+        log.debug { "Signing credential with proof using ${config.proofType.name}, credential is: $vcRequest" }
         val signedVc = when (config.proofType) {
             ProofType.LD_PROOF -> JsonLdCredentialService.getService().sign(vcRequest.encode(), config)
             ProofType.JWT -> JwtCredentialService.getService().sign(vcRequest.encode(), config)
         }
-        //ANDROID PORT
-        //log.debug { "Signed VC is: $signedVc" }
-        //ANDROID PORT
+        log.debug { "Signed VC is: $signedVc" }
         ContextManager.vcStore.storeCredential(configDP.credentialId!!, signedVc.toCredential(), VC_GROUP)
         return signedVc
     }

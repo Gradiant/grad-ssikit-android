@@ -10,11 +10,9 @@ import id.walt.services.essif.mock.DidRegistry
 import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
-//ANDROID PORT
-//import mu.KotlinLogging
+import mu.KotlinLogging
 
-//private val log = KotlinLogging.logger {}
-//ANDROID PORT
+private val log = KotlinLogging.logger {}
 
 object TrustedIssuerClient {
 
@@ -148,29 +146,21 @@ object TrustedIssuerClient {
     // GET /issuers/{did}
     // returns trusted issuer record
     fun getIssuerRaw(did: String): String = runBlocking {
-        //ANDROID PORT
-        //log.debug { "Getting trusted issuer with DID $did" }
-        //ANDROID PORT
+        log.debug { "Getting trusted issuer with DID $did" }
 
         val trustedIssuer: String = WaltIdServices.http.get("https://api.preprod.ebsi.eu/trusted-issuers-registry/v2/issuers/$did")
 
-        //ANDROID PORT
-        //log.debug { trustedIssuer }
-        //ANDROID PORT
+        log.debug { trustedIssuer }
 
         return@runBlocking trustedIssuer
     }
 
     fun getIssuer(did: String): TrustedIssuer = runBlocking {
-        //ANDROID PORT
-        //log.debug { "Getting trusted issuer with DID $did" }
-        //ANDROID PORT
+        log.debug { "Getting trusted issuer with DID $did" }
 
         val trustedIssuer: String = WaltIdServices.http.get("https://api.preprod.ebsi.eu/trusted-issuers-registry/v2/issuers/$did")
 
-        //ANDROID PORT
-        //log.debug { trustedIssuer }
-        //ANDROID PORT
+        log.debug { trustedIssuer }
 
         return@runBlocking Klaxon().parse<TrustedIssuer>(trustedIssuer)!!
     }
@@ -190,10 +180,8 @@ object TrustedIssuerClient {
         val header = readEssif("onboarding-onboards-callback-req-header")
         val body = readEssif("onboarding-onboards-callback-req-body")
 
-        //ANDROID PORT
-        //log.debug { "header: $header" }
-        //log.debug { "body: $body" }
-        //ANDROID PORT
+        log.debug { "header: $header" }
+        log.debug { "body: $body" }
 
         println("8. [Eos] Validate DID Document")
         println("9. [Eos] GET /identifiers/{did}")
@@ -216,9 +204,7 @@ object TrustedIssuerClient {
 
     fun didOwnershipResponse(didOwnershipResp: String): String {
         println("8. [Eos] Response DID ownership")
-        //ANDROID PORT
-        //log.debug { "didOwnershipResp: $didOwnershipResp" }
-        //ANDROID PORT
+        log.debug { "didOwnershipResp: $didOwnershipResp" }
 
         // TODO: move following call to:
         //EnterpriseWalletService.validateDidAuthResponse(didOwnershipResp)
@@ -226,13 +212,9 @@ object TrustedIssuerClient {
         println("9. [Eos] Validate DID ownership")
         val didOwnershipRespHeader = readEssif("onboarding-did-ownership-resp-header")
 
-        //ANDROID PORT
-        //log.debug { "didOwnershipRespHeader: $didOwnershipRespHeader" }
-        //ANDROID PORT
+        log.debug { "didOwnershipRespHeader: $didOwnershipRespHeader" }
         val didOwnershipRespBody = readEssif("onboarding-did-ownership-resp-body")
-        //ANDROID PORT
-        //log.debug { "didOwnershipRespBody: $didOwnershipRespBody" }
-        //ANDROID PORT
+        log.debug { "didOwnershipRespBody: $didOwnershipRespBody" }
         val vIdRequestOkResp = readEssif("onboarding-vid-req-ok")
 
         return vIdRequestOkResp

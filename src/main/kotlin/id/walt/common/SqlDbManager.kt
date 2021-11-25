@@ -1,8 +1,6 @@
 package id.walt.common
 
-//ANDROID PORT
-//import mu.KotlinLogging
-//ANDROID PORT
+import mu.KotlinLogging
 import java.sql.Connection
 //ANDROID PORT
 import java.sql.Driver
@@ -13,9 +11,7 @@ import java.sql.Statement
 
 
 object SqlDbManager {
-    //ANDROID PORT
-    //private val log = KotlinLogging.logger {}
-    //ANDROID PORT
+    private val log = KotlinLogging.logger {}
 
 //    val JDBC_URL = "jdbc:sqlite:data/walt.db"
 //    val JDBC_URL = "jdbc:sqlite::memory:"
@@ -72,9 +68,7 @@ object SqlDbManager {
             con.createStatement().use { stmt ->
 
                 if (recreateDb) {
-                    //ANDROID PORT
-                    //log.debug { "Recreating database" }
-                    //ANDROID PORT
+                    log.debug { "Recreating database" }
                     stmt.executeUpdate("drop table if exists lt_key")
                     stmt.executeUpdate("drop table if exists lt_key_alias")
                 }
