@@ -3,19 +3,24 @@ package id.walt.cli
 
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.requireObject
+import com.github.ajalt.clikt.parameters.arguments.argument
+import com.github.ajalt.clikt.parameters.arguments.optional
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.required
 import com.github.ajalt.clikt.parameters.types.choice
+import com.github.ajalt.clikt.parameters.types.path
 import id.walt.common.prettyPrint
 import id.walt.crypto.KeyAlgorithm
 import id.walt.model.DidMethod
 import id.walt.model.DidUrl
 import id.walt.services.crypto.CryptoService
 import id.walt.services.did.DidService
-
 import java.io.File
+import java.nio.file.Path
+import kotlin.io.path.absolutePathString
+import kotlin.io.path.writeText
 
 class DidCommand : CliktCommand(
     help = """Decentralized Identifiers (DIDs).
@@ -24,10 +29,7 @@ class DidCommand : CliktCommand(
         
         Supported DID methods are "key", "web" and "ebsi"""
 ) {
-
-    override fun run() {
-
-    }
+    override fun run() {}
 }
 
 class CreateDidCommand : CliktCommand(
@@ -35,20 +37,18 @@ class CreateDidCommand : CliktCommand(
     help = """Create DID.
 
         Creates a DID document based on the corresponding SSI ecosystem (DID method). 
-        Optionally the associated asymmetric keypair is also created.
+        Optionally the associated asymmetric key is also created.
 
         """
 ) {
     val config: CliConfig by requireObject()
-    val method: String by option("-m", "--did-method", help = "Specify DID method [key]").choice(
-        "key",
-        "web",
-        "ebsi"
-    ).default("key")
+    val method: String by option("-m", "--did-method", help = "Specify DID method [key]")
+        .choice("key", "web", "ebsi").default("key")
+
     val keyAlias: String? by option("-k", "--key", help = "Specific key (ID or alias)")
     val domain: String by option("-d", "--domain", help = "Domain for did:web").default("walt.id")
     val path: String? by option("-p", "--path", help = "Path for did:web")
-    val outFile: String? by option("-o", "--out", help = "Output file")
+    val dest: Path? by argument("destination-file").path().optional()
 
     override fun run() {
 
@@ -62,19 +62,22 @@ class CreateDidCommand : CliktCommand(
         val did = DidService.create(DidMethod.valueOf(method), keyId, DidService.DidWebOptions(domain, path))
 
         echo("\nResults:\n")
-        echo("DID created: $did")
+        echo("\nDID created: $did\n")
 
         val encodedDid = loadDidHelper(did)
-        echo("DID document (below, JSON):\n\n$encodedDid")
+        echo("\nDID document (below, JSON):\n\n$encodedDid")
 
-        outFile?.let {
-            val didFile = File(outFile)
-            echo("\nSaving DID to file: ${didFile.absolutePath}")
-            didFile.writeText(encodedDid)
+        dest?.let {
+            echo("\nSaving DID to file: ${dest!!.absolutePathString()}")
+            dest!!.writeText(encodedDid)
         }
 
         when (method) {
-            "web" -> echo("Install this did:web at: https://$domain/${path?.replace(":", "/")?.plus("/") ?: ""}.well-known/did.json")
+            "web" -> echo(
+                "\nInstall this did:web at: https://$domain/${
+                    path?.replace(":", "/")?.plus("/") ?: ""
+                }.well-known/did.json"
+            )
         }
     }
 }
@@ -136,3 +139,16 @@ class ListDidsCommand : CliktCommand(
         DidService.listDids().forEachIndexed { index, did -> echo("- ${index + 1}: $did") }
     }
 }
+
+class ImportDidCommand : CliktCommand(
+    name = "import",
+    help = "Import DID to custodian store"
+) {
+
+    val did: String by argument()
+
+    override fun run() {
+        DidService.importDidAndKey(did)
+    }
+}
+

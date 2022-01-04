@@ -1,16 +1,59 @@
 # Changelog
 
-Notable changes since the last release of the [SSI Kit](https://github.com/walt-id/waltid-ssikit).
+Notable changes since the last release of the [SSI Kit](https://github.com/walt-id/waltid-ssikit). 
 
 ## [Unreleased]
 
-- Features
-    - Parameterize did:web creation https://github.com/walt-id/waltid-ssikit/issues/51
+## [1.4.0] - 2022-01-03
+
+-   adaptations for changes in VerifiableCredential data model of vclib version 1.7.0
+-   refactoring of data providers
+-   credential timestamps using UTC by default
+
+## [1.3.0] - 2021-12-27
+
+-   Roadmap Items
+    -   Support of RSA keys  <https://github.com/walt-id/waltid-roadmap/issues/26>
+-   Features
+    -   Replaced log4j with slf4j-simple
+    -   Creation of Timestamps via REST API <https://github.com/walt-id/waltid-roadmap/issues/25>
+
+## [1.2.0] - 2021-12-12
+
+-   Roadmap Items
+    -   EBSI Timestamping service <https://github.com/walt-id/waltid-roadmap/issues/25>
+
+-   Features
+    -   Added generic jsonRpcService for working with the EBSI ledger <https://github.com/walt-id/waltid-ssikit/pull/82>
+    -   Generation of RSA keys
+    -   Secp256k1 based did:key implementation
+    -   RSA based did:key implementation
+    -   DID import
+
+## [1.1.1] - 2021-12-03
+
+-   Features
+    -   Added GaiaxSelfDecription credential <https://github.com/dNationCloud/waltid-ssikit/pull/1> thx to <https://github.com/dNationCloud> & <https://github.com/matofeder>
+    -   Added GaiaxServiceOffering credential
+    -   Added VerifiableVaccinationCertificate credential <https://github.com/walt-id/waltid-ssikit/pull/80>
+    -   Creation of VerifiablePresentations via Custodian REST API <https://github.com/walt-id/waltid-ssikit/issues/62>
+    -   Custodians REST API should also offer the management functionality for DIDs <https://github.com/walt-id/waltid-ssikit/issues/71>
+    -   Import cryptographic key from did:key <https://github.com/walt-id/waltid-ssikit/commit/4ed0b4c02ff75aad7032109b71414ff32756422a>
+
+## [1.1.0] - 2021-11-25
+
+-   Features
+    -   Parameterize did:web creation <https://github.com/walt-id/waltid-ssikit/issues/51>
+    -   Automatic deployment of test-system at <https://[core|signatory|custodian|auditor|essif].ssikit.walt.id>
+    -   Introduced TrustedSchemaRegistry Policy for validating Json-schemas against the EBSI TSR
+    -   JsonSchemaPolicy now validates against Json-schemas maintained in the VcLib
+    -   Did Document context can be a single string or a list of strings <https://github.com/walt-id/waltid-ssikit/pull/60>
+    -   Merging Data Provider - Signatory API now takes credential data as well <https://github.com/walt-id/waltid-ssikit/pull/74>
 
 ## [1.0.1] - 2021-11-08
 
-- Features
-    - SIOPv2 data structures  <https://github.com/walt-id/waltid-ssikit/pull/59>
+-   Features
+    -   SIOPv2 data structures  <https://github.com/walt-id/waltid-ssikit/pull/59>
 
 ## [1.0.0] - 2021-11-07
 
@@ -23,7 +66,7 @@ Notable changes since the last release of the [SSI Kit](https://github.com/walt-
     -   ESSIF | DID -basic <https://github.com/walt-id/waltid-roadmap/issues/2>
     -   ESSIF VC verification - basic  <https://github.com/walt-id/waltid-roadmap/issues/6>
 
--   Features
+-   Features 
     -   Server Binding-Address must be configurable <https://github.com/walt-id/waltid-ssikit/issues/1>
     -   Loading issuer from EBSI <https://github.com/walt-id/waltid-ssikit/pull/37>
     -   Abstract BaseDid <https://github.com/walt-id/waltid-ssikit/pull/38>
@@ -43,7 +86,19 @@ Notable changes since the last release of the [SSI Kit](https://github.com/walt-
     -   Fixed the way of finding the padding <https://github.com/walt-id/waltid-ssikit/pull/43>
     -   SignaturePolicy fails for issuers using did:ebsi <https://github.com/walt-id/waltid-ssikit/issues/52>
 
-[Unreleased]: https://github.com/walt-id/waltid-ssikit/compare/1.0.1...HEAD
+[Unreleased]: https://github.com/walt-id/waltid-ssikit/compare/1.4.0...HEAD
+
+[1.4.0]: https://github.com/walt-id/waltid-ssikit/compare/1.3.0...1.4.0
+
+[1.3.0]: https://github.com/walt-id/waltid-ssikit/compare/1.2.0...1.3.0
+
+[1.2.0]: https://github.com/walt-id/waltid-ssikit/compare/1.2.0...1.2.0
+
+[1.2.0]: https://github.com/walt-id/waltid-ssikit/compare/1.1.1...1.2.0
+
+[1.1.1]: https://github.com/walt-id/waltid-ssikit/compare/1.1.0...1.1.1
+
+[1.1.0]: https://github.com/walt-id/waltid-ssikit/compare/1.0.1...1.1.0
 
 [1.0.1]: https://github.com/walt-id/waltid-ssikit/compare/1.0.0...1.0.1
 

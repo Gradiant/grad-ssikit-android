@@ -7,8 +7,8 @@ import id.walt.services.essif.TrustedIssuerClient
 import id.walt.services.key.KeyService
 import id.walt.services.vc.JsonLdCredentialService
 import id.walt.services.vc.JwtCredentialService
-import id.walt.vclib.Helpers.encode
-import id.walt.vclib.VcUtils
+
+
 import id.walt.vclib.credentials.GaiaxCredential
 import id.walt.vclib.credentials.VerifiablePresentation
 import id.walt.vclib.model.VerifiableCredential
@@ -42,13 +42,9 @@ class SignaturePolicy : VerificationPolicy {
         return try {
             log.debug { "is jwt: ${vc.jwt != null}" }
 
-            val issuerDid = VcUtils.getIssuer(vc)
+            val issuerDid = vc.issuer!!
 
-            try {
-                // Check if key is already in keystore
-                KeyService.getService().load(issuerDid)
-            } catch (e: Exception) {
-                // Resolve DID and import key
+            if(!KeyService.getService().hasKey(issuerDid)) {
                 DidService.importKey(issuerDid)
             }
 
@@ -68,11 +64,11 @@ class JsonSchemaPolicy : VerificationPolicy {
     override fun verify(vc: VerifiableCredential): Boolean {
 
         SchemaService.validateSchema(vc.json!!).apply {
-            if(valid)
+            if (valid)
                 return true
 
             log.error { "Credential not valid according the json-schema of type ${vc.type}. The validation errors are:" }
-            errors?.forEach{ error -> log.error { error }}
+            errors?.forEach { error -> log.error { error } }
         }
         return false
     }
@@ -91,7 +87,7 @@ class TrustedSchemaRegistryPolicy : VerificationPolicy {
 class TrustedIssuerDidPolicy : VerificationPolicy {
     override val description: String = "Verify by trusted issuer did"
     override fun verify(vc: VerifiableCredential): Boolean {
-        return DidService.loadOrResolveAnyDid(VcUtils.getIssuer(vc)) != null
+        return DidService.loadOrResolveAnyDid(vc.issuer!!) != null
     }
 }
 
@@ -104,7 +100,7 @@ class TrustedIssuerRegistryPolicy : VerificationPolicy {
             return true
         }
 
-        val issuerDid = VcUtils.getIssuer(vc)
+        val issuerDid = vc.issuer!!
 
         val resolvedIssuerDid =
             DidService.loadOrResolveAnyDid(issuerDid) ?: throw Exception("Could not resolve issuer DID $issuerDid")
@@ -127,7 +123,7 @@ class TrustedIssuerRegistryPolicy : VerificationPolicy {
     private fun isValidTrustedIssuerRecord(tirRecord: TrustedIssuer): Boolean {
         for (attribute in tirRecord.attributes) {
             val attributeInfo = AttributeInfo.from(attribute.body)
-            if(TIR_TYPE_ATTRIBUTE.equals(attributeInfo?.type) && TIR_NAME_ISSUER.equals(attributeInfo?.name)) {
+            if (TIR_TYPE_ATTRIBUTE.equals(attributeInfo?.type) && TIR_NAME_ISSUER.equals(attributeInfo?.name)) {
                 return true
             }
         }
@@ -138,10 +134,10 @@ class TrustedIssuerRegistryPolicy : VerificationPolicy {
 class TrustedSubjectDidPolicy : VerificationPolicy {
     override val description: String = "Verify by trusted subject did"
     override fun verify(vc: VerifiableCredential): Boolean {
-        return VcUtils.getSubject(vc).let {
+        return vc.subject?.let {
             if (it.isEmpty()) true
             else DidService.loadOrResolveAnyDid(it) != null
-        }
+        } ?: false
     }
 }
 
@@ -150,7 +146,7 @@ class IssuanceDateBeforePolicy : VerificationPolicy {
     override fun verify(vc: VerifiableCredential): Boolean {
         return when (vc) {
             is VerifiablePresentation -> true
-            else -> parseDate(VcUtils.getIssuanceDate(vc)).let { it != null && it.before(Date()) }
+            else -> parseDate(vc.issuanceDate).let { it != null && it.before(Date()) }
         }
     }
 }
@@ -160,7 +156,7 @@ class ValidFromBeforePolicy : VerificationPolicy {
     override fun verify(vc: VerifiableCredential): Boolean {
         return when (vc) {
             is VerifiablePresentation -> true
-            else -> parseDate(VcUtils.getValidFrom(vc)).let { it != null && it.before(Date()) }
+            else -> parseDate(vc.validFrom).let { it != null && it.before(Date()) }
         }
     }
 }
@@ -170,7 +166,7 @@ class ExpirationDateAfterPolicy : VerificationPolicy {
     override fun verify(vc: VerifiableCredential): Boolean {
         return when (vc) {
             is VerifiablePresentation -> true
-            else -> parseDate(VcUtils.getExpirationDate(vc)).let { it == null || it.after(Date()) }
+            else -> parseDate(vc.expirationDate).let { it == null || it.after(Date()) }
         }
     }
 }
@@ -184,18 +180,27 @@ class GaiaxTrustedPolicy : VerificationPolicy {
         }
 
         val gaiaxVc = vc as GaiaxCredential
-
+        if (gaiaxVc.credentialSubject == null) {
+            return false
+        }
         // TODO: validate trusted fields properly
-        if (gaiaxVc.credentialSubject.DNSpublicKey.length < 0) {
+        if (gaiaxVc.credentialSubject!!.DNSpublicKey.length < 1) {
             log.debug { "DNS Public key not valid." }
             return false
         }
 
-        if (gaiaxVc.credentialSubject.ethereumAddress.id.length < 0) {
+        if (gaiaxVc.credentialSubject!!.ethereumAddress.id.length < 1) {
             log.debug { "ETH address not valid." }
             return false
         }
 
+        return true
+    }
+}
+
+class GaiaxSDPolicy : VerificationPolicy {
+    override val description: String = "Verify Gaiax SD fields"
+    override fun verify(vc: VerifiableCredential): Boolean {
         return true
     }
 }

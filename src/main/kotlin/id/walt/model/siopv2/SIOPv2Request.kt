@@ -19,12 +19,12 @@ data class SIOPv2Request(
   val claims: Claims
 
   ) {
-      private fun enc(str: String): String = URLEncoder.encode(str, StandardCharsets.UTF_8)
-      fun toUriQueryString(): String {
-          return "response_type=${enc(response_type)}&response_mode=${enc(response_mode)}&client_id=${enc(client_id)}&redirect_uri=${enc(redirect_uri)}" +
-                  "&scope=${enc(scope)}&nonce=${enc(nonce)}&registration=${enc(Klaxon().toJsonString(registration))}" +
-                  "&exp=$expiration&iat=$issuedAt&claims=${enc(Klaxon().toJsonString(claims))}"
-      }
+  private fun enc(str: String): String = URLEncoder.encode(str, StandardCharsets.UTF_8)
+  fun toUriQueryString(): String {
+    return "response_type=${enc(response_type)}&response_mode=${enc(response_mode)}&client_id=${enc(client_id)}&redirect_uri=${enc(redirect_uri)}" +
+           "&scope=${enc(scope)}&nonce=${enc(nonce)}&registration=${enc(Klaxon().toJsonString(registration))}" +
+           "&exp=$expiration&iat=$issuedAt&claims=${enc(Klaxon().toJsonString(claims))}"
+  }
 
   companion object {
     fun fromHttpContext(ctx: Context): SIOPv2Request {

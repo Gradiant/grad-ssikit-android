@@ -1,14 +1,14 @@
 package id.walt.services.data
 
 import com.beust.klaxon.Klaxon
-import id.walt.vclib.Helpers.toCredential
+import id.walt.vclib.model.toCredential
+import id.walt.vclib.credentials.Europass
+import id.walt.vclib.credentials.PermanentResidentCard
+import id.walt.vclib.credentials.VerifiableAttestation
 import id.walt.vclib.model.CredentialSchema
 import id.walt.vclib.model.CredentialStatus
 import id.walt.vclib.model.Proof
 import id.walt.vclib.model.VerifiableCredential
-import id.walt.vclib.credentials.Europass
-import id.walt.vclib.credentials.PermanentResidentCard
-import id.walt.vclib.credentials.VerifiableAttestation
 import io.kotest.assertions.fail
 import io.kotest.assertions.json.shouldEqualJson
 import io.kotest.core.spec.style.AnnotationSpec
@@ -101,7 +101,7 @@ class JsonSerializeVerifiableCredentialTest : AnnotationSpec() {
             issuer = "did:ebsi:2757945549477fc571663bee12042873fe555b674bd294a3",
             issuanceDate = "2019-06-22T14:11:44Z",
             validFrom = "2019-06-22T14:11:44Z",
-            credentialSubject = VerifiableAttestation.CredentialSubject(
+            credentialSubject = VerifiableAttestation.VerifiableAttestationSubject(
                 id = "id123"
             ),
             credentialStatus = CredentialStatus(

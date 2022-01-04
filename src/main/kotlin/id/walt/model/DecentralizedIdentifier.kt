@@ -2,7 +2,6 @@ package id.walt.model
 
 import com.beust.klaxon.*
 import id.walt.common.prettyPrint
-import id.walt.vclib.adapter.VCTypeAdapter
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlin.reflect.KClass
@@ -23,10 +22,10 @@ val listOrSingleValueConverter = object: Converter {
         }
 
     override fun toJson(o: Any)
-            = when((o as List<*>)?.size) {
-        1 -> Klaxon().toJsonString(o.first())
-        else -> Klaxon().toJsonString(o)
-    }
+        = when((o as List<*>)?.size) {
+            1 -> Klaxon().toJsonString(o.first())
+            else -> Klaxon().toJsonString(o)
+        }
 }
 
 class DidTypeAdapter : TypeAdapter<Did> {

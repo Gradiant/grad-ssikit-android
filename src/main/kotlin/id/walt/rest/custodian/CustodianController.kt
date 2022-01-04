@@ -1,8 +1,11 @@
 package id.walt.rest.custodian
 
+import com.beust.klaxon.Klaxon
 import id.walt.crypto.Key
 import id.walt.crypto.KeyAlgorithm
 import id.walt.custodian.Custodian
+
+import id.walt.vclib.credentials.VerifiablePresentation
 import id.walt.vclib.model.VerifiableCredential
 import io.javalin.http.Context
 import io.javalin.plugin.openapi.dsl.document
@@ -24,7 +27,9 @@ object CustodianController {
 //        responses = [OpenApiResponse("200", [OpenApiContent(Key::class)], "Created Key")]
 //    )
     fun generateKeyDocs() = document()
-        .operation { it.summary("Generates a key with a specific key algorithm").operationId("generateKey").addTagsItem("Keys") }
+        .operation {
+            it.summary("Generates a key with a specific key algorithm").operationId("generateKey").addTagsItem("Keys")
+        }
         .body<GenerateKeyRequest> { it.description("Generate Key Request") }
         .json<String>("200") { it.description("Created key") }
 
@@ -99,7 +104,7 @@ object CustodianController {
 
     fun getCredential(ctx: Context) {
         val vc = custodian.getCredential(ctx.pathParam("id"))
-        if(vc == null)
+        if (vc == null)
             ctx.status(404).result("Not found")
         else
             ctx.json(vc)
@@ -110,16 +115,18 @@ object CustodianController {
 //        responses = [OpenApiResponse("200", [OpenApiContent(ListCredentialsResponse::class)], "Credential list")]
 //    )
     fun listCredentialsDocs() = document()
-        .operation { it.summary("Lists all credentials the custodian knows of").operationId("listCredentials").addTagsItem("Credentials") }
+        .operation {
+            it.summary("Lists all credentials the custodian knows of").operationId("listCredentials").addTagsItem("Credentials")
+        }
         .queryParam<String>("id", isRepeatable = true)
         .json<String>("200") { it.description("Credentials list") }
 
     fun listCredentials(ctx: Context) {
         val ids = ctx.queryParams("id").toSet()
-        if(ids.isEmpty())
+        if (ids.isEmpty())
             ctx.json(ListCredentialsResponse(custodian.listCredentials()))
         else
-            ctx.json(ListCredentialsResponse(custodian.listCredentials().filter { it.id != null && ids.contains(it.id!!)}))
+            ctx.json(ListCredentialsResponse(custodian.listCredentials().filter { it.id != null && ids.contains(it.id!!) }))
     }
 
     //    @OpenApi(
@@ -127,7 +134,10 @@ object CustodianController {
 //        responses = [OpenApiResponse("200", [OpenApiContent(ListCredentialIdsResponse::class)], "Credential id list")]
 //    )
     fun listCredentialIdsDocs() = document()
-        .operation { it.summary("Lists all credential IDs the custodian knows of").operationId("listCredentialIds").addTagsItem("Credentials") }
+        .operation {
+            it.summary("Lists all credential IDs the custodian knows of").operationId("listCredentialIds")
+                .addTagsItem("Credentials")
+        }
         .json<String>("200") { it.description("Credentials ID list") }
 
     fun listCredentialIds(ctx: Context) {
@@ -139,13 +149,15 @@ object CustodianController {
 //        requestBody = OpenApiRequestBody([OpenApiContent(StoreCredentialRequest::class)], true, "Store Credential Request"),
 //        responses = [OpenApiResponse("200")]
 //    )
-    fun storeCredenitalsDocs() = document()
+    fun storeCredentialsDocs() = document()
         .operation { it.summary("Stores a credential").operationId("storeCredential").addTagsItem("Credentials") }
-        .body<StoreCredentialRequest> { it.description("Store Credential Request") }
-        .json<String>("200") { it.description("Http OK") }
+        .body<VerifiableCredential> { it.description("the vc") }
+        .json<Int>("201") { it.description("Http OK") }
 
     fun storeCredential(ctx: Context) {
-        ctx.bodyAsClass<StoreCredentialRequest>().run { custodian.storeCredential(alias, vc) }
+        val vc = Klaxon().parse<VerifiableCredential>(ctx.body())!!
+
+        custodian.storeCredential(ctx.pathParam("alias"), vc)
     }
 
     //    @OpenApi(
@@ -153,11 +165,44 @@ object CustodianController {
 //        tags = ["Credentials"], responses = [OpenApiResponse("200")]
 //    )
     fun deleteCredentialDocs() = document()
-        .operation { it.summary("Deletes a specific credential by alias").operationId("deleteCredential").addTagsItem("Credentials") }
+        .operation {
+            it.summary("Deletes a specific credential by alias").operationId("deleteCredential").addTagsItem("Credentials")
+        }
         .json<String>("200") { it.description("Http OK") }
 
     fun deleteCredential(ctx: Context) {
         custodian.deleteCredential(ctx.pathParam("alias"))
+    }
+
+    fun presentCredentialsDocs() = document()
+        .operation {
+            it.summary("Create a VerifiablePresentation from specific credentials)").operationId("presentCredentials")
+                .addTagsItem("Credentials")
+        }
+        .body<PresentCredentialsRequest>()
+        .json<VerifiablePresentation>("200") { it.description("The newly created VerifiablePresentation") }
+
+
+    fun presentCredentials(ctx: Context) {
+        val req = ctx.bodyAsClass<PresentCredentialsRequest>()
+        ctx.result(custodian.createPresentation(req.vcs, req.holderDid, req.verifierDid, req.domain, req.challenge))
+    }
+
+    fun presentCredentialIdsDocs() = document()
+        .operation {
+            it.summary("Create a VerifiablePresentation from specific credential IDs)").operationId("presentCredentialIds")
+                .addTagsItem("Credentials")
+        }
+        .body<PresentCredentialIdsRequest>()
+        .json<VerifiablePresentation>("200") { it.description("The newly created VerifiablePresentation") }
+
+
+    fun presentCredentialIds(ctx: Context) {
+        val req = ctx.bodyAsClass<PresentCredentialIdsRequest>()
+
+        val ids = req.vcIds.map { custodian.getCredential(it)!!.encode() }
+
+        ctx.result(custodian.createPresentation(ids, req.holderDid, req.verifierDid, req.domain, req.challenge))
     }
 
 }
