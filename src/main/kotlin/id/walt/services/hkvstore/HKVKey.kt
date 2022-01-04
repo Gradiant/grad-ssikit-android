@@ -48,7 +48,9 @@ class HKVKey(
         get() = if (subKeys.isEmpty()) null else HKVKey(rootKey, *subKeys.subList(0, subKeys.size - 1).toTypedArray())
 
     companion object {
-        private fun fromFS(value: String): String = URLDecoder.decode(value, StandardCharsets.UTF_8)
+        private fun fromFS(value: String): String = URLDecoder.decode(
+            value, StandardCharsets.UTF_8
+        )
 
         fun fromPath(path: Path): HKVKey {
             return HKVKey(

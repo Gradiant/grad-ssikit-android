@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "id.walt"
-version = "1.1-SNAPSHOT"
+version = "1.4-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -36,6 +36,11 @@ dependencies {
     implementation("com.github.multiformats:java-multibase:v1.1.0")
     implementation("com.microsoft.azure:azure-keyvault:1.2.4")
     implementation("com.microsoft.azure:azure-client-authentication:1.7.13")
+    implementation("com.nimbusds:nimbus-jose-jwt:9.15.2")
+
+    implementation("org.bouncycastle:bcprov-jdk15to18:1.70")
+    implementation("org.bouncycastle:bcpkix-jdk15to18:1.70")
+
 
     // Ethereum
     implementation("org.web3j:core:5.0.0")
@@ -45,14 +50,14 @@ dependencies {
 
     // VC
     //ANDROID PORT
-    //implementation("id.walt:waltid-ssikit-vclib:1.5-SNAPSHOT")
+    //implementation("id.walt:waltid-ssikit-vclib:1.7.0")
     //ANDROID PORT
 
     // JSON
     implementation("org.json:json:20210307")
     implementation("com.beust:klaxon:5.5")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.0")
-    implementation("net.pwall.json:json-kotlin-schema:0.29")
+    implementation("net.pwall.json:json-kotlin-schema:0.30")
     //implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
 
     // DB
@@ -67,26 +72,27 @@ dependencies {
     implementation("commons-io:commons-io:2.11.0")
 
     // HTTP
-    implementation("io.ktor:ktor-client-core:1.6.4")
-    implementation("io.ktor:ktor-client-cio:1.6.4")
-    implementation("io.ktor:ktor-client-serialization:1.6.4")
-    implementation("io.ktor:ktor-client-logging:1.6.4")
+    implementation("io.ktor:ktor-client-core:1.6.6")
+    implementation("io.ktor:ktor-client-cio:1.6.6")
+    implementation("io.ktor:ktor-client-serialization:1.6.6")
+    implementation("io.ktor:ktor-client-logging:1.6.6")
     implementation("io.github.rybalkinsd", "kohttp", "0.12.0")
 
     // REST
-    implementation("io.javalin:javalin-bundle:4.1.1")
+    implementation("io.javalin:javalin:4.1.1")
+    implementation("io.javalin:javalin-openapi:4.1.1")
+    implementation("io.javalin:javalin-testtools:4.1.1")
 
     // Logging
-    implementation("org.slf4j:slf4j-api:2.0.0-alpha2")
-    implementation("org.apache.logging.log4j:log4j-core:2.14.1")
-    implementation("org.apache.logging.log4j:log4j-api:2.14.1")
-    implementation("org.apache.logging.log4j:log4j-slf4j18-impl:2.14.1")
-    implementation("io.github.microutils:kotlin-logging-jvm:2.0.11")
+    implementation("org.slf4j:slf4j-api:2.0.0-alpha5")
+    implementation("org.slf4j:slf4j-simple:2.0.0-alpha5")
+
+    implementation("io.github.microutils:kotlin-logging-jvm:2.1.0")
 
     // Config
-    implementation("com.sksamuel.hoplite:hoplite-core:1.4.11")
-    implementation("com.sksamuel.hoplite:hoplite-yaml:1.4.11")
-    implementation("com.sksamuel.hoplite:hoplite-hikaricp:1.4.11")
+    implementation("com.sksamuel.hoplite:hoplite-core:1.4.15")
+    implementation("com.sksamuel.hoplite:hoplite-yaml:1.4.15")
+    implementation("com.sksamuel.hoplite:hoplite-hikaricp:1.4.15")
 
     // Service-Matrix
     //ANDROID PORT
@@ -94,15 +100,15 @@ dependencies {
     //ANDROID PORT
 
     // Kotlin
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.5.21")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.6.0")
 
     // Testing
     //testImplementation(kotlin("test-junit"))
-    testImplementation("io.mockk:mockk:1.12.0")
+    testImplementation("io.mockk:mockk:1.12.1")
 
-    testImplementation("io.kotest:kotest-runner-junit5:4.6.3")
-    testImplementation("io.kotest:kotest-assertions-core:4.6.3")
-    testImplementation("io.kotest:kotest-assertions-json:4.6.3")
+    testImplementation("io.kotest:kotest-runner-junit5:5.0.1")
+    testImplementation("io.kotest:kotest-assertions-core:5.0.1")
+    testImplementation("io.kotest:kotest-assertions-json:5.0.1")
 }
 
 tasks.withType<Test> {

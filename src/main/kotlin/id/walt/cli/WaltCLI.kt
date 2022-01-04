@@ -103,7 +103,8 @@ object WaltCLI {
                     DidCommand().subcommands(
                         CreateDidCommand(),
                         ResolveDidCommand(),
-                        ListDidsCommand()
+                        ListDidsCommand(),
+                        ImportDidCommand()
                     ),
                     VcCommand().subcommands(
                         VcIssueCommand(),
@@ -120,13 +121,17 @@ object WaltCLI {
                     EssifCommand().subcommands(
                         EssifOnboardingCommand(),
                         EssifAuthCommand(),
-                        EssifVcIssuanceCommand(),
-                        EssifVcExchangeCommand(),
+//                        EssifVcIssuanceCommand(),
+//                        EssifVcExchangeCommand(),
                         EssifDidCommand().subcommands(
                             EssifDidRegisterCommand()
                         ),
                         EssifTirCommand().subcommands(
                             EssifTirGetIssuerCommand()
+                        ),
+                        EssifTimestampCommand().subcommands(
+                            EssifTimestampCreateCommand(),
+                            EssifTimestampGetCommand()
                         ),
                         EssifTaorCommand(),
                         EssifTsrCommand()
@@ -137,7 +142,9 @@ object WaltCLI {
 
         } catch (e: Exception) {
             TermUi.echo(e.message)
-            log.debug { e.printStackTrace() }
+
+            if (log.isDebugEnabled)
+                e.printStackTrace()
         }
     }
 }

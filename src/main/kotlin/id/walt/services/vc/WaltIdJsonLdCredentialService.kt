@@ -13,11 +13,7 @@ import id.walt.services.essif.TrustedIssuerClient.domain
 import id.walt.services.keystore.KeyStoreService
 import id.walt.signatory.ProofConfig
 import id.walt.signatory.ProofType
-import id.walt.vclib.Helpers.encode
-import id.walt.vclib.Helpers.toCredential
-import id.walt.vclib.VcLibManager
-import id.walt.vclib.VcUtils
-
+import id.walt.vclib.model.toCredential
 import id.walt.vclib.credentials.VerifiableAttestation
 import id.walt.vclib.credentials.VerifiablePresentation
 import id.walt.vclib.model.CredentialSchema
@@ -66,6 +62,7 @@ open class WaltIdJsonLdCredentialService : JsonLdCredentialService() {
         val signer = when (key.algorithm) {
             KeyAlgorithm.ECDSA_Secp256k1 -> LdSigner.EcdsaSecp256k1Signature2019(key.keyId)
             KeyAlgorithm.EdDSA_Ed25519 -> LdSigner.Ed25519Signature2018(key.keyId)
+            KeyAlgorithm.RSA -> LdSigner.RsaSignature2018(key.keyId)
             else -> throw Exception("Signature for key algorithm ${key.algorithm} not supported")
         }
 
@@ -109,6 +106,7 @@ open class WaltIdJsonLdCredentialService : JsonLdCredentialService() {
         val verifier = when (publicKey.algorithm) {
             KeyAlgorithm.ECDSA_Secp256k1 -> id.walt.crypto.LdVerifier.EcdsaSecp256k1Signature2019(publicKey.getPublicKey())
             KeyAlgorithm.EdDSA_Ed25519 -> id.walt.crypto.LdVerifier.Ed25519Signature2018(publicKey)
+            KeyAlgorithm.RSA -> id.walt.crypto.LdVerifier.RsaSignature2018(publicKey.getPublicKey())
             else -> throw Exception("Signature for key algorithm ${publicKey.algorithm} not supported")
         }
 
@@ -189,13 +187,12 @@ open class WaltIdJsonLdCredentialService : JsonLdCredentialService() {
         return JSONObject(signedCredMap).toString()
     }
 
-    fun verifyVerifiableCredential(json: String) =
-        VerificationResult(verifyVc(json), VerificationType.VERIFIABLE_CREDENTIAL)
+    fun verifyVerifiableCredential(json: String) = VerificationResult(verifyVc(json), VerificationType.VERIFIABLE_CREDENTIAL)
 
     fun verifyVerifiablePresentation(json: String) =
         VerificationResult(verifyVp(json), VerificationType.VERIFIABLE_PRESENTATION)
 
-    override fun verify(vcOrVp: String): VerificationResult = when (VcLibManager.getVerifiableCredential(vcOrVp)) {
+    override fun verify(vcOrVp: String): VerificationResult = when (VerifiableCredential.fromString(vcOrVp)) {
         is VerifiablePresentation -> verifyVerifiablePresentation(vcOrVp)
         else -> verifyVerifiableCredential(vcOrVp)
     }
@@ -206,7 +203,7 @@ open class WaltIdJsonLdCredentialService : JsonLdCredentialService() {
 
         val vcObj = vcJson.toCredential()
 
-        val issuer = VcUtils.getIssuer(vcObj)
+        val issuer = vcObj.issuer!!
         log.debug { "VC decoded: $vcObj" }
 
         val vcVerified = verifyVc(issuer, vcJson)
@@ -221,8 +218,7 @@ open class WaltIdJsonLdCredentialService : JsonLdCredentialService() {
         // val vpObj = Klaxon().parse<VerifiablePresentation>(vp)
         log.trace { "VC decoded: $vp" }
 
-        if (vp.proof == null)
-            return false
+        if (vp.proof == null) return false
 
         //        val signatureType = SignatureType.valueOf(vpObj.proof!!.type)
         //        val presenter = vpObj.proof.creator!!
@@ -294,11 +290,8 @@ open class WaltIdJsonLdCredentialService : JsonLdCredentialService() {
             nonce = challenge,
             credentialId = id
         )
-        val vpReqStr = VerifiablePresentation(
-            id = id,
-            holder = holderDid,
-            verifiableCredential = vcs.map { it.toCredential() }
-        ).encode()
+        val vpReqStr =
+            VerifiablePresentation(id = id, holder = holderDid, verifiableCredential = vcs.map { it.toCredential() }).encode()
 
         log.trace { "VP request: $vpReqStr" }
         log.trace { "Proof config: $$config" }
@@ -310,10 +303,8 @@ open class WaltIdJsonLdCredentialService : JsonLdCredentialService() {
     }
 
     override fun listVCs(): List<String> {
-        return Files.walk(Path.of("data/vc/created"))
-            .filter { Files.isRegularFile(it) }
-            .filter { it.toString().endsWith(".json") }
-            .map { it.fileName.toString() }.toList()
+        return Files.walk(Path.of("data/vc/created")).filter { Files.isRegularFile(it) }
+            .filter { it.toString().endsWith(".json") }.map { it.fileName.toString() }.toList()
     }
 
     override fun defaultVcTemplate(): VerifiableCredential {
@@ -327,7 +318,7 @@ open class WaltIdJsonLdCredentialService : JsonLdCredentialService() {
             issuer = "did:ebsi:2757945549477fc571663bee12042873fe555b674bd294a3",
             issuanceDate = "2019-06-22T14:11:44Z",
             validFrom = "2019-06-22T14:11:44Z",
-            credentialSubject = VerifiableAttestation.CredentialSubject(
+            credentialSubject = VerifiableAttestation.VerifiableAttestationSubject(
                 id = "id123"
             ),
             credentialStatus = CredentialStatus(
@@ -335,8 +326,7 @@ open class WaltIdJsonLdCredentialService : JsonLdCredentialService() {
                 type = "CredentialStatusList2020"
             ),
             credentialSchema = CredentialSchema(
-                id = "https://essif.europa.eu/tsr-vid/verifiableid1.json",
-                type = "JsonSchemaValidator2018"
+                id = "https://essif.europa.eu/tsr-vid/verifiableid1.json", type = "JsonSchemaValidator2018"
             ),
             evidence = listOf(
                 VerifiableAttestation.Evidence(
@@ -363,12 +353,12 @@ open class WaltIdJsonLdCredentialService : JsonLdCredentialService() {
         val parsedSchema = try {
             JSONSchema.parse(schema)
         } catch (e: Exception) {
-                if (log.isDebugEnabled) {
+            if (log.isDebugEnabled) {
                 log.debug { "Could not parse schema" }
                 e.printStackTrace()
             }
             return false
-            }
+        }
 
         val basicOutput = parsedSchema.validateBasic(vc.json!!)
 
@@ -387,7 +377,7 @@ open class WaltIdJsonLdCredentialService : JsonLdCredentialService() {
 
             if (it is VerifiablePresentation) return true
 
-            val credentialSchemaUrl = VcUtils.getCredentialSchemaUrl(it)
+            val credentialSchemaUrl = it.credentialSchema
 
             if (credentialSchemaUrl == null) {
                 log.debug { "Credential has no associated credentialSchema property" }
