@@ -25,11 +25,11 @@ open class WaltIdDidEbsiService : DidEbsiService() {
 
     override fun registerDid(did: String, ethKeyAlias: String) = runBlocking {
         log.debug { "Running EBSI DID registration... " }
+
         val unsignedTransactionParams = buildUnsignedTransactionParams(did, ethKeyAlias)
         log.debug { "Insert document request: $unsignedTransactionParams" }
 
         jsonRpcService.execute(did, ethKeyAlias, DID_REGISTRY_JSONRPC, "insertDidDocument", unsignedTransactionParams)
-
         log.debug { "EBSI DID registration completed successfully" }
     }
 
