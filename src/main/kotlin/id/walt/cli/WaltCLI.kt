@@ -11,7 +11,6 @@ import id.walt.Values
 import id.walt.servicematrix.ServiceMatrix
 import id.walt.services.WaltIdServices
 import mu.KotlinLogging
-import org.apache.logging.log4j.Level
 //ANDROID PORT
 import java.io.File
 import java.io.FileInputStream
@@ -87,10 +86,6 @@ object WaltCLI {
             //ANDROID PORT
             ServiceMatrix(FileInputStream(File("service-matrix.properties")))
             //ANDROID PORT
-
-            if (args.any { it == "--verbose" || it == "-v" }) {
-                WaltIdServices.setLogLevel(Level.DEBUG)
-            }
 
             Walt()
                 .subcommands(
