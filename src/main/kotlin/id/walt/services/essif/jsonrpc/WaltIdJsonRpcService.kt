@@ -76,7 +76,9 @@ class WaltIdJsonRpcService : JsonRpcService() {
         //        val sig = toECDSASignature(cs.sign(key.keyId, encodedTx), key.algorithm)
         val v = BigInteger
             .valueOf(keyService.getRecoveryId(ethKeyAlias, encodedTx, sig).toLong())
-            .add(chainId.multiply(BigInteger.TWO))
+            //ANDROID PORT
+            .add(chainId.multiply(BigInteger.valueOf(2L)))
+            //ANDROID PORT
             .add(BigInteger.valueOf(35L))
 
         var sigR = sig.r.toByteArray()

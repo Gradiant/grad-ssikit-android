@@ -72,6 +72,8 @@ This is the Android Ported Version of the Walt.ID SSI Kit, developed by Gradiant
 
 31. AndroidECDSASigner and AndroidECDSAVerifier removed from code as they are not needed anymore. The origin of the previous problems that lead to the creation of this classes was conflicts between BouncyCastleProvider and AndroidOpenSSL. 
 
+32. WaltIdJsonRpcService.kt -> BigInteger.TWO does not exist in Android, so it was replaced by BigInteger.valueOf(2L).
+
 # SSI Kit
 
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=walt-id_waltid-ssikit&metric=security_rating)](https://sonarcloud.io/dashboard?id=walt-id_waltid-ssikit)
