@@ -5,18 +5,16 @@ import com.nimbusds.jwt.SignedJWT
 import id.walt.services.jwt.JwtService
 import id.walt.signatory.ProofConfig
 import id.walt.signatory.ProofType
-import id.walt.vclib.model.toCredential
 import id.walt.vclib.credentials.VerifiablePresentation
 import id.walt.vclib.model.VerifiableCredential
+import id.walt.vclib.model.toCredential
+import id.walt.vclib.schema.SchemaService
 import info.weboftrust.ldsignatures.LdProof
 import mu.KotlinLogging
-import net.pwall.json.schema.JSONSchema
-import java.net.URL
+import java.net.URI
 import java.nio.file.Files
 import java.nio.file.Path
 import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneOffset
 import java.util.*
 //ANDROID PORT
 import kotlin.streams.toList
@@ -34,12 +32,14 @@ open class WaltIdJwtCredentialService : JwtCredentialService() {
     override fun sign(jsonCred: String, config: ProofConfig): String {
         log.debug { "Signing JWT object with config: $config" }
 
+        val crd = jsonCred.toCredential()
         val issuerDid = config.issuerDid
         val issueDate = config.issueDate ?: Instant.now()
         val validDate = config.validDate ?: Instant.now()
         val jwtClaimsSet = JWTClaimsSet.Builder()
             .jwtID(config.credentialId)
             .issuer(issuerDid)
+            .subject(config.subjectDid)
             .issueTime(Date.from(issueDate))
             .notBeforeTime(Date.from(validDate))
 
@@ -49,11 +49,10 @@ open class WaltIdJwtCredentialService : JwtCredentialService() {
         config.verifierDid?.let { jwtClaimsSet.audience(config.verifierDid) }
         config.nonce?.let { jwtClaimsSet.claim("nonce", config.nonce) }
 
-        when (val crd = jsonCred.toCredential()) {
+        when (crd) {
             is VerifiablePresentation -> jwtClaimsSet
                 .claim(JWT_VP_CLAIM, crd.toMap())
             else -> jwtClaimsSet
-                .subject(config.subjectDid)
                 .claim(JWT_VC_CLAIM, crd.toMap())
         }
 
@@ -85,18 +84,26 @@ open class WaltIdJwtCredentialService : JwtCredentialService() {
     override fun verifyVp(vp: String): Boolean =
         verifyVc(vp)
 
-    override fun present(vcs: List<String>, holderDid: String, verifierDid: String?, challenge: String?): String {
+    override fun present(
+        vcs: List<String>,
+        holderDid: String,
+        verifierDid: String?,
+        challenge: String?,
+        expirationDate: Instant?
+    ): String {
         log.debug { "Creating a presentation for VCs:\n$vcs" }
 
         val id = "urn:uuid:${UUID.randomUUID()}"
         val config = ProofConfig(
             issuerDid = holderDid,
+            subjectDid = holderDid,
             verifierDid = verifierDid,
             proofType = ProofType.JWT,
             nonce = challenge,
-            credentialId = id
+            credentialId = id,
+            expirationDate = expirationDate
         )
-        val vpReqStr = VerifiablePresentation(verifiableCredential = vcs.map { it.toCredential() }).encode()
+        val vpReqStr = VerifiablePresentation(holder = holderDid, verifiableCredential = vcs.map { it.toCredential() }).encode()
 
         log.trace { "VP request: $vpReqStr" }
         log.trace { "Proof config: $$config" }
@@ -123,8 +130,7 @@ open class WaltIdJwtCredentialService : JwtCredentialService() {
             if (it is VerifiablePresentation) return true
 
             val credentialSchema = it.credentialSchema ?: return true
-            val schema = JSONSchema.parse(URL(credentialSchema.id).readText())
-            return schema.validateBasic(it.json!!).valid
+            return SchemaService.validateSchema(it.json!!, URI(credentialSchema.id).toURL().readText()).valid
         }
     } catch (e: Exception) {
         e.printStackTrace()

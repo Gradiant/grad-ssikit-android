@@ -13,22 +13,19 @@ import id.walt.services.essif.TrustedIssuerClient.domain
 import id.walt.services.keystore.KeyStoreService
 import id.walt.signatory.ProofConfig
 import id.walt.signatory.ProofType
-import id.walt.vclib.model.toCredential
 import id.walt.vclib.credentials.VerifiableAttestation
 import id.walt.vclib.credentials.VerifiablePresentation
-import id.walt.vclib.model.CredentialSchema
-import id.walt.vclib.model.CredentialStatus
-import id.walt.vclib.model.Proof
-import id.walt.vclib.model.VerifiableCredential
+import id.walt.vclib.model.*
+import id.walt.vclib.schema.SchemaService
 import info.weboftrust.ldsignatures.LdProof
 import info.weboftrust.ldsignatures.jsonld.LDSecurityContexts
 import mu.KotlinLogging
-import net.pwall.json.schema.JSONSchema
 import org.json.JSONObject
 import java.net.URI
 import java.net.URL
 import java.nio.file.Files
 import java.nio.file.Path
+import java.time.Instant
 import java.util.*
 // ANDROID PORT
 import kotlin.streams.toList
@@ -277,7 +274,13 @@ open class WaltIdJsonLdCredentialService : JsonLdCredentialService() {
     //        return verifier.verify(jsonLdObject)
     //    }
 
-    override fun present(vcs: List<String>, holderDid: String, domain: String?, challenge: String?): String {
+    override fun present(
+        vcs: List<String>,
+        holderDid: String,
+        domain: String?,
+        challenge: String?,
+        expirationDate: Instant?
+    ): String {
         log.debug { "Creating a presentation for VCs:\n$vcs" }
 
         val id = "urn:uuid:${UUID.randomUUID()}"
@@ -288,7 +291,8 @@ open class WaltIdJsonLdCredentialService : JsonLdCredentialService() {
             proofType = ProofType.LD_PROOF,
             domain = domain,
             nonce = challenge,
-            credentialId = id
+            credentialId = id,
+            expirationDate = expirationDate
         )
         val vpReqStr =
             VerifiablePresentation(id = id, holder = holderDid, verifiableCredential = vcs.map { it.toCredential() }).encode()
@@ -316,7 +320,7 @@ open class WaltIdJsonLdCredentialService : JsonLdCredentialService() {
             ),
             id = "education#higherEducation#3fea53a4-0432-4910-ac9c-69ah8da3c37f",
             issuer = "did:ebsi:2757945549477fc571663bee12042873fe555b674bd294a3",
-            issuanceDate = "2019-06-22T14:11:44Z",
+            issued = "2019-06-22T14:11:44Z",
             validFrom = "2019-06-22T14:11:44Z",
             credentialSubject = VerifiableAttestation.VerifiableAttestationSubject(
                 id = "id123"
@@ -349,26 +353,13 @@ open class WaltIdJsonLdCredentialService : JsonLdCredentialService() {
     }
 
     override fun validateSchema(vc: VerifiableCredential, schema: String): Boolean {
-
-        val parsedSchema = try {
-            JSONSchema.parse(schema)
-        } catch (e: Exception) {
-            if (log.isDebugEnabled) {
-                log.debug { "Could not parse schema" }
-                e.printStackTrace()
-            }
-            return false
-        }
-
-        val basicOutput = parsedSchema.validateBasic(vc.json!!)
-
-        if (!basicOutput.valid) {
+        val results = SchemaService.validateSchema(vc.json!!, schema)
+        if (!results.valid) {
             log.debug { "Could not validate vc against schema . The validation errors are:" }
-            basicOutput.errors?.forEach { e -> log.debug { " - ${e.error}" } }
-            return false
+            results.errors?.forEach {  log.debug { it }  }
         }
 
-        return true
+        return results.valid
     }
 
     override fun validateSchemaTsr(vc: String) = try {

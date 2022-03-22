@@ -8,8 +8,8 @@ import id.walt.services.context.ContextManager
 import id.walt.services.vc.JsonLdCredentialService
 import id.walt.services.vc.JwtCredentialService
 
-import id.walt.vclib.model.toCredential
 import id.walt.vclib.model.VerifiableCredential
+import id.walt.vclib.model.toCredential
 import id.walt.vclib.templates.VcTemplateManager
 import mu.KotlinLogging
 import java.time.Instant
@@ -66,7 +66,10 @@ class WaltIdSignatory() : Signatory() {
     override fun issue(templateId: String, config: ProofConfig, dataProvider: SignatoryDataProvider?): String {
 
         // TODO: load proof-conf from signatory.conf and optionally substitute values on request basis
-        val vcTemplate = VcTemplateManager.loadTemplate(templateId)
+
+        val vcTemplate = kotlin.runCatching {
+            VcTemplateManager.loadTemplate(templateId)
+        }.getOrElse { throw Exception("Could not load template: $templateId") }
 
         val configDP = when (config.credentialId.isNullOrBlank()) {
             true -> ProofConfig(
@@ -78,7 +81,7 @@ class WaltIdSignatory() : Signatory() {
                 domain = config.domain,
                 nonce = config.nonce,
                 proofPurpose = config.proofPurpose,
-                config.credentialId ?: "identity#${templateId}#${UUID.randomUUID()}",
+                config.credentialId ?: "urn:uuid:${UUID.randomUUID()}",
                 issueDate = config.issueDate ?: Instant.now(),
                 validDate = config.validDate ?: Instant.now(),
                 expirationDate = config.expirationDate,

@@ -213,6 +213,7 @@ fun ByteArray.toHexString() = this.joinToString("") { String.format("%02X ", (it
 
 fun String.fromHexString(): ByteArray = replace(" ", "").chunked(2).map { it.toInt(16).toByte() }.toByteArray()
 
+@Deprecated("remove me")
 fun convertEd25519PublicKeyFromMultibase58Btc(mbase58: String): ByteArray {
 
     if (mbase58[0] != 'z') throw RuntimeException("Invalid multibase encoding of ED25519 key")
@@ -246,7 +247,7 @@ fun getMulticodecKeyCode(algorithm: KeyAlgorithm) = when (algorithm) {
     KeyAlgorithm.EdDSA_Ed25519 -> 0xed01
     KeyAlgorithm.ECDSA_Secp256k1 -> 0xe701
     KeyAlgorithm.RSA -> 0x1205
-    else -> throw Exception("No multicodec for algorithm $algorithm")
+    else -> throw IllegalArgumentException("No multicodec for algorithm $algorithm")
 }
 
 fun getKeyAlgorithmFromMultibase(mb: String): KeyAlgorithm {
@@ -258,7 +259,8 @@ fun getKeyAlgorithmFromMultibase(mb: String): KeyAlgorithm {
         0xed01 -> KeyAlgorithm.EdDSA_Ed25519
         0xe701 -> KeyAlgorithm.ECDSA_Secp256k1
         0x1205 -> KeyAlgorithm.RSA
-        else -> throw Exception("No multicodec algorithm for code $code")
+        0x8524 -> KeyAlgorithm.RSA
+        else -> throw IllegalArgumentException("No multicodec algorithm for code $code")
     }
 }
 

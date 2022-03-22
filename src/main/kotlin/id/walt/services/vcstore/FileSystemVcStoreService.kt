@@ -1,12 +1,14 @@
 package id.walt.services.vcstore
 
 
-import id.walt.vclib.model.toCredential
 import id.walt.vclib.model.VerifiableCredential
+import id.walt.vclib.model.toCredential
 import java.io.File
 //ANDROID PORT
 import id.walt.servicematrix.utils.AndroidUtils
 //ANDROID PORT
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 open class FileSystemVcStoreService : VcStoreService() {
 
@@ -15,7 +17,7 @@ open class FileSystemVcStoreService : VcStoreService() {
     //ANDROID PORT
 
     private fun getGroupDir(group: String) = File(store.absolutePath, group).apply { mkdirs() }
-    private fun getFileById(id: String, group: String) = File(getGroupDir(group),"${id}.cred")
+    private fun getFileById(id: String, group: String) = File(getGroupDir(group),"${URLEncoder.encode(id, StandardCharsets.UTF_8)}.cred")
     private fun loadFileString(id: String, group: String) = getFileById(id, group).let {
         when(it.exists()) {
             true -> it.readText()
@@ -30,7 +32,10 @@ open class FileSystemVcStoreService : VcStoreService() {
 
     override fun listCredentialIds(group: String): List<String> = getGroupDir(group).listFiles()!!.map { it.nameWithoutExtension }
 
-    override fun storeCredential(alias: String, vc: VerifiableCredential, group: String) = getFileById(alias, group).writeText(vc.encode())
+    override fun storeCredential(alias: String, vc: VerifiableCredential, group: String) =
+        getFileById(
+            alias, group
+        ).writeText(vc.encode())
 
     override fun deleteCredential(alias: String, group: String) = getFileById(alias, group).delete()
 }

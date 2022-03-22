@@ -29,6 +29,8 @@ abstract class HKVStoreService : WaltIdService() {
 
     companion object : ServiceProvider {
         override fun getService() = object : HKVStoreService() {}
-        override fun defaultImplementation() = FileSystemHKVStore(FilesystemStoreConfig("data"))
+        //ANDROID PORT
+        override fun defaultImplementation() = FileSystemHKVStore()
+        //ANDROID PORT
     }
 }

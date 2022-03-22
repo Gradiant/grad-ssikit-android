@@ -91,21 +91,21 @@ The core services are in the scope of:
  - **Key Management** generation, import/export
  - **Decentralized Identifier (DID)** operations (create, register, update, deactivate)
  - **Verifiable Credential (VC)** operations (issue, present, verify)
- - **ESSIF/EBSI** related Use Cases (onboarding, VC exchange, etc.)
+ - **EBSI/ESSIF** related Use Cases (onboarding, VC exchange, etc.)
 
-The ESSIF/EBSI functions are in the scope of:
- - **Onboarding ESSIF/EBSI** onboarding a natural person/legal entity including the DID creation and registration
+The EBSI/ESSIF functions are in the scope of:
+ - **Onboarding EBSI/ESSIF** onboarding a natural person/legal entity including the DID creation and registration
  - **Enable Trusted Issuer** process for entitling a legal entity to become a Trusted Issuer in the ESSIF ecosystem.
  - **Credential Issuance** protocols and data formats for issuing W3C credentials from a Trusted Issuer to a natural person.
  - **Credential Verification** verification facilities in order to determine the validity of a W3C Verifiable Credential aligned with ESSIF/EBSI standards.
 
-The library is written in **Kotlin/Java based library** and can be directly integrated as Maven/Gradle dependency. Alternatively the library or the additional **Docker container** can be run as RESTful webservice.
+The library is written in **Kotlin/Java** and can be directly integrated as Maven/Gradle dependency. Alternatively the library or the additional **Docker container** can be run as RESTful webservice.
 
 ## Getting Started
 
 ### Via Docker
 
-The easiest way to getting your hands diry and to "play" with the functions the SSI Kit provides is by running the **CLI tool** with _Docker_.
+The easiest way to getting your hands dirty and to "play" with the functions the SSI Kit provides is by running the **CLI tool** with _Docker_.
 
     docker run -itv $(pwd)/data:/app/data waltid/ssikit -h
 
@@ -113,14 +113,14 @@ The easiest way to getting your hands diry and to "play" with the functions the 
 
 _Gradle_
 
-       implementation("id.walt:waltid-ssi-kit:1.3.0")
+       implementation("id.walt:waltid-ssi-kit:1.6.1")
 
 _Maven_
 
        <dependency>
            <groupId>id.walt</groupId>
            <artifactId>waltid-ssi-kit</artifactId>
-           <version>1.3.0</version>
+           <version>1.6.1</version>
        </dependency>
     
 Please go ahead and find further CLI commands and well as other ways how to use the SSI Kit in the documentation section below.
@@ -166,6 +166,24 @@ Following code snipped gives a first impression how to use the SSI Kit for creat
         println("JWT verification result: ${resJwt.overallStatus}")
     }
 
+## Funded & supported by
+
+<img src="logos-supporter.png">
+
 ## License
 
-The SSI Kit by walt.id is Open Source software released under the [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0.html).
+```
+Copyright ((C)) 2022 walt.id GmbH
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```

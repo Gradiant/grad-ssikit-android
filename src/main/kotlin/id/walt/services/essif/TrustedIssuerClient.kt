@@ -5,6 +5,7 @@ import id.walt.common.readEssif
 import id.walt.model.AuthRequestResponse
 import id.walt.model.TrustedIssuer
 import id.walt.services.WaltIdServices
+import id.walt.services.essif.didebsi.EBSI_ENV_URL
 import id.walt.services.essif.enterprisewallet.EnterpriseWalletService
 import id.walt.services.essif.mock.DidRegistry
 import io.ktor.client.request.*
@@ -18,7 +19,7 @@ object TrustedIssuerClient {
 
     // TODO: move to config file
     //ANDROID PORT
-    var domain = "https://api.preprod.ebsi.eu"
+    var domain = EBSI_ENV_URL
     //val domain = "https://api.test.intebsi.xyz"
 
     var authorisation = "$domain/authorisation/v1"
@@ -45,9 +46,7 @@ object TrustedIssuerClient {
     fun generateAuthenticationRequest(): String = runBlocking {
         return@runBlocking WaltIdServices.http.post<String>("$trustedIssuerUrl/generateAuthenticationRequest") {
             contentType(ContentType.Application.Json)
-            headers {
-                append(HttpHeaders.Accept, "application/json")
-            }
+            accept(ContentType.Application.Json)
         }
     }
 
@@ -55,9 +54,7 @@ object TrustedIssuerClient {
     fun openSession(authResp: String): String = runBlocking {
         return@runBlocking WaltIdServices.http.post<String>("$trustedIssuerUrl/openSession") {
             contentType(ContentType.Application.Json)
-            headers {
-                append(HttpHeaders.Accept, "application/json")
-            }
+            accept(ContentType.Application.Json)
             body = authResp
         }
     }
@@ -69,9 +66,7 @@ object TrustedIssuerClient {
     fun authenticationRequests(): AuthRequestResponse = runBlocking {
         return@runBlocking WaltIdServices.http.post<AuthRequestResponse>("$onboarding/authentication-requests") {
             contentType(ContentType.Application.Json)
-            headers {
-                append(HttpHeaders.Accept, "application/json")
-            }
+            accept(ContentType.Application.Json)
             body = mapOf("scope" to "ebsi users onboarding")
         }
     }
@@ -79,8 +74,8 @@ object TrustedIssuerClient {
     fun authenticationResponse(idToken: String, bearerToken: String): String = runBlocking {
         return@runBlocking WaltIdServices.http.post<String>("$onboarding/authentication-responses") {
             contentType(ContentType.Application.Json)
+            accept(ContentType.Application.Json)
             headers {
-                append(HttpHeaders.Accept, "application/json")
                 append(HttpHeaders.Authorization, "Bearer $bearerToken")
             }
             body = mapOf("id_token" to idToken)
@@ -90,9 +85,7 @@ object TrustedIssuerClient {
     fun siopSession(idToken: String): String = runBlocking {
         return@runBlocking WaltIdServices.http.post<String>("$authorisation/siop-sessions") {
             contentType(ContentType.Application.Json)
-            headers {
-                append(HttpHeaders.Accept, "application/json")
-            }
+            accept(ContentType.Application.Json)
             body = mapOf("id_token" to idToken)
         }
     }
@@ -100,8 +93,8 @@ object TrustedIssuerClient {
     fun siopSessionBearer(idToken: String, bearerToken: String): String = runBlocking {
         return@runBlocking WaltIdServices.http.post<String>("$authorisation/siop-sessions") {
             contentType(ContentType.Application.Json)
+            accept(ContentType.Application.Json)
             headers {
-                append(HttpHeaders.Accept, "application/json")
                 append(HttpHeaders.Authorization, "Bearer $bearerToken")
             }
             body = mapOf("id_token" to idToken)
@@ -120,9 +113,7 @@ object TrustedIssuerClient {
         }
         return@runBlocking WaltIdServices.http.post<AuthRequestResponse>("$operationUrl/authentication-requests") {
             contentType(ContentType.Application.Json)
-            headers {
-                append(HttpHeaders.Accept, "application/json")
-            }
+            accept(ContentType.Application.Json)
             body = mapOf("scope" to "ebsi users onboarding")
         }
     }
@@ -134,8 +125,8 @@ object TrustedIssuerClient {
         }
         return@runBlocking WaltIdServices.http.post<String>("$operationUrl/authentication-responses") {
             contentType(ContentType.Application.Json)
+            accept(ContentType.Application.Json)
             headers {
-                append(HttpHeaders.Accept, "application/json")
                 append(HttpHeaders.Authorization, "Bearer $bearerToken")
             }
             body = mapOf("id_token" to idToken)
