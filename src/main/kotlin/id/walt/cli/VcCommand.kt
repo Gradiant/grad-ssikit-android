@@ -13,9 +13,10 @@ import id.walt.auditor.Auditor
 import id.walt.auditor.PolicyRegistry
 import id.walt.common.prettyPrint
 import id.walt.custodian.Custodian
-import id.walt.signatory.*
+import id.walt.signatory.ProofConfig
+import id.walt.signatory.ProofType
+import id.walt.signatory.Signatory
 import id.walt.signatory.dataproviders.CLIDataProvider
-
 import id.walt.vclib.model.toCredential
 import io.ktor.util.date.*
 import mu.KotlinLogging
@@ -151,7 +152,7 @@ class PresentVcCommand : CliktCommand(
         val vcStrList = vcSources.values.toList()
 
         // Creating the Verifiable Presentation
-        val vp = Custodian.getService().createPresentation(vcStrList, holderDid, verifierDid, domain, challenge)
+        val vp = Custodian.getService().createPresentation(vcStrList, holderDid, verifierDid, domain, challenge, null)
 
         log.debug { "Presentation created:\n$vp" }
 

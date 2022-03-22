@@ -18,12 +18,13 @@ object PolicyRegistry {
         register(TrustedIssuerDidPolicy())
         register(TrustedIssuerRegistryPolicy())
         register(TrustedSubjectDidPolicy())
-        register(IssuanceDateBeforePolicy())
+        register(IssuedDateBeforePolicy())
         register(ValidFromBeforePolicy())
         register(ExpirationDateAfterPolicy())
         register(GaiaxTrustedPolicy())
         register(GaiaxSDPolicy())
         register(ChallengePolicy(""))
         register(VpTokenClaimPolicy(null))
+        register(CredentialStatusPolicy())
     }
 }

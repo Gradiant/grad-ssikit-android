@@ -1,6 +1,8 @@
 package id.walt.test
 
-import id.walt.signatory.*
+import id.walt.signatory.ProofConfig
+import id.walt.signatory.ProofType
+import id.walt.signatory.SignatoryDataProvider
 import id.walt.signatory.dataproviders.DefaultDataProvider
 import id.walt.vclib.credentials.VerifiableDiploma
 import id.walt.vclib.credentials.VerifiableId
@@ -11,7 +13,7 @@ class DummySignatoryDataProvider : SignatoryDataProvider {
     override fun populate(template: VerifiableCredential, proofConfig: ProofConfig): VerifiableCredential {
         if (template is VerifiableId) {
             DefaultDataProvider.populate(template, proofConfig)
-            template.evidence!!.id = "Dummy test value (waiting for EBSI schema update)"
+            template.evidence!![0].id = "Dummy test value (waiting for EBSI schema update)"
             if (proofConfig.proofType == ProofType.JWT) template.proof = Proof(
                 type = "Ed25519Signature2018", // Dummy test value (waiting for EBSI schema update)
                 created = "2021-10-28T16:20:00Z", // Dummy test value (waiting for EBSI schema update)

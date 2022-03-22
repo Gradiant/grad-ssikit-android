@@ -12,11 +12,13 @@ import org.web3j.crypto.Hash
 import org.web3j.utils.Numeric
 import kotlin.random.Random
 
+var EBSI_ENV_URL = System.getenv().get("EBSI_ENV_URL") ?: "https://api.preprod.ebsi.eu"
+
 open class WaltIdDidEbsiService : DidEbsiService() {
 
     companion object {
-        private const val DID_REGISTRY_JSONRPC =
-            "https://api.preprod.ebsi.eu/did-registry/v2/jsonrpc" // TODO: make url configurable
+        private val DID_REGISTRY_JSONRPC =
+            "${EBSI_ENV_URL}/did-registry/v2/jsonrpc" // TODO: make url configurable
     }
 
     private val log = KotlinLogging.logger {}
@@ -35,7 +37,7 @@ open class WaltIdDidEbsiService : DidEbsiService() {
 
     // TODO: Verify all params are properly defined according to EBSI expectations => https://ec.europa.eu/cefdigital/wiki/pages/viewpage.action?spaceKey=EBP&title=DID+Registry+Smart+Contract
     override fun buildUnsignedTransactionParams(did: String, ethKeyAlias: String?): List<InsertDidDocumentParams> {
-        val didDocumentString = Klaxon().toJsonString(DidService.loadDidEbsi(did))
+        val didDocumentString = Klaxon().toJsonString(DidService.load(did))
 
         val from = keyService.getEthereumAddress(ethKeyAlias ?: did)
         val identifier = Numeric.toHexString(did.toByteArray())

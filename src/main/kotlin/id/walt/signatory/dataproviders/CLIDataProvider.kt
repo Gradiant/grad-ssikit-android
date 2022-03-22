@@ -2,7 +2,11 @@ package id.walt.signatory.dataproviders
 
 import id.walt.signatory.ProofConfig
 import id.walt.signatory.SignatoryDataProvider
-import id.walt.vclib.credentials.*
+import id.walt.vclib.credentials.VerifiableDiploma
+import id.walt.vclib.credentials.VerifiableId
+import id.walt.vclib.credentials.VerifiableVaccinationCertificate
+import id.walt.vclib.credentials.gaiax.DataSelfDescription
+import id.walt.vclib.credentials.gaiax.GaiaxCredential
 import id.walt.vclib.model.VerifiableCredential
 
 fun prompt(prompt: String, default: String?): String? {
@@ -25,7 +29,7 @@ object CLIDataProvider : SignatoryDataProvider {
             is VerifiableDiploma -> VerifiableDiplomaCLIDataProvider
             is VerifiableId -> VerifiableIDCLIDataProvider
             is GaiaxCredential -> GaiaxCLIDataProvider
-            is GaiaxSelfDescription -> GaiaxSDProvider
+            is DataSelfDescription -> GaiaxSDProvider
             is VerifiableVaccinationCertificate -> VerifiableVaccinationCertificateCLIDataProvider
             else -> {
                 println("No CLI data provider defined for the given credential type. Only default meta data will be populated.")
@@ -206,8 +210,8 @@ object GaiaxCLIDataProvider : AbstractDataProvider<GaiaxCredential>() {
     }
 }
 
-object GaiaxSDProvider : AbstractDataProvider<GaiaxSelfDescription>() {
-    override fun populateCustomData(template: GaiaxSelfDescription, proofConfig: ProofConfig): GaiaxSelfDescription {
+object GaiaxSDProvider : AbstractDataProvider<DataSelfDescription>() {
+    override fun populateCustomData(template: DataSelfDescription, proofConfig: ProofConfig): DataSelfDescription {
         template.apply {
             println()
             println("> Subject information")
@@ -242,7 +246,7 @@ object VerifiableIDCLIDataProvider : AbstractDataProvider<VerifiableId>() {
         template.credentialSubject!!.dateOfBirth = prompt("Date of birth", template.credentialSubject!!.dateOfBirth)
         template.credentialSubject!!.gender = prompt("Gender", template.credentialSubject!!.gender)
         template.credentialSubject!!.placeOfBirth = prompt("Place of birth", template.credentialSubject!!.placeOfBirth)
-        template.credentialSubject!!.currentAddress = prompt("Current address", template.credentialSubject!!.currentAddress)
+        template.credentialSubject!!.currentAddress = prompt("Current address", template.credentialSubject!!.currentAddress!![0])?.let { listOf(it) }
 
         return template
     }

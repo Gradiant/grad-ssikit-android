@@ -7,6 +7,7 @@ import id.walt.signatory.ProofConfig
 import id.walt.vclib.model.VerifiableCredential
 import info.weboftrust.ldsignatures.LdProof
 import kotlinx.serialization.Serializable
+import java.time.Instant
 
 enum class VerificationType {
     VERIFIABLE_CREDENTIAL,
@@ -17,7 +18,7 @@ enum class VerificationType {
 data class VerificationResult(val verified: Boolean, val verificationType: VerificationType)
 
 abstract class JsonLdCredentialService : WaltIdService() {
-    override val implementation get() = ServiceRegistry.getService<JsonLdCredentialService>()
+    override val implementation get() = serviceImplementation<JsonLdCredentialService>()
 
     open fun sign(jsonCred: String, config: ProofConfig): String = implementation.sign(jsonCred, config)
 
@@ -26,8 +27,14 @@ abstract class JsonLdCredentialService : WaltIdService() {
     open fun verifyVc(vcJson: String): Boolean = implementation.verifyVc(vcJson)
     open fun verifyVp(vpJson: String): Boolean = implementation.verifyVp(vpJson)
 
-    open fun present(vcs: List<String>, holderDid: String, domain: String?, challenge: String?): String =
-        implementation.present(vcs, holderDid, domain, challenge)
+    open fun present(
+        vcs: List<String>,
+        holderDid: String,
+        domain: String?,
+        challenge: String?,
+        expirationDate: Instant?
+    ): String =
+        implementation.present(vcs, holderDid, domain, challenge, expirationDate)
 
     open fun listVCs(): List<String> = implementation.listVCs()
 
@@ -40,5 +47,6 @@ abstract class JsonLdCredentialService : WaltIdService() {
 
     companion object : ServiceProvider {
         override fun getService() = object : JsonLdCredentialService() {}
+        override fun defaultImplementation() = WaltIdJsonLdCredentialService()
     }
 }

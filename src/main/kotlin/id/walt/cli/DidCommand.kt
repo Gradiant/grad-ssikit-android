@@ -5,6 +5,9 @@ import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.requireObject
 import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.arguments.optional
+import com.github.ajalt.clikt.parameters.groups.mutuallyExclusiveOptions
+import com.github.ajalt.clikt.parameters.groups.required
+import com.github.ajalt.clikt.parameters.groups.single
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
@@ -64,7 +67,7 @@ class CreateDidCommand : CliktCommand(
         echo("\nResults:\n")
         echo("\nDID created: $did\n")
 
-        val encodedDid = loadDidHelper(did)
+        val encodedDid = DidService.load(did).encodePretty()
         echo("\nDID document (below, JSON):\n\n$encodedDid")
 
         dest?.let {
@@ -74,22 +77,16 @@ class CreateDidCommand : CliktCommand(
 
         when (method) {
             "web" -> echo(
-                "\nInstall this did:web at: https://$domain/${
-                    path?.replace(":", "/")?.plus("/") ?: ""
-                }.well-known/did.json"
+                "\nInstall this did:web at: https://$domain/.well-known/${
+                    path?.replace(":", "/") ?: ""
+                }/did.json"
             )
         }
     }
 }
 
-fun loadDidHelper(did: String) = when {
-    did.contains("web") -> DidService.resolveDidWebDummy(DidUrl.from(did)).encodePretty()
-    did.contains("ebsi") -> DidService.loadDidEbsi(did).encodePretty()
-    else -> DidService.load(did).encodePretty()
-}
-
 fun resolveDidHelper(did: String, raw: Boolean) = when {
-    did.contains("web") -> DidService.resolveDidWebDummy(DidUrl.from(did)).encodePretty()
+    did.contains("web") -> DidService.resolve(DidUrl.from(did)).encodePretty()
     did.contains("ebsi") -> when (raw) {
         true -> DidService.resolveDidEbsiRaw(did).prettyPrint()
         else -> DidService.resolveDidEbsi(did).encodePretty()
@@ -106,6 +103,7 @@ class ResolveDidCommand : CliktCommand(
     val did: String by option("-d", "--did", help = "DID to be resolved").required()
     val raw by option("--raw", "-r").flag("--typed", "-t", default = false)
     val config: CliConfig by requireObject()
+    val write by option("--write", "-w").flag(default = false)
 
     override fun run() {
         echo("Resolving DID \"$did\"...")
@@ -118,10 +116,12 @@ class ResolveDidCommand : CliktCommand(
 
         echo(encodedDid)
 
-        val didFileName = "${did.replace(":", "-").replace(".", "_")}.json"
-        val destFile = File(config.dataDir + "/did/resolved/" + didFileName)
-        destFile.writeText(encodedDid)
-        echo("\nDID document was saved to file: ${destFile.absolutePath}")
+        if (write) {
+            val didFileName = "${did.replace(":", "-").replace(".", "_")}.json"
+            val destFile = File(config.dataDir + "/did/resolved/" + didFileName)
+            destFile.writeText(encodedDid)
+            echo("\nDID document was saved to file: ${destFile.absolutePath}")
+        }
     }
 }
 
@@ -144,11 +144,27 @@ class ImportDidCommand : CliktCommand(
     name = "import",
     help = "Import DID to custodian store"
 ) {
-
-    val did: String by argument()
+    val keyId: String? by option("-k", "--key-id", help = "Specify key ID for imported did, if left empty, only public key will be imported")
+    val didOrDoc: String by mutuallyExclusiveOptions(
+        option("-f", "--file", help = "Load the DID document from the given file"),
+        option("-d", "--did", help = "Try to resolve DID document for the given DID")
+    ).single().required()
 
     override fun run() {
-        DidService.importDidAndKey(did)
+        val did = when(DidUrl.isDidUrl(didOrDoc)) {
+            true -> didOrDoc.also {
+                DidService.importDid(didOrDoc)
+            }
+            else -> DidService.importDidFromFile(File(didOrDoc))
+        }
+
+        if(!keyId.isNullOrEmpty()) {
+            DidService.setKeyIdForDid(did, keyId!!)
+        } else {
+            DidService.importKey(did)
+        }
+
+        println("DID imported: $did")
     }
 }
 
