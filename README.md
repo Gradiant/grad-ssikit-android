@@ -74,6 +74,8 @@ This is the Android Ported Version of the Walt.ID SSI Kit, developed by Gradiant
 
 32. WaltIdJsonRpcService.kt -> BigInteger.TWO does not exist in Android, so it was replaced by BigInteger.valueOf(2L).
 
+33. FileSystemVcStoreService -> URLEncoder.encode(string, charset) were replaced for URLEncoder.encode(string, string) as it is the only supported invocation of this function in Android SDK.
+
 # SSI Kit
 
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=walt-id_waltid-ssikit&metric=security_rating)](https://sonarcloud.io/dashboard?id=walt-id_waltid-ssikit)
