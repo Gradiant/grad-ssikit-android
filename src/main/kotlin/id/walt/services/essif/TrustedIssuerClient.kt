@@ -233,10 +233,21 @@ object TrustedIssuerClient {
     //ANDROID PORT
     fun setTrustedIssuerDomain(domain: String) {
         this.domain = domain
-        this.authorisation = "${TrustedIssuerClient.domain}/authorisation/v1"
         this.onboarding = "${TrustedIssuerClient.domain}/users-onboarding/v1"
         this.authentication = "${TrustedIssuerClient.domain}/authentication/v1"
         this.verification = "${TrustedIssuerClient.domain}/verification/v1"
+    }
+
+    fun setTrustedIssuerOnboarding(url: String) {
+        this.onboarding = url
+    }
+
+    fun setTrustedIssuerAuthentication(url: String) {
+        this.authentication = url
+    }
+
+    fun setTrustedIssuerVerification(url: String) {
+        this.verification = url
     }
     //ANDROID PORT
 }
