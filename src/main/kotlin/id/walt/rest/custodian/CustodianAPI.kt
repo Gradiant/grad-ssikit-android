@@ -113,8 +113,9 @@ object CustodianAPI {
                 get("/", documented(CustodianController.listKeysDocs(), CustodianController::listKeys))
                 get("{alias}", documented(CustodianController.getKeysDocs(), CustodianController::getKey))
                 post("generate", documented(CustodianController.generateKeyDocs(), CustodianController::generateKey))
-                put("store", documented(CustodianController.storeKeysDocs(), CustodianController::storeKey))
+                post("import", documented(CustodianController.importKeysDocs(), CustodianController::importKey))
                 delete("{id}", documented(CustodianController.deleteKeysDocs(), CustodianController::deleteKey))
+                post("export", documented(CustodianController.exportKeysDocs(), CustodianController::exportKey))
             }
 
             path("did") {
@@ -128,8 +129,10 @@ object CustodianAPI {
 
             path("credentials") {
                 get("/", documented(CustodianController.listCredentialsDocs(), CustodianController::listCredentials))
+                path("list/") {
+                    get("credentialIds", documented(CustodianController.listCredentialIdsDocs(), CustodianController::listCredentialIds))
+                }
                 get("{id}",  documented(CustodianController.getCredentialDocs(), CustodianController::getCredential))
-                get("listCredentialIds",  documented(CustodianController.listCredentialIdsDocs(), CustodianController::listCredentialIds))
                 put("{alias}",  documented(CustodianController.storeCredentialsDocs(),CustodianController::storeCredential))
                 delete("{alias}", documented(CustodianController.deleteCredentialDocs(), CustodianController::deleteCredential))
                 post("present", documented(CustodianController.presentCredentialsDocs(), CustodianController::presentCredentials))

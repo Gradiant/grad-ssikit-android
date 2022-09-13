@@ -4,9 +4,11 @@ import id.walt.signatory.ProofConfig
 import id.walt.signatory.SignatoryDataProvider
 import id.walt.vclib.credentials.VerifiableDiploma
 import id.walt.vclib.credentials.VerifiableId
+import id.walt.vclib.credentials.VerifiableMandate
 import id.walt.vclib.credentials.VerifiableVaccinationCertificate
 import id.walt.vclib.credentials.gaiax.DataSelfDescription
 import id.walt.vclib.credentials.gaiax.GaiaxCredential
+import id.walt.vclib.credentials.gaiax.ParticipantCredential
 import id.walt.vclib.model.VerifiableCredential
 
 fun prompt(prompt: String, default: String?): String? {
@@ -26,11 +28,13 @@ fun promptInt(prompt: String, default: Int?): Int {
 object CLIDataProvider : SignatoryDataProvider {
     override fun populate(template: VerifiableCredential, proofConfig: ProofConfig): VerifiableCredential {
         return when (template) {
-            is VerifiableDiploma -> VerifiableDiplomaCLIDataProvider
-            is VerifiableId -> VerifiableIDCLIDataProvider
-            is GaiaxCredential -> GaiaxCLIDataProvider
+            is VerifiableDiploma -> VerifiableDiplomaCliDataProvider
+            is VerifiableId -> VerifiableIdCliDataProvider
+            is GaiaxCredential -> GaiaxCliDataProvider
             is DataSelfDescription -> GaiaxSDProvider
-            is VerifiableVaccinationCertificate -> VerifiableVaccinationCertificateCLIDataProvider
+            is VerifiableVaccinationCertificate -> VerifiableVaccinationCertificateCliDataProvider
+            is ParticipantCredential -> ParticipantCredentialProvider
+            is VerifiableMandate -> VerifiableMandateCliDataProvider
             else -> {
                 println("No CLI data provider defined for the given credential type. Only default meta data will be populated.")
                 DefaultDataProvider
@@ -39,7 +43,7 @@ object CLIDataProvider : SignatoryDataProvider {
     }
 }
 
-object VerifiableDiplomaCLIDataProvider : AbstractDataProvider<VerifiableDiploma>() {
+object VerifiableDiplomaCliDataProvider : AbstractDataProvider<VerifiableDiploma>() {
     override fun populateCustomData(template: VerifiableDiploma, proofConfig: ProofConfig): VerifiableDiploma {
         template.apply {
 
@@ -117,7 +121,7 @@ object VerifiableDiplomaCLIDataProvider : AbstractDataProvider<VerifiableDiploma
     }
 }
 
-object VerifiableVaccinationCertificateCLIDataProvider : AbstractDataProvider<VerifiableVaccinationCertificate>() {
+object VerifiableVaccinationCertificateCliDataProvider : AbstractDataProvider<VerifiableVaccinationCertificate>() {
     override fun populateCustomData(template: VerifiableVaccinationCertificate, proofConfig: ProofConfig): VerifiableVaccinationCertificate {
         template.apply {
 
@@ -147,7 +151,7 @@ object VerifiableVaccinationCertificateCLIDataProvider : AbstractDataProvider<Ve
     }
 }
 
-object GaiaxCLIDataProvider : AbstractDataProvider<GaiaxCredential>() {
+object GaiaxCliDataProvider : AbstractDataProvider<GaiaxCredential>() {
     override fun populateCustomData(template: GaiaxCredential, proofConfig: ProofConfig): GaiaxCredential {
         template.apply {
             println()
@@ -198,7 +202,7 @@ object GaiaxCLIDataProvider : AbstractDataProvider<GaiaxCredential>() {
                 }
 
                 println()
-                println("Etherium address")
+                println("Ethereum address")
                 println("----------------------")
                 ethereumAddress.apply {
                     id = prompt("Id", "0x4C84a36fCDb7Bc750294A7f3B5ad5CA8F74C4A52") ?: ""
@@ -235,8 +239,7 @@ object GaiaxSDProvider : AbstractDataProvider<DataSelfDescription>() {
     }
 }
 
-
-object VerifiableIDCLIDataProvider : AbstractDataProvider<VerifiableId>() {
+object VerifiableIdCliDataProvider : AbstractDataProvider<VerifiableId>() {
     override fun populateCustomData(template: VerifiableId, proofConfig: ProofConfig): VerifiableId {
         println()
         println("Subject personal data, ID: ${proofConfig.subjectDid}")
@@ -248,6 +251,47 @@ object VerifiableIDCLIDataProvider : AbstractDataProvider<VerifiableId>() {
         template.credentialSubject!!.placeOfBirth = prompt("Place of birth", template.credentialSubject!!.placeOfBirth)
         template.credentialSubject!!.currentAddress = prompt("Current address", template.credentialSubject!!.currentAddress!![0])?.let { listOf(it) }
 
+        return template
+    }
+}
+
+object ParticipantCredentialProvider : AbstractDataProvider<ParticipantCredential>() {
+    override fun populateCustomData(template: ParticipantCredential, proofConfig: ProofConfig): ParticipantCredential {
+        template.apply {
+            println()
+            println("> Subject information")
+            println()
+            credentialSubject?.apply {
+                hasRegistrationNumber = prompt("Registration Number", hasRegistrationNumber) ?: ""
+                hasLegallyBindingName = prompt("Legally Binding Name", hasLegallyBindingName) ?: ""
+                hasJurisdiction = prompt("Jurisdiction", hasJurisdiction) ?: ""
+                hasCountry = prompt("Country", hasCountry) ?: ""
+                leiCode = prompt("LEI", leiCode) ?: ""
+                ethereumAddress = prompt("Ethereum Address", ethereumAddress) ?: ""
+                parentOrganisation = prompt("Parent-organisation", parentOrganisation) ?: ""
+                subOrganisation = prompt("Sub-organisation", subOrganisation) ?: ""
+                id = prompt("Subject ID", id) ?: ""
+            }
+        }
+
+        return template
+    }
+}
+
+object VerifiableMandateCliDataProvider : AbstractDataProvider<VerifiableMandate>() {
+    override fun populateCustomData(template: VerifiableMandate, proofConfig: ProofConfig): VerifiableMandate {
+        println()
+        template.apply {
+            println()
+            println("> Grant")
+            println()
+            credentialSubject!!.holder!!.apply {
+                id = prompt("ID of holder", "did:ebsi:ze2dC9GezTtVSzjHVMQzpkE")!!
+                role = prompt("Role", "family")!!
+                grant = prompt("Name", "apply_to_masters")!!
+                constraints = mapOf("location" to prompt("Location", "Slovenia")!!)
+            }
+        }
         return template
     }
 }

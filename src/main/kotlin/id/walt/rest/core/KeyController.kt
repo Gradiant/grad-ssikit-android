@@ -14,11 +14,6 @@ data class GenKeyRequest(
     val keyAlgorithm: KeyAlgorithm,
 )
 
-//@Serializable
-//data class ImportKeyRequest(
-//    val jwkKey: String,
-//)
-
 @Serializable
 data class ExportKeyRequest(
     val keyAlias: String,
@@ -52,7 +47,7 @@ object KeyController {
     }
 
     fun loadDocs() = document().operation {
-        it.summary("Load public key").addTagsItem("Key Management")
+        it.summary("Loads the public key in JWK format").addTagsItem("Key Management")
     }.json<String>("200")
 
     fun delete(ctx: Context) {
@@ -82,7 +77,7 @@ object KeyController {
         it.summary("Exports public and private key part (if supported by underlying keystore)").operationId("exportKey")
             .addTagsItem("Key Management")
     }.body<ExportKeyRequest> { it.description("Exports the key in JWK or PEM format") }
-        .json<String>("200") { it.description("The key in the desired formant") }
+        .json<String>("200") { it.description("The key in the desired format") }
 
     fun list(ctx: Context) {
         val keyIds = ArrayList<String>()
@@ -95,13 +90,12 @@ object KeyController {
     }.json<Array<String>>("200") { it.description("The desired key IDs") }
 
     fun import(ctx: Context) {
-        // val req = ctx.bodyAsClass(ImportKeyRequest::class.java)
         ctx.json(keyService.importKey(ctx.body()))
     }
 
     fun importDocs() = document().operation {
         it.summary("Import key").operationId("importKey").addTagsItem("Key Management")
     }.body<String> {
-        it.description("Imports the key (JWK format) to the key store")
+        it.description("Imports the key (JWK and PEM format) to the key store")
     }.json<String>("200")
 }

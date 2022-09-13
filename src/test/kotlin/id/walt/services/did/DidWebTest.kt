@@ -5,11 +5,13 @@ import id.walt.crypto.KeyAlgorithm
 import id.walt.crypto.LdVerificationKeyType.*
 import id.walt.model.DidMethod
 import id.walt.model.DidUrl
+import id.walt.model.DidWeb
 import id.walt.servicematrix.ServiceMatrix
 import id.walt.services.key.KeyService
 import id.walt.test.RESOURCES_PATH
 import io.kotest.core.spec.Spec
 import io.kotest.core.spec.style.StringSpec
+import io.kotest.core.test.TestCase
 import io.kotest.matchers.shouldBe
 import kotlin.time.ExperimentalTime
 
@@ -69,15 +71,36 @@ class DidWebTest : StringSpec({
         println("hey Ed25519")
     }
 
-    "resolve did:web from waltid.org" {
-        val resolvedDid = DidService.resolve("did:web:wallet.waltid.org:api:did-registry:266fa44b20c247a9926b44f4263799a3")
+    "resolve did:web from did:web:vc.lab.gaia-x.eu".config(enabled = false) {
+        val resolvedDid = DidService.resolve("did:web:vc.lab.gaia-x.eu")
         val encoded = resolvedDid.encodePretty()
         println(encoded)
     }
+
+    "get path from did:web" {
+        val didUrl = DidUrl.from("did:web:wallet.waltid.org:api:did-registry:266fa44b20c247a9926b44f4263799a3")
+        DidWeb.getPath(didUrl) shouldBe "api/did-registry/266fa44b20c247a9926b44f4263799a3"
+    }
+
+    "get path (empty) from did:web" {
+        val didUrl = DidUrl.from("did:web:empty-path.com")
+        DidWeb.getPath(didUrl) shouldBe ""
+    }
+
+    "get domain from did:web" {
+        val didUrl = DidUrl.from("did:web:sub-domain.top-level-domain.com")
+        DidWeb.getDomain(didUrl) shouldBe "sub-domain.top-level-domain.com"
+    }
+
+    "get domain from did:web incl. path" {
+        val didUrl = DidUrl.from("did:web:sub-domain.top-level-domain.com:api:did-registry:266fa44b20c247a9926b44f4263799a3")
+        DidWeb.getDomain(didUrl) shouldBe "sub-domain.top-level-domain.com"
+    }
+
 }) {
 
-    override fun beforeSpec(spec: Spec) {
-        super.beforeSpec(spec)
+    override suspend fun beforeTest(testCase: TestCase) {
+        super.beforeTest(testCase)
 
         ServiceMatrix("$RESOURCES_PATH/service-matrix.properties")
     }

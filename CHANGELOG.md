@@ -4,6 +4,46 @@ Notable changes since the last release of the [SSI Kit](https://github.com/walt-
 
 ## [Unreleased]
 
+## [1.12.0] - 2022-07-19
+
+-   Roadmap
+    -   Dynamic Policies powered by the OpenPolicyAgent <https://github.com/walt-id/waltid-roadmap/issues/42>
+-   Features
+    -   Added support for did:ebsi V2 by @xmartinez15 <https://github.com/walt-id/waltid-ssikit/pull/139>
+    -   Added support for Open Badge V3 credential by <https://github.com/walt-id/waltid-ssikit-vclib/issues/50>
+    -   Dynamically register opa enabled policies with the auditor <https://github.com/walt-id/waltid-ssikit/pull/140>
+-   Fixes
+    -   Fix custodian importkey api <https://github.com/walt-id/waltid-ssikit/pull/131>
+
+## [1.11.0] - 2022-05-31
+
+-   Roadmap Items
+    -   Verifiable Mandate & Delegation <https://github.com/walt-id/waltid-roadmap/issues/37>
+    -   Integration of Open Policy Agent <https://github.com/walt-id/waltid-roadmap/issues/40>
+-   Features
+    -   Support rego policy via CLI  <https://github.com/walt-id/waltid-ssikit/pull/134>
+
+## [1.10.0] - 2022-05-10
+
+-   Bumped all dependencies
+
+## [1.9.0] - 2022-04-08
+
+-   Features
+    -   added Secp256k1, Ed25519 key import test cases for key command, key service, core api <https://github.com/walt-id/waltid-ssikit/issues/116> 
+    -   added key delete command and tests for core api and key service <https://github.com/walt-id/waltid-ssikit/issues/114>
+    -   Simple s3 storage implementation for HKV store  <https://github.com/walt-id/waltid-ssikit/commit/e70e79e6c1d48832038038f3fa5974dd2f8231a6>
+    -   Presentation Exchange protocol 2.0 <https://github.com/walt-id/waltid-ssikit/pull/127>
+
+## [1.8.0] - 2022-03-22
+
+-   Features
+    -   Extended CLI tool with OidcCommands
+    -   DID import CLI command from file or resolved DID
+    -   Added support for ParticipantCredential
+-   Fixes
+    -   Fixed did:web resolution issue
+
 ## [1.7.0] - 2022-02-17
 
 -   Roadmap Items
@@ -120,7 +160,17 @@ Notable changes since the last release of the [SSI Kit](https://github.com/walt-
     -   Fixed the way of finding the padding <https://github.com/walt-id/waltid-ssikit/pull/43>
     -   SignaturePolicy fails for issuers using did:ebsi <https://github.com/walt-id/waltid-ssikit/issues/52>
 
-[Unreleased]: https://github.com/walt-id/waltid-ssikit/compare/1.7.0...HEAD
+[Unreleased]: https://github.com/walt-id/waltid-ssikit/compare/1.12.0...HEAD
+
+[1.12.0]: https://github.com/walt-id/waltid-ssikit/compare/1.11.0...1.12.0
+
+[1.11.0]: https://github.com/walt-id/waltid-ssikit/compare/1.10.0...1.11.0
+
+[1.10.0]: https://github.com/walt-id/waltid-ssikit/compare/1.9.0...1.10.0
+
+[1.9.0]: https://github.com/walt-id/waltid-ssikit/compare/1.8.0...1.9.0
+
+[1.8.0]: https://github.com/walt-id/waltid-ssikit/compare/1.7.0...1.8.0
 
 [1.7.0]: https://github.com/walt-id/waltid-ssikit/compare/1.6.2...1.7.0
 

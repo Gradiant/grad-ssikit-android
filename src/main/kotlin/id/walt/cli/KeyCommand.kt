@@ -11,13 +11,10 @@ import com.github.ajalt.clikt.parameters.types.enum
 import com.github.ajalt.clikt.parameters.types.path
 import id.walt.common.readWhenContent
 import id.walt.crypto.KeyAlgorithm
-import id.walt.crypto.KeyId
-import id.walt.crypto.convertPEMKeyToJWKKey
 import id.walt.services.key.KeyFormat
 import id.walt.services.key.KeyService
 import id.walt.services.keystore.KeyType
 import java.nio.file.Path
-import kotlin.io.path.extension
 
 private val keyService = KeyService.getService()
 
@@ -70,12 +67,9 @@ class ImportKeyCommand : CliktCommand(
     override fun run() {
         echo("Importing key from \"$keyFile\"...")
 
-        var keyStr = readWhenContent(keyFile)
+        val keyStr = readWhenContent(keyFile)
 
-        if (keyFile.extension.lowercase() == "pem") keyStr = convertPEMKeyToJWKKey(keyStr)
-
-
-        val keyId: KeyId = keyService.importKey(keyStr)
+        val keyId = keyService.importKey(keyStr)
 
         echo("\nResults:\n")
 
@@ -120,5 +114,25 @@ class ListKeysCommand : CliktCommand(
         keyService.listKeys().forEachIndexed { index, (keyId, algorithm, cryptoProvider) ->
             echo("- ${index + 1}: \"${keyId}\" (Algorithm: \"${algorithm.name}\", provided by \"${cryptoProvider.name}\")")
         }
+    }
+}
+
+class DeleteKeyCommand : CliktCommand(
+    name = "delete", help = """Delete key.
+
+        Deletes the key with the specified ID.
+        """
+) {
+
+    val keyId: String by argument("KEY-ID", help = "Key ID or key alias")
+
+    override fun run() {
+        echo("Deleting key \"$keyId\"...")
+
+        keyService.delete(keyId)
+
+        echo("\nResults:\n")
+
+        echo("Key \"${keyId}\" deleted.")
     }
 }

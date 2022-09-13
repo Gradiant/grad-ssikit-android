@@ -11,10 +11,12 @@ import id.walt.services.context.ContextManager
 import id.walt.services.crypto.CryptoService
 import id.walt.services.hkvstore.HKVKey
 import id.walt.services.key.KeyService
+import id.walt.services.keystore.KeyType
 import id.walt.services.vc.JsonLdCredentialService
 import id.walt.signatory.ProofConfig
-import io.ktor.client.features.*
+import io.ktor.client.plugins.*
 import io.ktor.client.request.*
+import io.ktor.client.statement.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
@@ -22,12 +24,10 @@ import org.bouncycastle.asn1.edec.EdECObjectIdentifiers
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo
 import java.io.File
-import java.net.URLDecoder
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 import java.security.KeyFactory
 import java.security.KeyPair
-import java.security.KeyStore
 import java.security.spec.X509EncodedKeySpec
 import java.util.*
 
@@ -42,7 +42,7 @@ object DidService {
 
     sealed class DidOptions
     data class DidWebOptions(val domain: String?, val path: String? = null) : DidOptions()
-    data class DidEbsiOptions(val addEidasKey: Boolean) : DidOptions()
+    data class DidEbsiOptions(val version: Int) : DidOptions()
 
 
     private val credentialService = JsonLdCredentialService.getService()
@@ -79,7 +79,7 @@ object DidService {
     fun resolveDidEbsiRaw(did: String): String = runBlocking {
         log.debug { "Resolving DID $did" }
 
-        val didDoc = WaltIdServices.http.get<String>("https://api.preprod.ebsi.eu/did-registry/v2/identifiers/$did")
+        val didDoc = WaltIdServices.http.get("https://api.preprod.ebsi.eu/did-registry/v2/identifiers/$did").bodyAsText()
 
         log.debug { didDoc }
 
@@ -97,7 +97,7 @@ object DidService {
         for (i in 1..5) {
             try {
                 log.debug { "Resolving did:ebsi at: https://api.preprod.ebsi.eu/did-registry/v2/identifiers/${didUrl.did}" }
-                didDoc = WaltIdServices.http.get("https://api.preprod.ebsi.eu/did-registry/v2/identifiers/${didUrl.did}")
+                didDoc = WaltIdServices.http.get("https://api.preprod.ebsi.eu/did-registry/v2/identifiers/${didUrl.did}").bodyAsText()
                 log.debug { "Result: $didDoc" }
                 return@runBlocking Did.decode(didDoc)!! as DidEbsi
             } catch (e: ClientRequestException) {
@@ -120,8 +120,23 @@ object DidService {
         val key = ContextManager.keyStore.load(keyId.id)
 
         // Created identifier
-        val didUrlStr = DidUrl.generateDidEbsiV2DidUrl().did
-        ContextManager.keyStore.addAlias(keyId, didUrlStr)
+        var didUrlStr: String? = didEbsiOptions?.let {
+            when (it.version) {
+                1 -> {
+                    DidUrl.generateDidEbsiV1DidUrl().did
+                }
+                2 -> {
+                    val publicKeyJwk = keyService.toJwk(keyId.id, KeyType.PUBLIC)
+                    val publicKeyJwkThumbprint = publicKeyJwk.computeThumbprint().decode()
+                    DidUrl.generateDidEbsiV2DidUrl(publicKeyJwkThumbprint).did
+                }
+                else -> null
+            }
+        } ?: let {
+            DidUrl.generateDidEbsiV1DidUrl().did
+        }
+
+        ContextManager.keyStore.addAlias(keyId, didUrlStr!!)
 
         // Created DID doc
         val kid = didUrlStr + "#" + key.keyId
@@ -170,14 +185,16 @@ object DidService {
         val key = keyAlias?.let { ContextManager.keyStore.load(it) } ?: cryptoService.generateKey(DEFAULT_KEY_ALGORITHM)
             .let { ContextManager.keyStore.load(it.id) }
 
-        val domain = when(options.domain.isNullOrEmpty()) {
+        val domain = when (options.domain.isNullOrEmpty()) {
             true -> throw Exception("Missing 'domain' parameter for creating did:web")
             else -> URLEncoder.encode(options.domain, StandardCharsets.UTF_8)
         }
 
-        val path = when(options.path.isNullOrEmpty()) {
+        val path = when (options.path.isNullOrEmpty()) {
             true -> ""
-            else -> ":${options.path.split("/").map { part -> URLEncoder.encode(part, StandardCharsets.UTF_8) }.joinToString(":" )}"
+            else -> ":${
+                options.path.split("/").map { part -> URLEncoder.encode(part, StandardCharsets.UTF_8) }.joinToString(":")
+            }"
         }
 
         val didUrlStr = DidUrl("web", "$domain$path").did
@@ -266,7 +283,7 @@ object DidService {
 
         log.debug { "Fetching DID from $didDocUri" }
 
-        val didDoc = WaltIdServices.http.get<String>(didDocUri.toString())
+        val didDoc = WaltIdServices.http.get(didDocUri.toString()).bodyAsText()
 
         log.debug { didDoc }
 
@@ -386,6 +403,15 @@ object DidService {
                 )
             }?.reduce { acc, b -> acc || b } != true) {
             throw Exception("Could not import any key from $didUrl")
+        }
+    }
+
+    fun deleteDid(didUrl: String) {
+        loadOrResolveAnyDid(didUrl)?.let { did ->
+            ContextManager.hkvStore.delete(HKVKey("did", "created", didUrl), recursive = true)
+            did.verificationMethod?.forEach {
+                ContextManager.keyStore.delete(it.id)
+            }
         }
     }
 
