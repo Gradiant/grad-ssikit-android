@@ -358,7 +358,6 @@ open class WaltIdJsonLdCredentialService : JsonLdCredentialService() {
             log.debug { "Could not validate vc against schema . The validation errors are:" }
             results.errors?.forEach {  log.debug { it }  }
         }
-
         return results.valid
     }
 

@@ -9,9 +9,10 @@ import com.zaxxer.hikari.HikariDataSource
 import id.walt.Values
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
-import io.ktor.client.features.json.*
-import io.ktor.client.features.json.serializer.*
-import io.ktor.client.features.logging.*
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.plugins.logging.*
+import io.ktor.serialization.kotlinx.json.*
+import kotlinx.serialization.json.Json
 import mu.KotlinLogging
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 //ANDROID PORT
@@ -43,8 +44,8 @@ object WaltIdServices {
     private val log = KotlinLogging.logger {}
 
     val http = HttpClient(CIO) {
-        install(JsonFeature) {
-            serializer = KotlinxSerializer()
+        install(ContentNegotiation) {
+            json(Json { ignoreUnknownKeys = true })
         }
         if (httpLogging) {
             install(Logging) {
@@ -98,7 +99,7 @@ object WaltIdServices {
         //ANDROID PORT
     }
 
-    fun loadConfig() = ConfigLoader.Builder()
+    fun loadConfig() = ConfigLoader.builder()
         .addFileExtensionMapping("yaml", YamlParser())
         .addSource(PropertySource.file(File("walt.yaml"), optional = true))
         .addSource(PropertySource.resource("/walt-default.yaml"))

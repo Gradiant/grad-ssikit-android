@@ -93,20 +93,26 @@ object WaltCLI {
                         GenKeyCommand(),
                         ListKeysCommand(),
                         ImportKeyCommand(),
-                        ExportKeyCommand()
+                        ExportKeyCommand(),
+                        DeleteKeyCommand()
                     ),
                     DidCommand().subcommands(
                         CreateDidCommand(),
                         ResolveDidCommand(),
                         ListDidsCommand(),
-                        ImportDidCommand()
+                        ImportDidCommand(),
+                        DeleteDidCommand()
                     ),
                     VcCommand().subcommands(
                         VcIssueCommand(),
                         PresentVcCommand(),
                         VerifyVcCommand(),
                         ListVcCommand(),
-                        ListVerificationPoliciesCommand(),
+                        VerificationPoliciesCommand().subcommands(
+                            ListVerificationPoliciesCommand(),
+                            CreateDynamicVerificationPolicyCommand(),
+                            RemoveDynamicVerificationPolicyCommand()
+                        ),
                         VcTemplatesCommand().subcommands(
                             VcTemplatesListCommand(),
                             VcTemplatesExportCommand()

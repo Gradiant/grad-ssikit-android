@@ -128,7 +128,6 @@ open class WaltIdJwtCredentialService : JwtCredentialService() {
     override fun validateSchemaTsr(vc: String) = try {
         vc.toCredential().let {
             if (it is VerifiablePresentation) return true
-
             val credentialSchema = it.credentialSchema ?: return true
             return SchemaService.validateSchema(it.json!!, URI(credentialSchema.id).toURL().readText()).valid
         }

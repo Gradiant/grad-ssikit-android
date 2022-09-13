@@ -12,7 +12,6 @@ import com.nimbusds.jose.JWSAlgorithm
 import com.nimbusds.jose.crypto.impl.ECDSA
 import com.nimbusds.jose.jwk.Curve
 import com.nimbusds.jose.jwk.ECKey
-import com.nimbusds.jose.jwk.JWK
 import com.nimbusds.jose.util.Base64URL
 //ANDROID PORT
 import id.walt.servicematrix.utils.ReflectionUtils.getKClassByName
@@ -52,8 +51,8 @@ enum class KeyAlgorithm {
 
     companion object {
         fun fromString(algorithm: String): KeyAlgorithm = when (algorithm) {
-            "Ed25519", "EdDSA_Ed25519" -> EdDSA_Ed25519
-            "Secp256k1", "ECDSA_Secp256k1" -> ECDSA_Secp256k1
+            "EdDSA", "Ed25519", "EdDSA_Ed25519" -> EdDSA_Ed25519
+            "ECDSA", "Secp256k1", "ECDSA_Secp256k1" -> ECDSA_Secp256k1
             "RSA" -> RSA
             else -> throw IllegalArgumentException("Algorithm not supported")
         }
@@ -74,7 +73,7 @@ enum class LdSignatureType {
     Ed25519Signature2020,
     EcdsaSecp256k1Signature2019,
     RsaSignature2018
-    }
+}
 
 enum class LdVerificationKeyType {
     Ed25519VerificationKey2018,
@@ -93,28 +92,27 @@ fun java.security.Key.toPEM(): String = when (this) {
 }
 
 fun PrivateKey.toPEM(): String =
-    "-----BEGIN PRIVATE KEY-----\n" +
+            "-----BEGIN PRIVATE KEY-----" +
+            System.lineSeparator() +
             String(
-                Base64.getMimeEncoder(64, "\n".toByteArray()).encode(PKCS8EncodedKeySpec(this.encoded).encoded)
+                Base64.getMimeEncoder(64, System.lineSeparator().toByteArray())
+                    .encode(PKCS8EncodedKeySpec(this.encoded).encoded)
             ) +
-            "\n-----END PRIVATE KEY-----"
+            System.lineSeparator() +
+            "-----END PRIVATE KEY-----"
 
 
 fun PrivateKey.toBase64(): String = String(Base64.getEncoder().encode(PKCS8EncodedKeySpec(this.encoded).encoded))
 
-fun PublicKey.toPEM(): String = "-----BEGIN PUBLIC KEY-----\n" +
-        String(
-            Base64.getMimeEncoder(64, "\n".toByteArray()).encode(X509EncodedKeySpec(this.encoded).encoded)
-        ) +
-        "\n-----END PUBLIC KEY-----"
-
-fun toPem(privKey: PrivateKey): String {
-    return "-----BEGIN PUBLIC KEY-----\n" +
+fun PublicKey.toPEM(): String =
+            "-----BEGIN PUBLIC KEY-----" +
+            System.lineSeparator() +
             String(
-                Base64.getMimeEncoder(64, "\n".toByteArray()).encode(X509EncodedKeySpec(privKey.encoded).encoded)
+                Base64.getMimeEncoder(64, System.lineSeparator().toByteArray())
+                    .encode(X509EncodedKeySpec(this.encoded).encoded)
             ) +
-            "\n-----END PUBLIC KEY-----"
-}
+            System.lineSeparator() +
+            "-----END PUBLIC KEY-----"
 
 fun encBase64Str(data: String): String = String(Base64.getEncoder().encode(data.toByteArray()))
 
@@ -130,7 +128,8 @@ fun decodePubKeyBase64(base64: String, kf: KeyFactory): PublicKey =
     kf.generatePublic(X509EncodedKeySpec(decBase64(base64)))
 
 fun decodeRawPubKeyBase64(base64: String, kf: KeyFactory): PublicKey {
-    val pubKeyInfo = SubjectPublicKeyInfo(AlgorithmIdentifier(EdECObjectIdentifiers.id_Ed25519), Base64URL.from(base64).decode())
+    val pubKeyInfo =
+        SubjectPublicKeyInfo(AlgorithmIdentifier(EdECObjectIdentifiers.id_Ed25519), Base64URL.from(base64).decode())
     val x509KeySpec = X509EncodedKeySpec(pubKeyInfo.encoded)
     return kf.generatePublic(x509KeySpec)
 }
@@ -138,14 +137,18 @@ fun decodeRawPubKeyBase64(base64: String, kf: KeyFactory): PublicKey {
 fun decodeRawPrivKey(base64: String, kf: KeyFactory): PrivateKey {
     // TODO: extend for Secp256k1 keys
     val privKeyInfo =
-        PrivateKeyInfo(AlgorithmIdentifier(EdECObjectIdentifiers.id_Ed25519), DEROctetString(Base64URL.from(base64).decode()))
+        PrivateKeyInfo(
+            AlgorithmIdentifier(EdECObjectIdentifiers.id_Ed25519),
+            DEROctetString(Base64URL.from(base64).decode())
+        )
     val pkcs8KeySpec = PKCS8EncodedKeySpec(privKeyInfo.encoded)
     return kf.generatePrivate(pkcs8KeySpec)
 }
 
 fun decodePubKeyPem(pem: String, kf: KeyFactory): PublicKey = decodePubKeyBase64(pemToBase64(pem), kf)
 
-fun pemToBase64(pem: String): String = pem.substringAfter("\n").substringBefore("-").replace("\n", "")
+fun pemToBase64(pem: String): String =
+    pem.substringAfter(System.lineSeparator()).substringBefore("-").replace(System.lineSeparator(), "")
 
 fun decodePrivKeyBase64(base64: String, kf: KeyFactory): PrivateKey =
     kf.generatePrivate(PKCS8EncodedKeySpec(decBase64(base64)))
@@ -383,5 +386,3 @@ fun toECDSASignature(jcaSignature: ByteArray, keyAlgorithm: KeyAlgorithm): ECDSA
         ).toCanonicalised()
     }
 }
-
-fun convertPEMKeyToJWKKey(keyStr: String): String = JWK.parseFromPEMEncodedObjects(keyStr).toJSONString()

@@ -2,8 +2,8 @@ package id.walt
 
 object Values {
     //ANDROID PORT
-    const val versionNum = 1.7
+    const val versionNum = 1.11
     //ANDROID PORT
-    const val version = "1.7-SNAPSHOT"
+    const val version = "1.11.0-SNAPSHOT"
     const val isSnapshot = false
 }

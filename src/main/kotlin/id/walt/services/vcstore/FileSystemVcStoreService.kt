@@ -7,6 +7,7 @@ import java.io.File
 //ANDROID PORT
 import id.walt.servicematrix.utils.AndroidUtils
 //ANDROID PORT
+import java.net.URLDecoder
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
@@ -32,7 +33,10 @@ open class FileSystemVcStoreService : VcStoreService() {
     override fun listCredentials(group: String): List<VerifiableCredential> =
         listCredentialIds(group).map { getCredential(it, group)!! }
 
-    override fun listCredentialIds(group: String): List<String> = getGroupDir(group).listFiles()!!.map { it.nameWithoutExtension }
+    //ANDROID PORT
+    override fun listCredentialIds(group: String): List<String> = getGroupDir(group).listFiles()!!
+        .map { URLDecoder.decode(it.nameWithoutExtension, StandardCharsets.UTF_8.toString()) }
+    //ANDROID PORT
 
     override fun storeCredential(alias: String, vc: VerifiableCredential, group: String) =
         getFileById(

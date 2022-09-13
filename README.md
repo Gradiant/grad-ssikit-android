@@ -76,7 +76,12 @@ This is the Android Ported Version of the Walt.ID SSI Kit, developed by Gradiant
 
 33. FileSystemVcStoreService -> URLEncoder.encode(string, charset) were replaced for URLEncoder.encode(string, string) as it is the only supported invocation of this function in Android SDK.
 
-# SSI Kit
+34. FileSystemVcStoreService -> URLEncoder.decode(string, charset) were replaced for URLDecoder.decode(string, string) as it is the only supported invocation of this function in Android SDK.
+
+<div align="center">
+<h1>SSI Kit</h1>
+<span>by </span><a href="https://walt.id">walt.id</a>
+<p>Use web3 identity / self-sovereign identity (SSI)<p>
 
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=walt-id_waltid-ssikit&metric=security_rating)](https://sonarcloud.io/dashboard?id=walt-id_waltid-ssikit)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=walt-id_waltid-ssikit&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=walt-id_waltid-ssikit)
@@ -84,7 +89,7 @@ This is the Android Ported Version of the Walt.ID SSI Kit, developed by Gradiant
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=walt-id_waltid-ssikit&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=walt-id_waltid-ssikit)
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=walt-id_waltid-ssikit&metric=ncloc)](https://sonarcloud.io/dashboard?id=walt-id_waltid-ssikit)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=walt-id_waltid-ssikit-examples&metric=alert_status)](https://sonarcloud.io/dashboard?id=walt-id_waltid-ssikit)
-  
+
 [![CI/CD Workflow for walt.id SSI Kit](https://github.com/walt-id/waltid-ssikit/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/walt-id/waltid-ssikit/actions/workflows/build.yml)
 
 The **SSI Kit** by **walt.id** is a holistic Self-Sovereign-Identity solution, with primarily focus on the European EBSI/ESSIF ecosystem.
@@ -95,6 +100,7 @@ The core services are in the scope of:
  - **Verifiable Credential (VC)** operations (issue, present, verify)
  - **EBSI/ESSIF** related Use Cases (onboarding, VC exchange, etc.)
 
+</div>
 The EBSI/ESSIF functions are in the scope of:
  - **Onboarding EBSI/ESSIF** onboarding a natural person/legal entity including the DID creation and registration
  - **Enable Trusted Issuer** process for entitling a legal entity to become a Trusted Issuer in the ESSIF ecosystem.
@@ -105,46 +111,35 @@ The library is written in **Kotlin/Java** and can be directly integrated as Mave
 
 ## Getting Started
 
-### Via Docker
+- [CLI | Command Line Interface](https://docs.walt.id/v/ssikit/getting-started/cli-command-line-interface) - Try out the functions of the SSI Kit locally.
+- [REST Api](https://docs.walt.id/v/ssikit/getting-started/rest-apis) - Use the functions of the SSI Kit via an REST api.
+- [Maven/Gradle Dependency](https://docs.walt.id/v/ssikit/getting-started/dependency-jvm) - Use the functions of the SSI Kit directly in a Kotlin/Java project.
+- [Example Projects](https://github.com/walt-id/waltid-ssikit-examples) - Demonstrate how to use the SSI Kit in any Kotlin/Java app
 
-The easiest way to getting your hands dirty and to "play" with the functions the SSI Kit provides is by running the **CLI tool** with _Docker_.
+Checkout the [Official Documentation](https://docs.walt.id/v/ssikit), to dive deeper into the architecture and configur
+ation options available.
 
-    docker run -itv $(pwd)/data:/app/data waltid/ssikit -h
+## What is the SSI Kit?
+A **library** written in Kotlin/Java **to manage Keys, DIDs and VCs**. Functions can be used via **Maven/Gradle** or a **REST api**.
 
-### As dependency
+### Features
+- **Key Management** generation, import/export
+- **Decentralized Identifier (DID)** operations (create, register, update, deactivate)
+- **Verifiable Credential (VC)** operations (issue, present, verify)
+- **EBSI/ESSIF** related Use Cases (onboarding, VC exchange, etc.)
 
-_Gradle_
+#### For EBSI
+- **Onboarding EBSI/ESSIF** onboarding a natural person/legal entity including the DID creation and registration
+- **Enable Trusted Issuer** process for entitling a legal entity to become a Trusted Issuer in the ESSIF ecosystem.
+- **Credential Issuance** protocols and data formats for issuing W3C credentials from a Trusted Issuer to a natural person.
+- **Credential Verification** verification facilities in order to determine the validity of a W3C Verifiable Credential aligned with EBSI/ESSIF standards.
 
-       implementation("id.walt:waltid-ssi-kit:1.6.1")
+## Example
 
-_Maven_
+- Creating W3C Decentralized Identifiers
+- Issuing/verifying W3C Verifiable Credentials in JSON_LD and JWT format
 
-       <dependency>
-           <groupId>id.walt</groupId>
-           <artifactId>waltid-ssi-kit</artifactId>
-           <version>1.6.1</version>
-       </dependency>
-    
-Please go ahead and find further CLI commands and well as other ways how to use the SSI Kit in the documentation section below.
-
-## Documentation
-
-The documentation is hosted at: https://docs.walt.id/ssikit/
-
-Direct links for using the SSI Kit are:
-
-- Quick Start (running the SSI Kit with Docker or with **ssikit.sh**): https://docs.walt.id/ssikit/ssikit-usage.html#quick-start
-- Building the SSI Kit with Gradle or with Docker: https://docs.walt.id/ssikit/ssikit-usage.html#build
-- CLI Tool: https://docs.walt.id/ssikit/ssikit-usage.html#cli
-- APIs: https://docs.walt.id/ssikit/ssikit-usage.html#rest-apis
-- Configuration: https://docs.walt.id/ssikit/ssikit-usage.html#configuration
-
-## Examples
-
-This project demonstrates how to integrate & use the SSI Kit in any Kotlin/Java app: https://github.com/walt-id/waltid-ssikit-examples. Also the **Gradle** and **Maven** build instructions are provided there.
-
-Following code snipped gives a first impression how to use the SSI Kit for creating **W3C Decentralized Identifiers** and for issuing/verifying **W3C Verifiable Credentials** in **JSON_LD** as well as **JWT** format.
-
+```kotlin
     fun main() {
 
         ServiceMatrix("service-matrix.properties")
@@ -167,25 +162,28 @@ Following code snipped gives a first impression how to use the SSI Kit for creat
         println("JSON verification result: ${resJson.overallStatus}")
         println("JWT verification result: ${resJwt.overallStatus}")
     }
+ ```
+## Join the community
 
-## Funded & supported by
+* Connect and get the latest updates: <a href="https://discord.gg/AW8AgqJthZ">Discord</a> | <a href="https://walt.id/newsletter">Newsletter</a> | <a href="https://www.youtube.com/channel/UCXfOzrv3PIvmur_CmwwmdLA">YouTube</a> | <a href="https://mobile.twitter.com/walt_id" target="_blank">Twitter</a>
+* Get help, request features and report bugs: <a href="https://github.com/walt-id/.github/discussions" target="_blank">GitHub Discussions</a>
 
-<img src="logos-supporter.png">
+## Standards and Specifications
+
+- [EBSI Wallet Conformance](https://ec.europa.eu/digital-building-blocks/wikis/display/EBSIDOC/EBSI+Wallet+Conformance+Testing)
+- [Verifiable Credentials Data Model 1.0](https://www.w3.org/TR/vc-data-model/)
+- [Decentralized Identifiers (DIDs) v1.0](https://w3c.github.io/did-core/)
+- [DID Method Rubric](https://w3c.github.io/did-rubric/)
+- [did:web Decentralized Identifier Method Specification](https://w3c-ccg.github.io/did-method-web/)
+- [The did:key Method v0.7](https://w3c-ccg.github.io/did-method-key/)
+- [Self-Issued OpenID Provider v2](https://openid.net/specs/openid-connect-self-issued-v2-1_0.html)
+- [OpenID Connect for Verifiable Presentations](https://openid.net/specs/openid-connect-4-verifiable-presentations-1_0-07.html)
+- [OpenID Connect for Verifiable Credential Issuance](https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html)
 
 ## License
 
-```
-Copyright ((C)) 2022 walt.id GmbH
+Licensed under the [Apache License, Version 2.0](https://github.com/walt-id/waltid-ssikit/blob/master/LICENSE)
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+## Funded & supported by
 
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-```
+<a href="https://essif-lab.eu/" target="_blank"><img src="logos-supporter.png"></a>
